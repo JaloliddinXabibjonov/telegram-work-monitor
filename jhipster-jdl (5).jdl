@@ -1,0 +1,70 @@
+
+application {
+  config {
+    baseName WorkMonitor,
+    applicationType monolith,
+    packageName uz.devops,
+    authenticationType jwt,
+    databaseType postgresql,
+    clientFramework angular
+  }
+  entities *
+}
+
+/**
+ * Справочник для описания вида этапа работы
+ */
+entity Job {
+name String required minlength(3) maxlength(128) /** Наименование */
+}
+
+/**
+ * Справочник для описания вида этапа задачи
+ */
+entity Task {
+name String required minlength(3) maxlength(128) /** Наименование */
+status Status //** Статус задачи*/
+}
+
+/**
+ * Заказы на работу
+ */
+entity Order {
+	name String required minlength(3) maxlength(128) /** Наименование */
+    price Long /** Цена заказа */
+    chatId String //** ID чата */
+    employee String //** Сотрудник*/
+    status OrderStatus //** Статус заказа*/
+    description TextBlob /** Описание заказа  */
+    startedDate Instant //** Дата начала */
+    endDate Instant //** Дата окончания */
+}
+
+/**
+ * Роли
+ */
+entity Profession {
+name String required minlength(3) maxlength(128) /** Наименование */
+description String /** Описание профессии  */
+}
+
+enum OrderStatus {
+	TO_DO, DOING, DONE
+}
+enum Status {
+	NEW, ACTIVE, DOING INACTIVE, DELETED, DONE
+}
+
+relationship OneToMany {
+  Job to Task{job(name) required},
+  Job to Order{job(name) required}
+}
+
+relationship ManyToMany {
+  Task{profession(name)} to Profession{task(name)}
+}
+
+dto * with mapstruct
+paginate * with pagination
+service * with serviceImpl
+    
