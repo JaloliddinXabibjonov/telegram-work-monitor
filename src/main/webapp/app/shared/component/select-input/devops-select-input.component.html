@@ -1,0 +1,23 @@
+<nz-select
+  nzSize="large"
+  [nzLoading]="loading"
+  [nzShowArrow]="true"
+  [nzDisabled]="disabled"
+  [nzShowSearch]="devopsShowSearch"
+  [nzServerSearch]="devopsServerSearch"
+  [nzMaxTagCount]="devopsMaxTagCount"
+  [nzOptionOverflowSize]="devopsOptionOverflowSize"
+  [nzMode]="devopsMode"
+  [nzAllowClear]="true"
+  [compareWith]="compareFn"
+  [(ngModel)]="item"
+  (ngModelChange)="emitValue()"
+  (nzOnSearch)="onSearch($event)"
+>
+  <nz-option
+    *ngFor="let i of data"
+    [nzValue]="devopsValueField ? i[devopsValueField] : i"
+    [nzLabel]="devopsLabelField ? i[devopsLabelField] : i"
+  >
+  </nz-option>
+</nz-select>

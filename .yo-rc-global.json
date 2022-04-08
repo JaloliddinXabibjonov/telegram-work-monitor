@@ -1,0 +1,12 @@
+{
+  "generator-jhipster-devops:0.0.0": {
+    "promptValues": {
+      "packageName": "uz.devops"
+    }
+  },
+  "generator-jhipster:7.8.1": {
+    "promptValues": {
+      "nativeLanguage": "en"
+    }
+  }
+}
