@@ -1,0 +1,39 @@
+{
+  "applications": ["WorkMonitor"],
+  "changelogDate": "20220408112706",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "profession",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "128",
+      "fieldValidateRulesMinlength": "3",
+      "javadoc": "Наименование"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "javadoc": "Описание профессии"
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "Роли",
+  "jpaMetamodelFiltering": false,
+  "name": "Profession",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "task",
+      "otherEntityRelationshipName": "profession",
+      "ownerSide": false,
+      "relationshipName": "task",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}

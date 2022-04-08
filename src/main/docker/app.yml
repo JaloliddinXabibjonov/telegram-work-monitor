@@ -7,8 +7,8 @@ services:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
       - SPRING_PROFILES_ACTIVE=prod,api-docs
       - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://workmonitor-postgresql:5432/workmonitor
-      - SPRING_LIQUIBASE_URL=jdbc:postgresql://workmonitor-postgresql:5432/workmonitor
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://workmonitor-postgresql:5432/WorkMonitor
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://workmonitor-postgresql:5432/WorkMonitor
       - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
@@ -17,9 +17,9 @@ services:
   workmonitor-postgresql:
     image: postgres:13.5
     # volumes:
-    #   - ~/volumes/jhipster/workmonitor/postgresql/:/var/lib/postgresql/data/
+    #   - ~/volumes/jhipster/WorkMonitor/postgresql/:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=workmonitor
+      - POSTGRES_USER=WorkMonitor
       - POSTGRES_PASSWORD=
       - POSTGRES_HOST_AUTH_METHOD=trust
     # If you want to expose these ports outside your dev PC,

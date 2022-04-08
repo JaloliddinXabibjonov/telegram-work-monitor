@@ -1,0 +1,83 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="m-0" jhiTranslate="workMonitorApp.task.home.title">Tasks</h2>
+
+    <ngl-export-as
+      *ngIf="tasks?.length"
+      class="ml-auto"
+      [data]="tasks"
+      requestUrl="{{ taskService.resourceUrl }}"
+      [requestOption]="getOption"
+      [exclude]="exclude"
+      translationPrefix="workMonitorApp.task"
+      fileName="{{ 'global.menu.entities.task' | translate }}"
+    >
+    </ngl-export-as>
+
+    <button
+      class="ml-2"
+      type="button"
+      nz-button
+      nzSize="large"
+      nzType="primary"
+      jhiTranslate="entity.action.add"
+      *jhiHasAnyAuthority="'ROLE_TASK_WRITE'"
+      (click)="taskService.openUpdate()"
+    >
+      Add
+    </button>
+  </div>
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="tasks?.length === 0">
+    <span jhiTranslate="workMonitorApp.task.home.notFound">No tasks found</span>
+  </div>
+
+  <div class="table-responsive">
+    <nz-table [nzLoading]="loading" [nzShowPagination]="false" nzSize="small" nzOuterBordered nzTemplateMode>
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="name"><span jhiTranslate="workMonitorApp.task.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="status"><span jhiTranslate="workMonitorApp.task.status">Status</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="job.name"><span jhiTranslate="workMonitorApp.task.job">Job</span> <fa-icon icon="sort"></fa-icon></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks; trackBy: trackId">
+          <td>
+            <a href="javascript:void(0)" (click)="taskService.openView(task)">{{ task.id }}</a>
+          </td>
+          <td>{{ task.name }}</td>
+          <td jhiTranslate="{{ 'workMonitorApp.Status.' + task.status }}">{{ task.status }}</td>
+          <td>
+            <div *ngIf="task.job">
+              <a href="javascript:void(0)" click="jobService.openView(task.job)">{{ task.job?.name }}</a>
+            </div>
+          </td>
+          <td [width]="10" class="text-right">
+            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_task_WRITE'">
+              <button nz-button (click)="taskService.openView(task)">
+                <i nz-icon nzType="eye" class="icon-btn"></i>
+              </button>
+              <button nz-button (click)="taskService.openUpdate(task)">
+                <i nz-icon nzType="edit" class="icon-btn"></i>
+              </button>
+
+              <button nz-button (click)="taskService.openDelete(task.id)">
+                <i nz-icon nzType="delete" class="icon-btn"></i>
+              </button>
+            </nz-button-group>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div class="d-flex justify-content-center mt-3">
+    <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems" [nzPageSize]="itemsPerPage" (nzPageIndexChange)="loadPage($event)">
+    </nz-pagination>
+  </div>
+</div>

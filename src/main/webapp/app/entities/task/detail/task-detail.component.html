@@ -1,0 +1,49 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="task">
+      <h2 data-cy="taskDetailsHeading"><span jhiTranslate="workMonitorApp.task.detail.title">Task</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ task.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.task.name" [ngbTooltip]="'workMonitorApp.task.help.name' | translate">Name</span></dt>
+        <dd>
+          <span>{{ task.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.task.status">Status</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'workMonitorApp.Status.' + task.status }}">{{ task.status }}</span>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.task.profession">Profession</span></dt>
+        <dd>
+          <span *ngFor="let profession of task.professions; let last = last">
+            <a [routerLink]="['/profession', profession?.id, 'view']">{{ profession.name }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.task.job">Job</span></dt>
+        <dd>
+          <div *ngIf="task.job">
+            <a [routerLink]="['/job', task.job?.id, 'view']">{{ task.job?.name }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/task', task.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

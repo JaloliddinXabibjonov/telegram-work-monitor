@@ -1,8 +1,8 @@
 {
-  "name": "workmonitor",
+  "name": "work-monitor",
   "version": "0.0.1-SNAPSHOT",
   "private": true,
-  "description": "Description for workmonitor",
+  "description": "Description for WorkMonitor",
   "license": "UNLICENSED",
   "scripts": {
     "build": "npm run webapp:prod --",

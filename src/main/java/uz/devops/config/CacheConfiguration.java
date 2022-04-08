@@ -48,6 +48,14 @@ public class CacheConfiguration {
             createCache(cm, uz.devops.domain.User.class.getName());
             createCache(cm, uz.devops.domain.Authority.class.getName());
             createCache(cm, uz.devops.domain.User.class.getName() + ".authorities");
+            createCache(cm, uz.devops.domain.Job.class.getName());
+            createCache(cm, uz.devops.domain.Job.class.getName() + ".tasks");
+            createCache(cm, uz.devops.domain.Job.class.getName() + ".orders");
+            createCache(cm, uz.devops.domain.Task.class.getName());
+            createCache(cm, uz.devops.domain.Task.class.getName() + ".professions");
+            createCache(cm, uz.devops.domain.Order.class.getName());
+            createCache(cm, uz.devops.domain.Profession.class.getName());
+            createCache(cm, uz.devops.domain.Profession.class.getName() + ".tasks");
             // jhipster-needle-ehcache-add-entry
         };
     }

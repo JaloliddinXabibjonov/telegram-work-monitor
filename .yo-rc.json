@@ -1,8 +1,9 @@
 {
   "generator-jhipster": {
+    "applicationIndex": 0,
     "applicationType": "monolith",
     "authenticationType": "jwt",
-    "baseName": "workmonitor",
+    "baseName": "WorkMonitor",
     "blueprints": [
       {
         "name": "generator-jhipster-devops",
@@ -17,18 +18,21 @@
     "clientThemeVariant": "",
     "creationTimestamp": 1649413895933,
     "databaseType": "sql",
-    "devDatabaseType": "postgresql",
+    "devDatabaseType": "h2Disk",
     "devServerPort": 4200,
     "dtoSuffix": "DTO",
     "enableGradleEnterprise": false,
     "enableHibernateCache": true,
     "enableSwaggerCodegen": false,
     "enableTranslation": true,
+    "entities": ["Job", "Task", "Order", "Profession"],
     "entitySuffix": "",
+    "gradleEnterpriseHost": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.8.1",
     "jwtSecretKey": "MWQyOGMzMTU4MTNiZTFlZjYzYTE3ODA4MjljMDcyNzNmNmZkYjEwNDQzODQ1YzUzNzM1ZjZkYjE2MTI1MDQwZjYwN2VjZGUzZThkZmExNDU3OTYzMTY1ZGY3ZWE2YjdmOWExNzI1MGZhMjE5ZmY5YWMwMDVjODdiNjU1YWQzZDY=",
-    "languages": ["en", "ru", "uz-Cyrl-uz"],
+    "languages": ["en"],
+    "lastLiquibaseTimestamp": 1649417226000,
     "messageBroker": false,
     "nativeLanguage": "en",
     "otherModules": [
@@ -37,6 +41,7 @@
         "version": "0.0.0"
       }
     ],
+    "packageFolder": "uz/devops",
     "packageName": "uz.devops",
     "pages": [],
     "prodDatabaseType": "postgresql",
@@ -44,7 +49,7 @@
     "searchEngine": false,
     "serverPort": "8080",
     "serverSideOptions": [],
-    "serviceDiscoveryType": "no",
+    "serviceDiscoveryType": false,
     "skipCheckLengthOfIdentifier": false,
     "skipFakeData": false,
     "skipUserManagement": false,

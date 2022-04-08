@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "workmonitor": {
+    "work-monitor": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -84,15 +84,15 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "workmonitor:build:development",
+            "browserTarget": "work-monitor:build:development",
             "port": 4200
           },
           "configurations": {
             "production": {
-              "browserTarget": "workmonitor:build:production"
+              "browserTarget": "work-monitor:build:production"
             },
             "development": {
-              "browserTarget": "workmonitor:build:development"
+              "browserTarget": "work-monitor:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -106,7 +106,7 @@
       }
     }
   },
-  "defaultProject": "workmonitor",
+  "defaultProject": "work-monitor",
   "cli": {
     "packageManager": "npm"
   }

@@ -5,7 +5,6 @@ application {
     applicationType monolith,
     packageName uz.devops,
     authenticationType jwt,
-    databaseType postgresql,
     clientFramework angular
   }
   entities *

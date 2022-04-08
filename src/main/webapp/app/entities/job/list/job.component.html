@@ -1,0 +1,75 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="m-0" jhiTranslate="workMonitorApp.job.home.title">Jobs</h2>
+
+    <ngl-export-as
+      *ngIf="jobs?.length"
+      class="ml-auto"
+      [data]="jobs"
+      requestUrl="{{ jobService.resourceUrl }}"
+      [requestOption]="getOption"
+      [exclude]="exclude"
+      translationPrefix="workMonitorApp.job"
+      fileName="{{ 'global.menu.entities.job' | translate }}"
+    >
+    </ngl-export-as>
+
+    <button
+      class="ml-2"
+      type="button"
+      nz-button
+      nzSize="large"
+      nzType="primary"
+      jhiTranslate="entity.action.add"
+      *jhiHasAnyAuthority="'ROLE_JOB_WRITE'"
+      (click)="jobService.openUpdate()"
+    >
+      Add
+    </button>
+  </div>
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="jobs?.length === 0">
+    <span jhiTranslate="workMonitorApp.job.home.notFound">No jobs found</span>
+  </div>
+
+  <div class="table-responsive">
+    <nz-table [nzLoading]="loading" [nzShowPagination]="false" nzSize="small" nzOuterBordered nzTemplateMode>
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="name"><span jhiTranslate="workMonitorApp.job.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let job of jobs; trackBy: trackId">
+          <td>
+            <a href="javascript:void(0)" (click)="jobService.openView(job)">{{ job.id }}</a>
+          </td>
+          <td>{{ job.name }}</td>
+          <td [width]="10" class="text-right">
+            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_job_WRITE'">
+              <button nz-button (click)="jobService.openView(job)">
+                <i nz-icon nzType="eye" class="icon-btn"></i>
+              </button>
+              <button nz-button (click)="jobService.openUpdate(job)">
+                <i nz-icon nzType="edit" class="icon-btn"></i>
+              </button>
+
+              <button nz-button (click)="jobService.openDelete(job.id)">
+                <i nz-icon nzType="delete" class="icon-btn"></i>
+              </button>
+            </nz-button-group>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div class="d-flex justify-content-center mt-3">
+    <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems" [nzPageSize]="itemsPerPage" (nzPageIndexChange)="loadPage($event)">
+    </nz-pagination>
+  </div>
+</div>
