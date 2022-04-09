@@ -3,15 +3,14 @@ package uz.devops.service.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.Objects;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link uz.devops.domain.Profession} entity.
  */
 @Schema(description = "Роли")
 public class ProfessionDTO implements Serializable {
-
-    private Long id;
 
     /**
      * Наименование
@@ -26,14 +25,6 @@ public class ProfessionDTO implements Serializable {
      */
     @Schema(description = "Описание профессии")
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -61,22 +52,21 @@ public class ProfessionDTO implements Serializable {
         }
 
         ProfessionDTO professionDTO = (ProfessionDTO) o;
-        if (this.id == null) {
+        if (this.name == null) {
             return false;
         }
-        return Objects.equals(this.id, professionDTO.id);
+        return Objects.equals(this.name, professionDTO.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id);
+        return Objects.hash(this.name);
     }
 
     // prettier-ignore
     @Override
     public String toString() {
         return "ProfessionDTO{" +
-            "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             "}";

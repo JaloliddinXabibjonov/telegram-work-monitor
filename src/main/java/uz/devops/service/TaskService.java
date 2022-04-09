@@ -3,6 +3,7 @@ package uz.devops.service;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import uz.devops.domain.Task;
 import uz.devops.service.dto.TaskDTO;
 
 /**
@@ -63,4 +64,8 @@ public interface TaskService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    void addProfessionToTask(String profName, Task task);
+
+    void checkTaskProfession(String data, Long taskId);
 }

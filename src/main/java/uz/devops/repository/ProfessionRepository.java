@@ -1,6 +1,6 @@
 package uz.devops.repository;
 
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import uz.devops.domain.Profession;
 
@@ -9,4 +9,4 @@ import uz.devops.domain.Profession;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ProfessionRepository extends JpaRepository<Profession, Long> {}
+public interface ProfessionRepository extends JpaRepository<Profession, String> {}

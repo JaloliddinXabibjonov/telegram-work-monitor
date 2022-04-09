@@ -2,7 +2,10 @@ package uz.devops.service.mapper;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import uz.devops.domain.Job;
 import uz.devops.domain.Profession;
 import uz.devops.domain.Task;
@@ -24,7 +27,6 @@ public interface TaskMapper extends EntityMapper<TaskDTO, Task> {
 
     @Named("professionName")
     @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
     ProfessionDTO toDtoProfessionName(Profession profession);
 

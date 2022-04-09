@@ -3,6 +3,7 @@ package uz.devops.service;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import uz.devops.domain.Order;
 import uz.devops.service.dto.OrderDTO;
 
 /**
@@ -63,4 +64,6 @@ public interface OrderService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Optional<Order> findOrderById(Long orderId);
 }

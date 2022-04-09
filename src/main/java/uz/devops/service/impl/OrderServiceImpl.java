@@ -1,6 +1,7 @@
 package uz.devops.service.impl;
 
 import java.util.Optional;
+import javax.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -84,5 +85,13 @@ public class OrderServiceImpl implements OrderService {
     public void delete(Long id) {
         log.debug("Request to delete Order : {}", id);
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Order> findOrderById(Long orderId) {
+        log.debug("Request to find order with id: {}", orderId);
+        return Optional
+            .of(orderRepository.findById(orderId))
+            .orElseThrow(() -> new NotFoundException("Order not found with id: " + orderId));
     }
 }

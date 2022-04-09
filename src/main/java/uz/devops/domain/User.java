@@ -16,6 +16,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uz.devops.config.Constants;
+import uz.devops.domain.enumeration.BotState;
 
 /**
  * A user.
@@ -81,6 +82,43 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "reset_date")
     private Instant resetDate = null;
+
+    @Column(name = "chat_id")
+    private String chatId;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "confirmed")
+    private Boolean confirmed = false;
+
+    @Column(name = "tg_username")
+    private String tgUsername;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state")
+    private BotState state;
+
+    @Column(name = "confirmed_date")
+    private Instant confirmedDate;
+
+    @Column(name = "temp_table_id")
+    private Long tempTableId;
+
+    @Column(name = "busy")
+    private Boolean busy = false;
+
+    @Column(name = "free_table_id")
+    private Long extraTableId;
+
+    @Column(name = "professions")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_profession",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "profession_name")
+    )
+    private Set<Profession> professions = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
@@ -198,6 +236,86 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.authorities = authorities;
     }
 
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public String getTgUsername() {
+        return tgUsername;
+    }
+
+    public void setTgUsername(String tgUsername) {
+        this.tgUsername = tgUsername;
+    }
+
+    public BotState getState() {
+        return state;
+    }
+
+    public void setState(BotState state) {
+        this.state = state;
+    }
+
+    public Instant getConfirmedDate() {
+        return confirmedDate;
+    }
+
+    public void setConfirmedDate(Instant confirmedDate) {
+        this.confirmedDate = confirmedDate;
+    }
+
+    public Long getTempTableId() {
+        return tempTableId;
+    }
+
+    public void setTempTableId(Long tempTableId) {
+        this.tempTableId = tempTableId;
+    }
+
+    public Boolean getBusy() {
+        return busy;
+    }
+
+    public void setBusy(Boolean busy) {
+        this.busy = busy;
+    }
+
+    public Long getExtraTableId() {
+        return extraTableId;
+    }
+
+    public void setExtraTableId(Long extraTableId) {
+        this.extraTableId = extraTableId;
+    }
+
+    public Set<Profession> getProfessions() {
+        return professions;
+    }
+
+    public void setProfessions(Set<Profession> professions) {
+        this.professions = professions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -215,18 +333,56 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
-        return "User{" +
-            "login='" + login + '\'' +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", imageUrl='" + imageUrl + '\'' +
-            ", activated='" + activated + '\'' +
-            ", langKey='" + langKey + '\'' +
-            ", activationKey='" + activationKey + '\'' +
-            "}";
+        return (
+            "User{" +
+            "login='" +
+            login +
+            '\'' +
+            ", firstName='" +
+            firstName +
+            '\'' +
+            ", lastName='" +
+            lastName +
+            '\'' +
+            ", email='" +
+            email +
+            '\'' +
+            ", imageUrl='" +
+            imageUrl +
+            '\'' +
+            ", activated='" +
+            activated +
+            '\'' +
+            ", langKey='" +
+            langKey +
+            '\'' +
+            ", activationKey='" +
+            activationKey +
+            '\'' +
+            ", chatId='" +
+            chatId +
+            '\'' +
+            ", phoneNumber='" +
+            phoneNumber +
+            '\'' +
+            ", confirmed=" +
+            confirmed +
+            ", tgUsername='" +
+            tgUsername +
+            '\'' +
+            ", state=" +
+            state +
+            ", confirmedDate=" +
+            confirmedDate +
+            ", tempTableId=" +
+            tempTableId +
+            ", busy=" +
+            busy +
+            ", extraTableId=" +
+            extraTableId +
+            "}"
+        );
     }
 }

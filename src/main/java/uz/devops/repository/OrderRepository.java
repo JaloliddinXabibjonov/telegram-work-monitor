@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uz.devops.domain.Order;
+import uz.devops.domain.enumeration.OrderStatus;
 
 /**
  * Spring Data SQL repository for the Order entity.
@@ -37,4 +39,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("select jhiOrder from Order jhiOrder left join fetch jhiOrder.job where jhiOrder.id =:id")
     Optional<Order> findOneWithToOneRelationships(@Param("id") Long id);
+
+    List<Order> findAllByStatus(@Param("status") OrderStatus status);
+
+    List<Order> findAllByChatIdAndStatusIsNotLike(@Param("chatId") String chatId, @Param("status") OrderStatus status);
 }

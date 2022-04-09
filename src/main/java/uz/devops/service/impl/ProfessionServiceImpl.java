@@ -52,7 +52,7 @@ public class ProfessionServiceImpl implements ProfessionService {
         log.debug("Request to partially update Profession : {}", professionDTO);
 
         return professionRepository
-            .findById(professionDTO.getId())
+            .findById(professionDTO.getName())
             .map(existingProfession -> {
                 professionMapper.partialUpdate(existingProfession, professionDTO);
 
@@ -68,17 +68,16 @@ public class ProfessionServiceImpl implements ProfessionService {
         log.debug("Request to get all Professions");
         return professionRepository.findAll(pageable).map(professionMapper::toDto);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<ProfessionDTO> findOne(Long id) {
-        log.debug("Request to get Profession : {}", id);
-        return professionRepository.findById(id).map(professionMapper::toDto);
-    }
-
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Profession : {}", id);
-        professionRepository.deleteById(id);
-    }
+    //    @Override
+    //    @Transactional(readOnly = true)
+    //    public Optional<ProfessionDTO> findOne(String name) {
+    //        log.debug("Request to get Profession : {}", name);
+    //        return professionRepository.findById(name).map(professionMapper::toDto);
+    //    }
+    //
+    //    @Override
+    //    public void delete(String id) {
+    //        log.debug("Request to delete Profession : {}", id);
+    //        professionRepository.deleteById(name);
+    //    }
 }

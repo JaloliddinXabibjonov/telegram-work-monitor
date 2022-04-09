@@ -40,19 +40,18 @@ public interface ProfessionService {
      * @return the list of entities.
      */
     Page<ProfessionDTO> findAll(Pageable pageable);
-
     /**
      * Get the "id" profession.
      *
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<ProfessionDTO> findOne(Long id);
-
-    /**
-     * Delete the "id" profession.
-     *
-     * @param id the id of the entity.
-     */
-    void delete(Long id);
+    //    Optional<ProfessionDTO> findOne(Long id);
+    //
+    //    /**
+    //     * Delete the "id" profession.
+    //     *
+    //     * @param id the id of the entity.
+    //     */
+    //    void delete(Long id);
 }

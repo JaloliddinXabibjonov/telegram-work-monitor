@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -19,18 +20,13 @@ public class Profession implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    @Column(name = "id")
-    private Long id;
-
     /**
      * Наименование
      */
     @NotNull
     @Size(min = 3, max = 128)
-    @Column(name = "name", length = 128, nullable = false)
+    @Id
+    @Column(name = "name", length = 128)
     private String name;
 
     /**
@@ -45,19 +41,6 @@ public class Profession implements Serializable {
     private Set<Task> tasks = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public Profession id(Long id) {
-        this.setId(id);
-        return this;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return this.name;
@@ -120,13 +103,10 @@ public class Profession implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Profession)) {
-            return false;
-        }
-        return id != null && id.equals(((Profession) o).id);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Profession that = (Profession) o;
+        return name.equals(that.name);
     }
 
     @Override
@@ -139,7 +119,6 @@ public class Profession implements Serializable {
     @Override
     public String toString() {
         return "Profession{" +
-            "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             "}";

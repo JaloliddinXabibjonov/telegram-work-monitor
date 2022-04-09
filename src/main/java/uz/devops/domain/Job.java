@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -15,7 +16,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "job")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Job implements Serializable {
+public class Job extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

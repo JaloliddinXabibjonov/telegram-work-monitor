@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -13,11 +14,17 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import tech.jhipster.security.RandomUtil;
 import uz.devops.config.Constants;
 import uz.devops.domain.Authority;
+import uz.devops.domain.Profession;
+import uz.devops.domain.Task;
 import uz.devops.domain.User;
+import uz.devops.domain.enumeration.BotState;
 import uz.devops.repository.AuthorityRepository;
+import uz.devops.repository.ProfessionRepository;
+import uz.devops.repository.TaskRepository;
 import uz.devops.repository.UserRepository;
 import uz.devops.security.AuthoritiesConstants;
 import uz.devops.security.SecurityUtils;
@@ -39,17 +46,25 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
+    private final ProfessionRepository professionRepository;
+
+    private final TaskRepository taskRepository;
+
     private final CacheManager cacheManager;
 
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
+        ProfessionRepository professionRepository,
+        TaskRepository taskRepository,
         CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.professionRepository = professionRepository;
+        this.taskRepository = taskRepository;
         this.cacheManager = cacheManager;
     }
 
@@ -321,5 +336,79 @@ public class UserService {
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
+    }
+
+    public Optional<User> findByChatId(Long chatId) {
+        log.debug("Request to find user with chatId: {}", chatId);
+        return Optional
+            .ofNullable(userRepository.findByChatId(String.valueOf(chatId)))
+            .orElseThrow(() -> new NotFoundException("User not found with id: " + chatId));
+    }
+
+    public void changeUserFields(User user, BotState botState, Long taskId) {
+        log.info("Request to change user with id: {} state: {} and editTaskId: {}", user.getId(), botState, taskId);
+        user.setState(botState);
+        user.setTempTableId(taskId);
+        userRepository.save(user);
+    }
+
+    public User createNewUser(Message message) {
+        log.info("Request to create new user with message: {}", message);
+        User user = new User();
+        user.setFirstName(message.getFrom().getFirstName());
+        user.setPhoneNumber(message.getContact().getPhoneNumber());
+        user.setChatId(String.valueOf(message.getChatId()));
+        user.setTgUsername(message.getFrom().getUserName());
+        user.setCreatedDate(Instant.now());
+        return userRepository.save(user);
+    }
+
+    public List<User> checkAvailableUsers(Long taskId) {
+        log.debug("Request to check task with id: {}", taskId);
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new NotFoundException("Task not found with id: " + taskId));
+
+        return userRepository
+            .findAll()
+            .stream()
+            .filter(user ->
+                task
+                    .getProfessions()
+                    .stream()
+                    .anyMatch(taskProfession -> user.getProfessions().stream().anyMatch(taskProfession::equals) && !user.getBusy())
+            )
+            .collect(Collectors.toList());
+    }
+
+    public User save(User userDTO) {
+        User user = new User();
+        user.setChatId(user.getChatId());
+        user.setFirstName(userDTO.getFirstName());
+        user.setTgUsername(userDTO.getTgUsername());
+
+        return userRepository.save(user);
+    }
+
+    public void addProfessionToUser(String profName, User user) {
+        Optional<Profession> professionOptional = professionRepository.findById(profName);
+        if (professionOptional.isEmpty()) {
+            log.debug("Profession not found with name: {}", profName);
+            return;
+        }
+        var list = new ArrayList<>(Collections.singletonList(professionOptional.get()));
+        if (user.getProfessions() != null) {
+            list.addAll(user.getProfessions());
+        }
+        user.setProfessions(new HashSet<>(list));
+        userRepository.save(user);
+    }
+
+    public void checkUserProfession(String data, Long userId) {
+        userRepository
+            .findById(userId)
+            .ifPresent(user -> {
+                if (!user.getProfessions().removeIf(profession -> Objects.equals(profession.getName(), data))) {
+                    addProfessionToUser(data, user);
+                }
+            });
     }
 }

@@ -1,6 +1,6 @@
 package uz.devops.service.impl;
 
-import java.util.Optional;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.devops.domain.Task;
+import uz.devops.repository.ProfessionRepository;
 import uz.devops.repository.TaskRepository;
 import uz.devops.service.TaskService;
 import uz.devops.service.dto.TaskDTO;
@@ -24,10 +25,13 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    private final ProfessionRepository professionRepository;
+
     private final TaskMapper taskMapper;
 
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper) {
+    public TaskServiceImpl(TaskRepository taskRepository, ProfessionRepository professionRepository, TaskMapper taskMapper) {
         this.taskRepository = taskRepository;
+        this.professionRepository = professionRepository;
         this.taskMapper = taskMapper;
     }
 
@@ -84,5 +88,32 @@ public class TaskServiceImpl implements TaskService {
     public void delete(Long id) {
         log.debug("Request to delete Task : {}", id);
         taskRepository.deleteById(id);
+    }
+
+    @Override
+    public void addProfessionToTask(String profName, Task task) {
+        var professionOptional = professionRepository.findById(profName);
+        if (professionOptional.isEmpty()) {
+            return;
+        }
+        var list = new ArrayList<>(Collections.singletonList(professionOptional.get()));
+        if (task.getProfessions() != null) {
+            list.addAll(task.getProfessions());
+        }
+        task.setProfessions(new HashSet<>(list));
+        taskRepository.save(task);
+    }
+
+    @Override
+    public void checkTaskProfession(String data, Long taskId) {
+        taskRepository
+            .findById(taskId)
+            .ifPresent(task -> {
+                if (task.getProfessions().removeIf(profession -> Objects.equals(profession.getName(), data))) {
+                    taskRepository.save(task);
+                    return;
+                }
+                addProfessionToTask(data, task);
+            });
     }
 }
