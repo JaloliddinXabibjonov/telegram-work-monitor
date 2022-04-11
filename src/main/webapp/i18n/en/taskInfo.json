@@ -1,0 +1,32 @@
+{
+  "workmonitorApp": {
+    "taskInfo": {
+      "home": {
+        "title": "Task Infos",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Task Info",
+        "createOrEditLabel": "Create or edit a Task Info",
+        "notFound": "No Task Infos found"
+      },
+      "created": "A new Task Info is created with identifier {{ param }}",
+      "updated": "A Task Info is updated with identifier {{ param }}",
+      "deleted": "A Task Info is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Task Info {{ id }}?"
+      },
+      "detail": {
+        "title": "Task Info"
+      },
+      "id": "ID",
+      "price": "Price",
+      "status": "Status",
+      "description": "Description",
+      "task": "Task",
+      "order": "Order",
+      "help": {
+        "price": "Цена заказа",
+        "description": "Описание заказа"
+      }
+    }
+  }
+}

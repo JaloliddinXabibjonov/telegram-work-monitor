@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <!--
+        Added the entity constraints User.
+    -->
+    <changeSet id="added_entity_constraints_user" author="asliddin">
+
+        <addForeignKeyConstraint baseColumnNames="profession_name"
+                                 baseTableName="user_profession"
+                                 constraintName="fk_profession_name"
+                                 referencedColumnNames="name"
+                                 referencedTableName="profession"/>
+
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_profession"
+                                 constraintName="fk_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+    </changeSet>
+</databaseChangeLog>

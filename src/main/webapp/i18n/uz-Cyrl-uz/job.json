@@ -1,0 +1,29 @@
+{
+  "workmonitorApp": {
+    "job": {
+      "home": {
+        "title": "Jobs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Янги Job қўшиш",
+        "createOrEditLabel": "Jobни таҳрирлаш",
+        "notFound": "No Jobs found"
+      },
+      "created": "Job {{ param }} билан қўшилди.",
+      "updated": "{{ param }}- Job сақланди.",
+      "deleted": "{{ param }}- Job ўчирилди.",
+      "delete": {
+        "question": "{{ id }}- Jobни ўчирмоқчимисиз? "
+      },
+      "detail": {
+        "title": "Job"
+      },
+      "id": "ID",
+      "name": "Name",
+      "task": "Task",
+      "order": "Order",
+      "help": {
+        "name": "Наименование"
+      }
+    }
+  }
+}

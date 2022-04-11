@@ -7,7 +7,7 @@ export interface IEntityConfig {
 
   openView<T>(model: T): void;
 
-  openDelete(id: number): void;
+  openDelete(id: number | string): void;
 
   openHistory(id: number): void;
 }

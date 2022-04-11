@@ -1,0 +1,11 @@
+id;price;status;description
+1;71246;NEW;../fake-data/blob/hipster.txt
+2;34195;TO_DO;../fake-data/blob/hipster.txt
+3;76535;INACTIVE;../fake-data/blob/hipster.txt
+4;52458;INACTIVE;../fake-data/blob/hipster.txt
+5;67607;DOING;../fake-data/blob/hipster.txt
+6;41775;DONE;../fake-data/blob/hipster.txt
+7;5050;DOING;../fake-data/blob/hipster.txt
+8;85081;DOING;../fake-data/blob/hipster.txt
+9;16881;NEW;../fake-data/blob/hipster.txt
+10;56721;TO_DO;../fake-data/blob/hipster.txt

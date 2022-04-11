@@ -1,0 +1,31 @@
+{
+  "workmonitorApp": {
+    "task": {
+      "home": {
+        "title": "Tasks",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Янги Task қўшиш",
+        "createOrEditLabel": "Taskни таҳрирлаш",
+        "notFound": "No Tasks found"
+      },
+      "created": "Task {{ param }} билан қўшилди.",
+      "updated": "{{ param }}- Task сақланди.",
+      "deleted": "{{ param }}- Task ўчирилди.",
+      "delete": {
+        "question": "{{ id }}- Taskни ўчирмоқчимисиз? "
+      },
+      "detail": {
+        "title": "Task"
+      },
+      "id": "ID",
+      "name": "Name",
+      "status": "Status",
+      "profession": "Profession",
+      "job": "Job",
+      "taskInfo": "Task Info",
+      "help": {
+        "name": "Наименование"
+      }
+    }
+  }
+}
