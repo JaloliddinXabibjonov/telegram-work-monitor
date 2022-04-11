@@ -28,8 +28,7 @@
     },
     {
       "fieldName": "status",
-      "fieldType": "OrderStatus",
-      "fieldValues": "TO_DO,DOING,DONE"
+      "fieldType": "Status"
     },
     {
       "fieldName": "description",

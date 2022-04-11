@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
 import uz.devops.domain.Order;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
@@ -45,7 +45,7 @@ public class RejectOrder implements Processor {
         }
 
         Order order = optionalOrder.get();
-        order.setStatus(OrderStatus.TO_DO);
+        order.setStatus(Status.TO_DO);
         order.setEmployee(null);
         order.setStartedDate(null);
         order.setChatId(null);

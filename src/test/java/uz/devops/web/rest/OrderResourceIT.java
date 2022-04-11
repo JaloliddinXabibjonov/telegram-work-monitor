@@ -21,16 +21,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import uz.devops.IntegrationTest;
 import uz.devops.domain.Job;
 import uz.devops.domain.Order;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.service.OrderService;
 import uz.devops.service.dto.OrderDTO;
@@ -57,8 +55,8 @@ class OrderResourceIT {
     private static final String DEFAULT_EMPLOYEE = "AAAAAAAAAA";
     private static final String UPDATED_EMPLOYEE = "BBBBBBBBBB";
 
-    private static final OrderStatus DEFAULT_STATUS = OrderStatus.TO_DO;
-    private static final OrderStatus UPDATED_STATUS = OrderStatus.DOING;
+    private static final Status DEFAULT_STATUS = Status.TO_DO;
+    private static final Status UPDATED_STATUS = Status.DOING;
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
@@ -107,7 +105,6 @@ class OrderResourceIT {
             .price(DEFAULT_PRICE)
             .chatId(DEFAULT_CHAT_ID)
             .employee(DEFAULT_EMPLOYEE)
-            .status(DEFAULT_STATUS)
             .description(DEFAULT_DESCRIPTION)
             .startedDate(DEFAULT_STARTED_DATE)
             .endDate(DEFAULT_END_DATE);

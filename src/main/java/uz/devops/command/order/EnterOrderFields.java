@@ -30,7 +30,7 @@ public class EnterOrderFields implements Processor {
         userRepository
             .findByChatId(String.valueOf(message.getChatId()))
             .ifPresent(user -> {
-                Task availableTask = jobService.getAvailableTask(jobId);
+                Task availableTask = jobService.getAvailableTask(jobId).getData();
 
                 user.setState(ENTER_ORDER_DESCRIPTION);
                 user.setTempTableId(jobId);

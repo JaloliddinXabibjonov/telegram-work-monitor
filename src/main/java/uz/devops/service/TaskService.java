@@ -4,6 +4,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import uz.devops.domain.Task;
+import uz.devops.domain.TaskInfo;
 import uz.devops.service.dto.TaskDTO;
 
 /**
@@ -68,4 +69,8 @@ public interface TaskService {
     void addProfessionToTask(String profName, Task task);
 
     void checkTaskProfession(String data, Long taskId);
+
+    TaskInfo findTaskInfoByTaskId(Long taskId);
+
+    void addTaskToTaskInfo(TaskInfo taskInfo, Long taskId);
 }

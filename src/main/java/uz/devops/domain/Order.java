@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.enumeration.Status;
 
 /**
  * Заказы на работу
@@ -16,7 +17,7 @@ import uz.devops.domain.enumeration.OrderStatus;
 @Entity
 @Table(name = "jhi_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Order implements Serializable {
+public class Order extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,7 +49,7 @@ public class Order implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private OrderStatus status;
+    private Status status;
 
     /**
      * Описание заказа
@@ -136,16 +137,16 @@ public class Order implements Serializable {
         this.employee = employee;
     }
 
-    public OrderStatus getStatus() {
+    public Status getStatus() {
         return this.status;
     }
 
-    public Order status(OrderStatus status) {
+    public Order status(Status status) {
         this.setStatus(status);
         return this;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -4,6 +4,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import uz.devops.command.SimpleResultData;
 import uz.devops.domain.Job;
 import uz.devops.domain.Order;
 import uz.devops.domain.Task;
@@ -60,7 +61,7 @@ public interface JobService {
      */
     void delete(Long id);
 
-    Task getAvailableTask(Long jobId);
+    SimpleResultData<Task> getAvailableTask(Long jobId);
 
     Job createNewJob(Message message);
 

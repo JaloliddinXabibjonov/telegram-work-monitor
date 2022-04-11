@@ -44,12 +44,12 @@ public class TaskInfo implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "taskInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "professions", "job", "taskInfo" }, allowSetters = true)
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(mappedBy = "taskInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "job", "taskInfo" }, allowSetters = true)
     private Set<Order> orders = new HashSet<>();
@@ -113,61 +113,15 @@ public class TaskInfo implements Serializable {
     }
 
     public void setTasks(Set<Task> tasks) {
-        if (this.tasks != null) {
-            this.tasks.forEach(i -> i.setTaskInfo(null));
-        }
-        if (tasks != null) {
-            tasks.forEach(i -> i.setTaskInfo(this));
-        }
         this.tasks = tasks;
     }
 
-    public TaskInfo tasks(Set<Task> tasks) {
-        this.setTasks(tasks);
-        return this;
-    }
-
-    public TaskInfo addTask(Task task) {
-        this.tasks.add(task);
-        task.setTaskInfo(this);
-        return this;
-    }
-
-    public TaskInfo removeTask(Task task) {
-        this.tasks.remove(task);
-        task.setTaskInfo(null);
-        return this;
-    }
-
     public Set<Order> getOrders() {
-        return this.orders;
+        return orders;
     }
 
     public void setOrders(Set<Order> orders) {
-        if (this.orders != null) {
-            this.orders.forEach(i -> i.setTaskInfo(null));
-        }
-        if (orders != null) {
-            orders.forEach(i -> i.setTaskInfo(this));
-        }
         this.orders = orders;
-    }
-
-    public TaskInfo orders(Set<Order> orders) {
-        this.setOrders(orders);
-        return this;
-    }
-
-    public TaskInfo addOrder(Order order) {
-        this.orders.add(order);
-        order.setTaskInfo(this);
-        return this;
-    }
-
-    public TaskInfo removeOrder(Order order) {
-        this.orders.remove(order);
-        order.setTaskInfo(null);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -17,7 +17,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
 import uz.devops.domain.Order;
-import uz.devops.domain.enumeration.OrderStatus;
 import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.repository.TaskRepository;
@@ -59,7 +58,7 @@ public class GetOrder implements Processor {
         }
 
         order.setChatId(String.valueOf(message.getChatId()));
-        order.setStatus(OrderStatus.DOING);
+        order.setStatus(Status.DOING);
         order.setEmployee(message.getChat().getUserName());
         order.setStartedDate(Instant.now());
         orderRepository.save(order);

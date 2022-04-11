@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import uz.devops.command.SimpleResultData;
 import uz.devops.domain.Job;
 import uz.devops.domain.Order;
 import uz.devops.domain.Task;
@@ -90,12 +91,29 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Task getAvailableTask(Long jobId) {
+    public SimpleResultData<Task> getAvailableTask(Long jobId) {
         log.debug("Request to find job with id: {}", jobId);
         Optional<Job> optionalJob = jobRepository.findById(jobId);
-        Job job = optionalJob.get();
 
-        return job.getTasks().stream().filter(task -> task.getStatus().equals(Status.NEW)).min(Comparator.comparing(Task::getId)).get();
+        if (optionalJob.isEmpty()) {
+            log.debug("Job not found with id: {}", jobId);
+            return new SimpleResultData<>("Job not found with id: " + jobId, false);
+        }
+
+        Job job = optionalJob.get();
+        Optional<Task> optionalTask = job
+            .getTasks()
+            .stream()
+            .filter(task -> task.getStatus().equals(Status.NEW))
+            .min(Comparator.comparing(Task::getId));
+
+        if (optionalTask.isEmpty()) {
+            log.debug("Available task not found with job id: {}", jobId);
+            return new SimpleResultData<>("Available task not found with job id: " + jobId, false);
+        }
+
+        log.debug("Available task: {}", optionalTask.get());
+        return new SimpleResultData<>("Available task: " + optionalTask.get(), true, optionalTask.get());
     }
 
     @Override

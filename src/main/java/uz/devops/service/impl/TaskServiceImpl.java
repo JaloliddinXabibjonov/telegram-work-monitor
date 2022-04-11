@@ -1,6 +1,7 @@
 package uz.devops.service.impl;
 
 import java.util.*;
+import javax.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -8,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.devops.domain.Task;
+import uz.devops.domain.TaskInfo;
 import uz.devops.repository.ProfessionRepository;
+import uz.devops.repository.TaskInfoRepository;
 import uz.devops.repository.TaskRepository;
 import uz.devops.service.TaskService;
 import uz.devops.service.dto.TaskDTO;
@@ -27,11 +30,19 @@ public class TaskServiceImpl implements TaskService {
 
     private final ProfessionRepository professionRepository;
 
+    private final TaskInfoRepository taskInfoRepository;
+
     private final TaskMapper taskMapper;
 
-    public TaskServiceImpl(TaskRepository taskRepository, ProfessionRepository professionRepository, TaskMapper taskMapper) {
+    public TaskServiceImpl(
+        TaskRepository taskRepository,
+        ProfessionRepository professionRepository,
+        TaskInfoRepository taskInfoRepository,
+        TaskMapper taskMapper
+    ) {
         this.taskRepository = taskRepository;
         this.professionRepository = professionRepository;
+        this.taskInfoRepository = taskInfoRepository;
         this.taskMapper = taskMapper;
     }
 
@@ -115,5 +126,32 @@ public class TaskServiceImpl implements TaskService {
                 }
                 addProfessionToTask(data, task);
             });
+    }
+
+    @Override
+    public TaskInfo findTaskInfoByTaskId(Long taskId) {
+        return taskInfoRepository
+            .findAll()
+            .stream()
+            .filter(taskInfo -> taskInfo.getTasks().stream().anyMatch(task -> task.getId().equals(taskId)))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException("Task Info not found with taskId: " + taskId));
+    }
+
+    @Override
+    public void addTaskToTaskInfo(TaskInfo taskInfo, Long taskId) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if (optionalTask.isEmpty()) {
+            return;
+        }
+        Task task = optionalTask.get();
+
+        if (taskInfo.getTasks() != null) {
+            taskInfo.getTasks().add(task);
+            taskInfoRepository.save(taskInfo);
+        } else {
+            taskInfo.setTasks(Set.of(task));
+            taskInfoRepository.save(taskInfo);
+        }
     }
 }

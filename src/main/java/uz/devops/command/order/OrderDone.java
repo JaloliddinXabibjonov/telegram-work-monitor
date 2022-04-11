@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
@@ -38,7 +38,7 @@ public class OrderDone implements Processor {
         orderService
             .findOrderById(orderId)
             .ifPresent(order -> {
-                order.setStatus(OrderStatus.DONE);
+                order.setStatus(Status.DONE);
                 order.setEndDate(Instant.now());
                 orderRepository.save(order);
 

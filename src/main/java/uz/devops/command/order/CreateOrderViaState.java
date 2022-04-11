@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
 import uz.devops.domain.Order;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.JobService;
@@ -37,7 +37,7 @@ public class CreateOrderViaState implements Processor {
                 if (user.getState() != null && user.getState().equals(ENTER_ORDER_DESCRIPTION)) {
                     Order order = new Order();
                     order.setDescription(message.getText());
-                    order.setStatus(OrderStatus.TO_DO);
+                    order.setStatus(Status.TO_DO);
                     orderRepository.save(order);
 
                     jobService.addOrderToJob(user.getTempTableId(), order);

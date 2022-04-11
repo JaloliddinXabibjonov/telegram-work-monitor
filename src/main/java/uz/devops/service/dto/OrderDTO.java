@@ -5,8 +5,9 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 import javax.persistence.Lob;
-import javax.validation.constraints.*;
-import uz.devops.domain.enumeration.OrderStatus;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import uz.devops.domain.enumeration.Status;
 
 /**
  * A DTO for the {@link uz.devops.domain.Order} entity.
@@ -34,7 +35,7 @@ public class OrderDTO implements Serializable {
 
     private String employee;
 
-    private OrderStatus status;
+    private Status status;
 
     /**
      * Описание заказа
@@ -89,11 +90,11 @@ public class OrderDTO implements Serializable {
         this.employee = employee;
     }
 
-    public OrderStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
