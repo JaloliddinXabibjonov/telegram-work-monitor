@@ -54,7 +54,11 @@ public final class BotUtils {
     }
 
     public Long getOrderIdFromText(String text) {
-        return Long.parseLong(text.substring(text.indexOf("Buyurtma  #") + 11, text.indexOf("\n\n")));
+        return Long.parseLong(text.substring(text.indexOf("Buyurtma  #") + 11, text.indexOf("Info  #") - 1));
+    }
+
+    public Long getTaskInfoIdFromText(String text) {
+        return Long.parseLong(text.substring(text.indexOf("Info  #") + 7, text.indexOf("\n\n")));
     }
 
     // ------>  KEYBOARDS
@@ -76,14 +80,13 @@ public final class BotUtils {
         if (Objects.equals(String.valueOf(chatId), ADMIN_1_CHAT_ID)) {
             KeyboardRow keyboardRow1 = newKeyboardRow(CREATE_NEW_JOB.getCommandName());
             keyboardRow1.add(CREATE_NEW_ORDER.getCommandName());
-            //            keyboardRow1.add(CREATE_NEW_TASK.getCommandName());
             keyboardRowList.add(keyboardRow1);
 
             KeyboardRow keyboardRow2 = newKeyboardRow(REVIEW_JOB.getCommandName());
-            //            keyboardRow2.add(REVIEW_TASK.getCommandName());
             keyboardRowList.add(keyboardRow2);
             //            keyboardRowList.add(newKeyboardRow(PIPELINE.getCommandName()));
         }
+        //        keyboardRowList.add(newKeyboardRow(MENU.getCommandName()));
 
         keyboardMarkup.setKeyboard(keyboardRowList);
         keyboardMarkup.setResizeKeyboard(true);

@@ -19,9 +19,9 @@ import uz.devops.command.Processor;
 import uz.devops.domain.Order;
 import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
-import uz.devops.repository.TaskRepository;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
+import uz.devops.service.TaskService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
 
@@ -33,15 +33,15 @@ public class GetOrder implements Processor {
     private final MessageSenderService messageSenderService;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final TaskRepository taskRepository;
     private final MessageUtils messageUtils;
+    private final TaskService taskService;
     private final BotUtils botUtils;
 
     @Override
     public void execute(Update update) {
         Message message = update.getCallbackQuery().getMessage();
-        Long taskId = botUtils.getAnyIdFromText(message.getText());
         Long orderId = botUtils.getOrderIdFromText(message.getText());
+        Long taskInfoId = botUtils.getTaskInfoIdFromText(message.getText());
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
         if (optionalOrder.isEmpty()) {
@@ -63,13 +63,7 @@ public class GetOrder implements Processor {
         order.setStartedDate(Instant.now());
         orderRepository.save(order);
 
-        taskRepository
-            .findById(taskId)
-            .ifPresent(task -> {
-                task.setStatus(Status.DOING);
-                taskRepository.save(task);
-            });
-
+        taskService.changeTaskStatus(taskInfoId);
         userRepository
             .findByChatId(String.valueOf(message.getChatId()))
             .ifPresent(user -> {
@@ -84,7 +78,16 @@ public class GetOrder implements Processor {
             )
         );
 
-        messageSenderService.sendEditMessage(message.getChatId(), messageUtils.testTaskInfo(order), message.getMessageId(), markupInline);
-        messageSenderService.sendMessageForAdmin(List.of(ADMIN_1_CHAT_ID), messageUtils.getTaskInfoAfterTook(order), null);
+        messageSenderService.sendEditMessage(
+            message.getChatId(),
+            messageUtils.testTaskInfo(order, taskService.findTaskInfoById(taskInfoId)),
+            message.getMessageId(),
+            markupInline
+        );
+        messageSenderService.sendMessageForAdmin(
+            List.of(ADMIN_1_CHAT_ID),
+            messageUtils.getTaskInfoAfterTook(order, taskService.findTaskInfoById(taskInfoId)),
+            null
+        );
     }
 }

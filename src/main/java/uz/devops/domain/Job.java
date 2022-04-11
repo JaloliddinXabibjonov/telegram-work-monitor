@@ -34,12 +34,12 @@ public class Job extends AbstractAuditingEntity implements Serializable {
     @Column(name = "name", length = 128, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "job")
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "professions", "job" }, allowSetters = true)
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(mappedBy = "job")
+    @OneToMany(mappedBy = "job", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "job" }, allowSetters = true)
     private Set<Order> orders = new HashSet<>();

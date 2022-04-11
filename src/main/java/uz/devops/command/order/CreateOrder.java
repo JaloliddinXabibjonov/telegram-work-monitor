@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
-import uz.devops.repository.JobRepository;
+import uz.devops.service.JobService;
 import uz.devops.service.MessageSenderService;
 import uz.devops.utils.MessageUtils;
 
@@ -19,19 +19,23 @@ import uz.devops.utils.MessageUtils;
 public class CreateOrder implements Processor {
 
     private final MessageSenderService messageSenderService;
-    private final JobRepository jobRepository;
+    private final JobService jobService;
     private final MessageUtils messageUtils;
 
     @Override
     public void execute(Update update) {
         var markupInline = newInlineKeyboardMarkup(List.of(newInlineKeyboardButton("Order  ➕", CREATE_ORDER.getCommandName())));
 
-        if (jobRepository.findAll().isEmpty()) {
+        var availableJobs = jobService.findAvailableJobs();
+
+        if (availableJobs.getSuccess().equals(Boolean.FALSE)) {
             messageSenderService.sendMessage(update.getMessage().getChatId(), NO_WORKS_YET, null);
             return;
         }
-        jobRepository
-            .findAll()
+
+        jobService
+            .findAvailableJobs()
+            .getData()
             .forEach(job -> messageSenderService.sendMessage(update.getMessage().getChatId(), messageUtils.getJobs(job), markupInline));
     }
 }

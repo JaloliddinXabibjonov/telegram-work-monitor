@@ -8,27 +8,25 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import uz.devops.domain.Job;
-import uz.devops.domain.Order;
-import uz.devops.domain.Task;
-import uz.devops.domain.User;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.*;
+import uz.devops.domain.enumeration.Status;
 
 @Service
 public class MessageUtils {
 
     private final BotUtils botUtils;
 
-    Map<OrderStatus, String> taskStatusStringMap;
+    Map<Status, String> taskStatusStringMap;
 
     public MessageUtils(BotUtils botUtils) {
         this.botUtils = botUtils;
         taskStatusStringMap =
             ImmutableMap
-                .<OrderStatus, String>builder()
-                .put(OrderStatus.TO_DO, PURPLE_ROUND_ICON)
-                .put(OrderStatus.DOING, BLUE_ROUND_ICON)
-                .put(OrderStatus.DONE, CONFIRM_ICON)
+                .<Status, String>builder()
+                .put(Status.TO_DO, PURPLE_ROUND_ICON)
+                .put(Status.NEW, PURPLE_ROUND_ICON)
+                .put(Status.DOING, BLUE_ROUND_ICON)
+                .put(Status.DONE, CONFIRM_ICON)
                 //                .put(TaskStatus.PAUSED, ORANGE_ROUND_ICON)
                 //                .put(TaskStatus.REJECTED, GREEN_ROUND_ICON)
                 .build();
@@ -102,7 +100,7 @@ public class MessageUtils {
         );
     }
 
-    public String getAboutMyTask(Order order) {
+    public String getAboutMyTask(Order order, TaskInfo taskInfo) {
         return (
             "<b>Task  #</b>" +
             order.getId() +
@@ -112,7 +110,7 @@ public class MessageUtils {
             "\n" +
             "\n" +
             "\uD83D\uDCB0  " +
-            order.getPrice() +
+            taskInfo.getPrice() +
             "\n" +
             "\uD83D\uDCC6  " +
             botUtils.dateTimeFormatter(order.getStartedDate()) +
@@ -120,7 +118,7 @@ public class MessageUtils {
             botUtils.dateTimeFormatter(order.getEndDate()) +
             "\n" +
             "\uD83D\uDCDC  " +
-            order.getDescription() +
+            taskInfo.getDescription() +
             "\n" +
             EMPLOYEE_MAN_ICON +
             "  @" +
@@ -135,32 +133,57 @@ public class MessageUtils {
         );
     }
 
-    public String getTaskInfo(Order order) {
+    public String getTaskInfo(Order order, TaskInfo taskInfo) {
         return (
             "<b>Buyurtma  #</b>" +
             order.getId() +
             "\n" +
-            "\n" +
-            //                "\uD83D\uDCB0  " + order.getPrice() + "\n" +
-            "\uD83D\uDCDC  " +
-            order.getDescription()
-        );
-    }
-
-    public String testTaskInfo(Order order) {
-        return (
-            "<b>Buyurtma  #</b>" +
-            order.getId() +
+            "<b>Info  #</b>" +
+            taskInfo.getId() +
             "\n" +
             "\n" +
             "\uD83D\uDCB0  " +
-            order.getPrice() +
+            taskInfo.getPrice() +
+            "\n" +
+            "\uD83D\uDCDC  " +
+            taskInfo.getDescription()
+        );
+    }
+
+    public String getOrderInfo(Order order, TaskInfo taskInfo) {
+        return (
+            "<b>Buyurtma  #</b>" +
+            order.getId() +
+            "\n" +
+            "<b>Info  #</b>" +
+            taskInfo.getId() +
+            "\n" +
+            "\n" +
+            "\uD83D\uDCB0  " +
+            taskInfo.getPrice() +
+            "\n" +
+            "\uD83D\uDCDC  " +
+            taskInfo.getDescription()
+        );
+    }
+
+    public String testTaskInfo(Order order, TaskInfo taskInfo) {
+        return (
+            "<b>Buyurtma  #</b>" +
+            order.getId() +
+            "\n" +
+            "<b>Info  #</b>" +
+            taskInfo.getId() +
+            "\n" +
+            "\n" +
+            "\uD83D\uDCB0  " +
+            taskInfo.getPrice() +
             "\n" +
             "\uD83D\uDCC6  " +
             botUtils.dateTimeFormatter(order.getStartedDate()) +
             "\n" +
             "\uD83D\uDCDC  " +
-            order.getDescription() +
+            taskInfo.getDescription() +
             "\n" +
             EMPLOYEE_MAN_ICON +
             "  @" +
@@ -177,39 +200,16 @@ public class MessageUtils {
 
     // NOTIFICATION FOR ADMIN
 
-    public String getTask(Order order) {
-        return (
-            "<b>Buyurtma  #</b>" +
-            order.getId() +
-            "\n" +
-            "\n" +
-            "Nomi:  " +
-            order.getName() +
-            "\n" +
-            "Status:  " +
-            order.getStatus() +
-            "\n" +
-            "Narxi:  " +
-            order.getPrice() +
-            "\n" +
-            "Ish olingan sana:  " +
-            botUtils.dateTimeFormatter(order.getStartedDate()) +
-            "\n" +
-            "Bajaruvchi:  @" +
-            order.getEmployee()
-        );
-    }
-
-    public String getTaskInfoAfterTook(Order order) {
+    public String getTaskInfoAfterTook(Order order, TaskInfo taskInfo) {
         return (
             "Ish olindi  ⚡" +
             "\n" +
             "\n" +
             "\uD83D\uDCB0  " +
-            order.getPrice() +
+            taskInfo.getPrice() +
             "\n" +
             "\uD83D\uDCDC  " +
-            order.getDescription() +
+            taskInfo.getDescription() +
             "\n" +
             "\uD83D\uDCC6  " +
             botUtils.dateTimeFormatter(order.getStartedDate()) +
@@ -249,13 +249,13 @@ public class MessageUtils {
         );
     }
 
-    public String rejectTask(Order order, Message message) {
+    public String rejectTask(Order order, TaskInfo taskInfo, Message message) {
         return (
             "Buyurtma  #" +
             order.getId() +
             "\n" +
             "\n" +
-            order.getDescription() +
+            taskInfo.getDescription() +
             "\n" +
             "@" +
             message.getChat().getUserName() +
@@ -278,23 +278,21 @@ public class MessageUtils {
     public String getJobTasksToEdit(String message, Set<Task> tasks) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Task task : tasks) {
-            stringBuilder.append("<b>").append(task.getId()).append("</b>").append(". ").append(task.getName()).append("\n");
+            stringBuilder
+                .append("<b>")
+                .append(task.getId())
+                .append("</b>")
+                .append(". ")
+                .append(task.getName())
+                .append("  ")
+                .append("  -- ")
+                .append("<b><i>")
+                .append(task.getStatus())
+                .append("</i></b>")
+                .append("  ")
+                .append(taskStatusStringMap.get(task.getStatus()))
+                .append("\n");
         }
         return message + "\n" + "\n" + "<i>Vazifalar</i>: " + "\n" + stringBuilder;
-    }
-
-    public String createOrderForUsers(Order order) {
-        return (
-            "Ish   #" +
-            order.getId() +
-            "  ⚡" +
-            "\n" +
-            "\n" +
-            "\uD83D\uDCB0  " +
-            order.getPrice() +
-            "\n" +
-            "\uD83D\uDCDC  " +
-            order.getDescription()
-        );
     }
 }

@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
 import uz.devops.domain.Order;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.TaskInfo;
+import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.service.MessageSenderService;
+import uz.devops.service.TaskService;
 import uz.devops.utils.MessageUtils;
 
 @RequiredArgsConstructor
@@ -26,13 +28,14 @@ public class GetTaskInfo implements Processor {
     private final MessageSenderService messageSenderService;
     private final MessageUtils messageUtils;
     private final OrderRepository orderRepository;
+    private final TaskService taskService;
 
     @Override
     public void execute(Update update) {
-        List<Order> orders = orderRepository.findAllByStatus(OrderStatus.TO_DO);
+        List<Order> orders = orderRepository.findAllByStatus(Status.TO_DO);
 
         if (orders.isEmpty()) {
-            log.debug("Order not found with status: {}", OrderStatus.TO_DO);
+            log.debug("Order not found with status: {}", Status.TO_DO);
             messageSenderService.sendMessage(update.getMessage().getChatId(), NO_WORKS_YET, null);
             return;
         }
@@ -41,8 +44,13 @@ public class GetTaskInfo implements Processor {
             List.of(newInlineKeyboardButton(GET_ORDER.getCommandName() + EMPLOYEE_MAN_ICON, GET_ORDER.getCommandName()))
         );
 
-        orders.forEach(order ->
-            messageSenderService.sendMessage(update.getMessage().getChatId(), messageUtils.getTaskInfo(order), inlineKeyboardMarkup)
-        );
+        orders.forEach(order -> {
+            TaskInfo taskInfo = taskService.getTaskInfo(order.getId());
+            messageSenderService.sendMessage(
+                update.getMessage().getChatId(),
+                messageUtils.getOrderInfo(order, taskInfo),
+                inlineKeyboardMarkup
+            );
+        });
     }
 }

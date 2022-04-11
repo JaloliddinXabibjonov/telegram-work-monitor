@@ -32,6 +32,7 @@ public enum Command {
     MY_INFO("Mening ma'lumotlarim  ℹ"),
     MY_TASKS("Mening ishlarim  \uD83D\uDD28"),
     PIPELINE("Pipeline"),
+    MENU("Menu"),
     GET_MAIN_KEYBOARDS("get_main_keyboards"),
     GET_TASK("Ishni olish"),
     GET_ORDER("Ishni olish"),

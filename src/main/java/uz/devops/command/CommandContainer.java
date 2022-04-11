@@ -10,9 +10,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.job.*;
 import uz.devops.command.order.*;
 import uz.devops.command.other.*;
-import uz.devops.command.pipeline.Pipeline;
 import uz.devops.command.task.*;
 import uz.devops.command.task.edit.*;
+import uz.devops.command.taskInfo.CreateTaskInfo;
 import uz.devops.command.user.*;
 import uz.devops.domain.enumeration.BotState;
 
@@ -45,24 +45,22 @@ public class CommandContainer {
     private final ChooseTaskToEdit chooseTaskToEdit;
     private final ConfirmTaskProfession confirmTaskProfession;
     private final CreateOrder createOrder;
-    private final EnterOrderFields enterOrderFields;
     private final GetTaskInfo getTaskInfo;
     private final MyTasks myTasks;
     private final GetOrder getOrder;
     private final OrderDone orderDone;
     private final RejectOrder rejectOrder;
     private final ConfirmOrder confirmOrder;
-    private final Pipeline pipeline;
     private final CallToAdmin callToAdmin;
-    private final BackCommand backCommand;
     private final GetMainKeyboards getMainKeyboards;
     private final EditTaskName editTaskName;
     private final EditTaskPrice editTaskPrice;
     private final EditTaskViaState editTaskViaState;
-    private final CreateOrderViaState createOrderViaState;
     private final EditJobName editJobName;
     private final SetRoleToUser setRoleToUser;
     private final SetRoleToTask setRoleToTask;
+    private final CreateTaskInfo createTaskInfo;
+    private final CreateFullOrder createFullOrder;
 
     @PostConstruct
     public void init() {
@@ -97,32 +95,28 @@ public class CommandContainer {
                 .put(CHOOSE_TASK_TO_EDIT.getCommandName(), chooseTaskToEdit)
                 .put(CONFIRM_TASK_PROFESSION.getCommandName(), confirmTaskProfession)
                 .put(CREATE_NEW_ORDER.getCommandName(), createOrder)
-                .put(CREATE_ORDER.getCommandName(), enterOrderFields)
+                .put(CREATE_ORDER.getCommandName(), createFullOrder)
                 .put(EXIST_TASKS.getCommandName(), getTaskInfo)
                 .put(MY_TASKS.getCommandName(), myTasks)
                 .put(GET_ORDER.getCommandName(), getOrder)
                 .put(ORDER_DONE.getCommandName(), orderDone)
                 .put(REJECT_ORDER.getCommandName(), rejectOrder)
                 .put(CONFIRM_ORDER.getCommandName(), confirmOrder)
-                .put(PIPELINE.getCommandName(), pipeline)
                 .put(CALL_TO_ADMIN.getCommandName(), callToAdmin)
-                .put(BACK.getCommandName(), backCommand)
                 .put(GET_MAIN_KEYBOARDS.getCommandName(), getMainKeyboards)
+                .put(MENU.getCommandName(), getMainKeyboards)
                 .build();
 
         stateProcessorMap =
             ImmutableMap
                 .<BotState, Processor>builder()
                 .put(BotState.ENTER_TASK_NAME, createTask)
-                .put(BotState.ENTER_TASK_PRICE, createTask)
-                .put(BotState.ENTER_TASK_EXPIRY, createTask)
-                .put(BotState.ENTER_TASK_DESCRIPTION, createTask)
+                .put(BotState.ENTER_TASK_PRICE, createTaskInfo)
+                .put(BotState.ENTER_TASK_DESCRIPTION, createTaskInfo)
                 .put(BotState.ENTER_TASK_NEW_NAME, editTaskName)
                 .put(BotState.ENTER_TASK_NEW_PRICE, editTaskPrice)
                 .put(BotState.EDIT_TASK, editTaskViaState)
                 .put(BotState.COMPLETED_CREATE_TASK, createTask)
-                .put(BotState.ENTER_ORDER_DESCRIPTION, createOrderViaState)
-                .put(BotState.COMPLETED_ORDER, enterOrderFields)
                 .put(BotState.ENTER_JOB_NAME, createJob)
                 .put(BotState.ENTER_JOB_NEW_NAME, editJobName)
                 .build();

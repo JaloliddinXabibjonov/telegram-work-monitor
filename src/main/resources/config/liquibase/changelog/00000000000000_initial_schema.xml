@@ -18,7 +18,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="login" type="varchar(50)">
-                <constraints unique="true" nullable="false" uniqueConstraintName="ux_user_login"/>
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_user_login"/>
             </column>
             <column name="password_hash" type="varchar(60)"/>
             <column name="first_name" type="varchar(50)"/>
@@ -33,15 +33,23 @@
             <column name="lang_key" type="varchar(10)"/>
             <column name="activation_key" type="varchar(20)"/>
             <column name="reset_key" type="varchar(20)"/>
-            <column name="created_by" type="varchar(50)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="created_by" type="varchar(50)"/>
             <column name="created_date" type="timestamp"/>
             <column name="reset_date" type="timestamp">
                 <constraints nullable="true"/>
             </column>
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
+            <column name="chat_id" type="varchar"/>
+            <column name="phone_number" type="varchar"/>
+            <column name="confirmed" type="boolean" valueBoolean="false"/>
+            <column name="tg_username" type="varchar"/>
+            <column name="state" type="varchar(255)"/>
+            <column name="confirmed_date" type="timestamp"/>
+            <column name="temp_table_id" type="bigint"/>
+            <column name="busy" type="boolean" valueBoolean="false"/>
+            <column name="free_table_id" type="bigint"/>
+
         </createTable>
 
         <createTable tableName="jhi_authority">
@@ -72,9 +80,9 @@
                                  constraintName="fk_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
-        <addNotNullConstraint   columnName="password_hash"
-                                columnDataType="varchar(60)"
-                                tableName="jhi_user"/>
+<!--        <addNotNullConstraint   columnName="password_hash"-->
+<!--                                columnDataType="varchar(60)"-->
+<!--                                tableName="jhi_user"/>-->
         <loadData
                   file="config/liquibase/data/user.csv"
                   separator=";"
@@ -99,6 +107,20 @@
                   usePreparedStatements="true">
             <column name="user_id" type="numeric"/>
         </loadData>
+    </changeSet>
+
+    <changeSet id="relation" author="asliddin">
+
+        <createTable tableName="user_profession">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="profession_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="user_id, profession_name" tableName="user_profession"/>
     </changeSet>
 
     <changeSet author="jhipster" id="00000000000002" context="test">

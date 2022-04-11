@@ -72,5 +72,13 @@ public interface TaskService {
 
     TaskInfo findTaskInfoByTaskId(Long taskId);
 
+    TaskInfo getTaskInfo(Long orderId);
+
+    Task findTaskByInfoId(Long taskInfoId);
+
+    void changeTaskStatus(Long taskInfoId);
+
+    TaskInfo findTaskInfoById(Long taskInfoId);
+
     void addTaskToTaskInfo(TaskInfo taskInfo, Long taskId);
 }

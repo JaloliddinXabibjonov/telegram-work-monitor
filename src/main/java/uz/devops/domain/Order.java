@@ -66,9 +66,12 @@ public class Order extends AbstractAuditingEntity implements Serializable {
     private Instant endDate;
 
     @ManyToOne(optional = false)
-    @NotNull
     @JsonIgnoreProperties(value = { "tasks", "orders" }, allowSetters = true)
     private Job job;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "tasks", "orders" }, allowSetters = true)
+    private TaskInfo taskInfo;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 

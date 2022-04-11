@@ -66,4 +66,6 @@ public interface OrderService {
     void delete(Long id);
 
     Optional<Order> findOrderById(Long orderId);
+
+    void addOrderToTaskInfo(Long orderId, Long taskInfoId);
 }

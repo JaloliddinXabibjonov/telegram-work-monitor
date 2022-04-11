@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import uz.devops.domain.Order;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.enumeration.Status;
 
 /**
  * Spring Data SQL repository for the Order entity.
@@ -40,7 +40,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("select jhiOrder from Order jhiOrder left join fetch jhiOrder.job where jhiOrder.id =:id")
     Optional<Order> findOneWithToOneRelationships(@Param("id") Long id);
 
-    List<Order> findAllByStatus(@Param("status") OrderStatus status);
+    List<Order> findAllByStatus(@Param("status") Status status);
 
-    List<Order> findAllByChatIdAndStatusIsNotLike(@Param("chatId") String chatId, @Param("status") OrderStatus status);
+    List<Order> findAllByChatIdAndStatusIsNotLike(@Param("chatId") String chatId, @Param("status") Status status);
 }

@@ -16,6 +16,8 @@ import uz.devops.command.Processor;
 import uz.devops.domain.User;
 import uz.devops.repository.OrderRepository;
 import uz.devops.service.MessageSenderService;
+import uz.devops.service.OrderService;
+import uz.devops.service.TaskService;
 import uz.devops.service.UserService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
@@ -28,6 +30,8 @@ public class ConfirmOrder implements Processor {
     private final MessageSenderService messageSenderService;
     private final UserService userService;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
+    private final TaskService taskService;
     private final BotUtils botUtils;
     private final MessageUtils messageUtils;
 
@@ -36,7 +40,10 @@ public class ConfirmOrder implements Processor {
         Message message = update.getCallbackQuery().getMessage();
         Long taskId = botUtils.getAnyIdFromText(message.getText());
         Long orderId = botUtils.getOrderIdFromText(message.getText());
+        Long taskInfoId = botUtils.getTaskInfoIdFromText(message.getText());
         List<User> availableUsers = userService.checkAvailableUsers(taskId);
+
+        orderService.addOrderToTaskInfo(orderId, taskInfoId);
 
         if (availableUsers.isEmpty()) {
             log.info("Available users not found");
@@ -58,7 +65,7 @@ public class ConfirmOrder implements Processor {
                 availableUsers.forEach(user ->
                     messageSenderService.sendMessage(
                         Long.valueOf(user.getChatId()),
-                        "Task  #" + taskId + "\n" + messageUtils.getTaskInfo(order),
+                        "Vazifa  #" + taskId + "\n" + messageUtils.getTaskInfo(order, taskService.getTaskInfo(order.getId())),
                         inlineKeyboardMarkup
                     )
                 )

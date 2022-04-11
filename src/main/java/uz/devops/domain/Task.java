@@ -39,7 +39,7 @@ public class Task extends AbstractAuditingEntity implements Serializable {
     @Column(name = "status")
     private Status status;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
         name = "rel_task__profession",
         joinColumns = @JoinColumn(name = "task_id"),
@@ -50,7 +50,6 @@ public class Task extends AbstractAuditingEntity implements Serializable {
     private Set<Profession> professions = new HashSet<>();
 
     @ManyToOne(optional = false)
-    @NotNull
     @JsonIgnoreProperties(value = { "tasks", "orders" }, allowSetters = true)
     private Job job;
 

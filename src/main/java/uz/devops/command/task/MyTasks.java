@@ -15,9 +15,10 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
 import uz.devops.domain.Order;
-import uz.devops.domain.enumeration.OrderStatus;
+import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.service.MessageSenderService;
+import uz.devops.service.TaskService;
 import uz.devops.utils.MessageUtils;
 
 @RequiredArgsConstructor
@@ -28,15 +29,16 @@ public class MyTasks implements Processor {
     private final MessageSenderService messageSenderService;
     private final OrderRepository orderRepository;
     private final MessageUtils messageUtils;
+    private final TaskService taskService;
 
     @Override
     public void execute(Update update) {
         Message message = update.getMessage();
 
-        List<Order> orders = orderRepository.findAllByChatIdAndStatusIsNotLike(String.valueOf(message.getChatId()), OrderStatus.TO_DO);
+        List<Order> orders = orderRepository.findAllByChatIdAndStatusIsNotLike(String.valueOf(message.getChatId()), Status.TO_DO);
 
         if (orders.isEmpty()) {
-            log.debug("Order not found with chatId: {} and status: {}", message.getChatId(), OrderStatus.DOING);
+            log.debug("Order not found with chatId: {} and status: {}", message.getChatId(), Status.DOING);
             messageSenderService.sendMessage(message.getChatId(), USER_WORK_NOT_FOUND, null);
             return;
         }
@@ -50,13 +52,25 @@ public class MyTasks implements Processor {
 
         orders
             .stream()
-            .filter(order -> order.getStatus().equals(OrderStatus.DONE))
+            .filter(order -> order.getStatus().equals(Status.DONE))
             .collect(Collectors.toList())
-            .forEach(order -> messageSenderService.sendMessage(message.getChatId(), messageUtils.getAboutMyTask(order), null));
+            .forEach(order ->
+                messageSenderService.sendMessage(
+                    message.getChatId(),
+                    messageUtils.getAboutMyTask(order, taskService.getTaskInfo(order.getId())),
+                    null
+                )
+            );
 
         orders
             .stream()
-            .filter(order -> order.getStatus().equals(OrderStatus.DOING))
-            .forEach(order -> messageSenderService.sendMessage(message.getChatId(), messageUtils.testTaskInfo(order), markupInline));
+            .filter(order -> order.getStatus().equals(Status.DOING))
+            .forEach(order ->
+                messageSenderService.sendMessage(
+                    message.getChatId(),
+                    messageUtils.testTaskInfo(order, taskService.getTaskInfo(order.getId())),
+                    markupInline
+                )
+            );
     }
 }

@@ -19,6 +19,7 @@ import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
+import uz.devops.service.TaskService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
 
@@ -28,6 +29,7 @@ import uz.devops.utils.MessageUtils;
 public class RejectOrder implements Processor {
 
     private final MessageSenderService messageSenderService;
+    private final TaskService taskService;
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final BotUtils botUtils;
@@ -64,10 +66,14 @@ public class RejectOrder implements Processor {
 
         messageSenderService.sendEditMessage(
             message.getChatId(),
-            messageUtils.getTaskInfo(order),
+            messageUtils.getTaskInfo(order, taskService.getTaskInfo(order.getId())),
             message.getMessageId(),
             inlineKeyboardMarkup
         );
-        messageSenderService.sendMessageForAdmin(List.of(ADMIN_1_CHAT_ID), messageUtils.rejectTask(order, message), null);
+        messageSenderService.sendMessageForAdmin(
+            List.of(ADMIN_1_CHAT_ID),
+            messageUtils.rejectTask(order, taskService.getTaskInfo(order.getId()), message),
+            null
+        );
     }
 }

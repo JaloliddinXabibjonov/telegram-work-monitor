@@ -1,5 +1,6 @@
 package uz.devops.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,4 +67,10 @@ public interface JobService {
     Job createNewJob(Message message);
 
     void addOrderToJob(Long jobId, Order order);
+
+    SimpleResultData<List<Job>> findAvailableJobs();
+
+    SimpleResultData<List<Job>> findDoneJobs();
+
+    Job findJobByOrderId(Long orderId);
 }

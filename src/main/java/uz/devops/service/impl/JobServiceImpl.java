@@ -2,8 +2,10 @@ package uz.devops.service.impl;
 
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
+import javax.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,8 @@ import uz.devops.domain.Order;
 import uz.devops.domain.Task;
 import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.JobRepository;
+import uz.devops.repository.OrderRepository;
+import uz.devops.security.AuthoritiesConstants;
 import uz.devops.service.JobService;
 import uz.devops.service.dto.JobDTO;
 import uz.devops.service.mapper.JobMapper;
@@ -32,10 +36,13 @@ public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;
 
+    private final OrderRepository orderRepository;
+
     private final JobMapper jobMapper;
 
-    public JobServiceImpl(JobRepository jobRepository, JobMapper jobMapper) {
+    public JobServiceImpl(JobRepository jobRepository, OrderRepository orderRepository, JobMapper jobMapper) {
         this.jobRepository = jobRepository;
+        this.orderRepository = orderRepository;
         this.jobMapper = jobMapper;
     }
 
@@ -117,12 +124,62 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public SimpleResultData<List<Job>> findAvailableJobs() {
+        log.debug("Request to find all available jobs");
+
+        List<Job> jobs = jobRepository
+            .findAll()
+            .stream()
+            .filter(job -> job.getTasks().stream().anyMatch(task -> !task.getStatus().equals(Status.DONE)))
+            .collect(Collectors.toList());
+
+        if (jobs.isEmpty()) {
+            log.debug("Available jobs not found");
+            return new SimpleResultData<>("Available jobs not found", false);
+        }
+
+        log.debug("Available jobs found");
+        return new SimpleResultData<>("Available jobs", true, jobs);
+    }
+
+    @Override
+    public SimpleResultData<List<Job>> findDoneJobs() {
+        log.debug("Request tpo find done jobs");
+
+        var jobs = jobRepository
+            .findAll()
+            .stream()
+            .filter(job -> job.getTasks().stream().anyMatch(task -> task.getStatus().equals(Status.DONE)))
+            .collect(Collectors.toList());
+
+        if (jobs.isEmpty()) {
+            log.debug("Done jobs not found");
+            return new SimpleResultData<>("Done jobs not found", false);
+        }
+
+        log.debug("Done jobs found");
+        return new SimpleResultData<>("Done jobs found", true, jobs);
+    }
+
+    @Override
+    public Job findJobByOrderId(Long orderId) {
+        log.debug("Request to find job with order id: {}", orderId);
+        return jobRepository
+            .findAll()
+            .stream()
+            .filter(job -> job.getOrders().stream().anyMatch(order -> order.getId().equals(orderId)))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException("Job not found with order id: " + orderId));
+    }
+
+    @Override
     public Job createNewJob(Message message) {
         log.info("Request to create Job with name: {}", message.getText());
 
         Job job = new Job();
         job.setName(message.getText());
         job.setCreatedDate(Instant.now());
+        job.setCreatedBy(AuthoritiesConstants.ADMIN);
         jobRepository.save(job);
 
         log.info("Job created: {}", job);
@@ -140,12 +197,13 @@ public class JobServiceImpl implements JobService {
         }
 
         Job job = optionalJob.get();
-        if (job.getOrders() != null) {
-            job.getOrders().add(order);
-            jobRepository.save(job);
-        } else {
-            job.setOrders(Set.of(order));
-            jobRepository.save(job);
-        }
+        order.setJob(job);
+        orderRepository.save(order);
+        //        if (job.getOrders() != null) {
+        //            job.getOrders().add(order);
+        //        } else {
+        //            job.setOrders(Set.of(order));
+        //        }
+        //        jobRepository.save(job);
     }
 }

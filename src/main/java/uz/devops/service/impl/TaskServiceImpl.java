@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.devops.domain.Task;
 import uz.devops.domain.TaskInfo;
+import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.ProfessionRepository;
 import uz.devops.repository.TaskInfoRepository;
 import uz.devops.repository.TaskRepository;
@@ -26,11 +27,11 @@ public class TaskServiceImpl implements TaskService {
 
     private final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    private final TaskRepository taskRepository;
-
     private final ProfessionRepository professionRepository;
 
     private final TaskInfoRepository taskInfoRepository;
+
+    private final TaskRepository taskRepository;
 
     private final TaskMapper taskMapper;
 
@@ -139,13 +140,55 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Task findTaskByInfoId(Long taskInfoId) {
+        TaskInfo taskInfo = taskInfoRepository
+            .findById(taskInfoId)
+            .orElseThrow(() -> new NotFoundException("Task Info not found with id: " + taskInfoId));
+
+        return taskInfo
+            .getTasks()
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException("Task not found with taskInfoId: " + taskInfoId));
+    }
+
+    @Override
+    public TaskInfo getTaskInfo(Long orderId) {
+        return taskInfoRepository
+            .findAll()
+            .stream()
+            .filter(taskInfo -> taskInfo.getOrders().stream().anyMatch(order -> order.getId().equals(orderId)))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException("Task Info not found with orderId: " + orderId));
+    }
+
+    @Override
+    public void changeTaskStatus(Long taskInfoId) {
+        Optional<TaskInfo> optionalTaskInfo = taskInfoRepository.findById(taskInfoId);
+        if (optionalTaskInfo.isEmpty()) {
+            return;
+        }
+        TaskInfo taskInfo = optionalTaskInfo.get();
+        Task task = taskInfo.getTasks().stream().findFirst().get();
+
+        task.setStatus(Status.DOING);
+        taskRepository.save(task);
+    }
+
+    @Override
+    public TaskInfo findTaskInfoById(Long taskInfoId) {
+        return taskInfoRepository.findById(taskInfoId).orElseThrow(() -> new NotFoundException("Task info not found with id" + taskInfoId));
+    }
+
+    @Override
     public void addTaskToTaskInfo(TaskInfo taskInfo, Long taskId) {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
         if (optionalTask.isEmpty()) {
             return;
         }
         Task task = optionalTask.get();
-
+        //        task.setTaskInfo(taskInfo);
+        //        taskRepository.save(task);
         if (taskInfo.getTasks() != null) {
             taskInfo.getTasks().add(task);
             taskInfoRepository.save(taskInfo);

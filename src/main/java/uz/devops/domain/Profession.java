@@ -35,7 +35,7 @@ public class Profession implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "professions")
+    @ManyToMany(mappedBy = "professions", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "professions", "job" }, allowSetters = true)
     private Set<Task> tasks = new HashSet<>();
