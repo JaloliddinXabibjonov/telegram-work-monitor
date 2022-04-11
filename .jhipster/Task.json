@@ -1,0 +1,53 @@
+{
+  "name": "Task",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "javadoc": "Наименование",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "3",
+      "fieldValidateRulesMaxlength": "128"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "Status",
+      "fieldValues": "NEW,ACTIVE,TO_DO,DOING,INACTIVE,DELETED,DONE"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "profession",
+      "otherEntityRelationshipName": "task",
+      "relationshipName": "profession",
+      "otherEntityField": "name",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "job",
+      "otherEntityRelationshipName": "task",
+      "relationshipValidateRules": "required",
+      "relationshipName": "job",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "taskInfo",
+      "otherEntityRelationshipName": "task",
+      "relationshipName": "taskInfo"
+    }
+  ],
+  "javadoc": "Справочник для описания вида этапа задачи",
+  "entityTableName": "task",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20220411072415"
+}

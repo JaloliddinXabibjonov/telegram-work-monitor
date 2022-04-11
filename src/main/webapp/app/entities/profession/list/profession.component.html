@@ -1,0 +1,77 @@
+<div>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="m-0" jhiTranslate="workmonitorApp.profession.home.title">Professions</h2>
+
+    <ngl-export-as
+      *ngIf="professions?.length"
+      class="ml-auto"
+      [data]="professions"
+      requestUrl="{{ professionService.resourceUrl }}"
+      [requestOption]="getOption"
+      [exclude]="exclude"
+      translationPrefix="workmonitorApp.profession"
+      fileName="{{ 'global.menu.entities.profession' | translate }}"
+    >
+    </ngl-export-as>
+
+    <button
+      class="ml-2"
+      type="button"
+      nz-button
+      nzSize="large"
+      nzType="primary"
+      jhiTranslate="entity.action.add"
+      *jhiHasAnyAuthority="'ROLE_PROFESSION_WRITE'"
+      (click)="professionService.openUpdate()"
+    >
+      Add
+    </button>
+  </div>
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="professions?.length === 0">
+    <span jhiTranslate="workmonitorApp.profession.home.notFound">No professions found</span>
+  </div>
+
+  <div class="table-responsive">
+    <nz-table [nzLoading]="loading" [nzShowPagination]="false" nzSize="small" nzOuterBordered nzTemplateMode>
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
+          <th jhiSortBy="name"><span jhiTranslate="workmonitorApp.profession.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="description">
+            <span jhiTranslate="workmonitorApp.profession.description">Description</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let profession of professions; trackBy: trackName">
+          <td>
+            <a href="javascript:void(0)" (click)="professionService.openView(profession)">{{ profession.name }}</a>
+          </td>
+          <td>{{ profession.description }}</td>
+          <td [width]="10" class="text-right">
+            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_profession_WRITE'">
+              <button nz-button (click)="professionService.openView(profession)">
+                <i nz-icon nzType="eye" class="icon-btn"></i>
+              </button>
+              <button nz-button (click)="professionService.openUpdate(profession)">
+                <i nz-icon nzType="edit" class="icon-btn"></i>
+              </button>
+
+              <button nz-button (click)="professionService.openDelete(profession.name)">
+                <i nz-icon nzType="delete" class="icon-btn"></i>
+              </button>
+            </nz-button-group>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <div class="d-flex justify-content-center mt-3">
+    <nz-pagination [nzPageIndex]="page" [nzTotal]="totalItems" [nzPageSize]="itemsPerPage" (nzPageIndexChange)="loadPage($event)">
+    </nz-pagination>
+  </div>
+</div>

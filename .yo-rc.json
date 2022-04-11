@@ -50,6 +50,8 @@
     "skipUserManagement": false,
     "testFrameworks": [],
     "websocket": false,
-    "withAdminUi": true
+    "withAdminUi": true,
+    "entities": ["Job", "Task", "TaskInfo", "Order", "Profession"],
+    "lastLiquibaseTimestamp": 1649661858000
   }
 }

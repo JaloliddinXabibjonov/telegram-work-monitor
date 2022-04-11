@@ -1,0 +1,33 @@
+{
+  "workmonitorApp": {
+    "order": {
+      "home": {
+        "title": "Orders",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Янги Order қўшиш",
+        "createOrEditLabel": "Orderни таҳрирлаш",
+        "notFound": "No Orders found"
+      },
+      "created": "Order {{ param }} билан қўшилди.",
+      "updated": "{{ param }}- Order сақланди.",
+      "deleted": "{{ param }}- Order ўчирилди.",
+      "delete": {
+        "question": "{{ id }}- Orderни ўчирмоқчимисиз? "
+      },
+      "detail": {
+        "title": "Order"
+      },
+      "id": "ID",
+      "name": "Name",
+      "chatId": "Chat Id",
+      "employee": "Employee",
+      "startedDate": "Started Date",
+      "endDate": "End Date",
+      "job": "Job",
+      "taskInfo": "Task Info",
+      "help": {
+        "name": "Наименование"
+      }
+    }
+  }
+}

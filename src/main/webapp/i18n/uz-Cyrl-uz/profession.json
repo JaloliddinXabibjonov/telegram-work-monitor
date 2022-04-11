@@ -1,0 +1,29 @@
+{
+  "workmonitorApp": {
+    "profession": {
+      "home": {
+        "title": "Professions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Янги Profession қўшиш",
+        "createOrEditLabel": "Professionни таҳрирлаш",
+        "notFound": "No Professions found"
+      },
+      "created": "Profession {{ param }} билан қўшилди.",
+      "updated": "{{ param }}- Profession сақланди.",
+      "deleted": "{{ param }}- Profession ўчирилди.",
+      "delete": {
+        "question": "{{ id }}- Professionни ўчирмоқчимисиз? "
+      },
+      "detail": {
+        "title": "Profession"
+      },
+      "name": "Name",
+      "description": "Description",
+      "task": "Task",
+      "help": {
+        "name": "Наименование",
+        "description": "Описание профессии"
+      }
+    }
+  }
+}

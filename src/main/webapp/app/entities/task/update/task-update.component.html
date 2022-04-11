@@ -1,0 +1,111 @@
+<form class="fade-in" [formGroup]="editForm" (ngSubmit)="save()">
+  <div class="modal-header">
+    <h4 class="modal-title" jhiTranslate="workmonitorApp.task.home.createOrEditLabel">Create or edit a Task</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="activeModal.dismiss()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <jhi-alert-error> </jhi-alert-error>
+
+      <div class="form-group col-md-6" [hidden]="editForm.get('id')!.value == null">
+        <label for="field_id" jhiTranslate="global.field.id">ID</label>
+        <nz-input-number
+          nzSize="large"
+          formControlName="id"
+          id="field_id"
+          [nzDisabled]="editForm.get('id')!.value != null"
+        ></nz-input-number>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_name"
+          class="label-required"
+          jhiTranslate="workmonitorApp.task.name"
+          [ngbTooltip]="'workmonitorApp.task.help.name' | translate"
+          >Name</label
+        >
+        <input id="field_name" nz-input nzSize="large" formControlName="name" />
+        <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+            This field is required.
+          </small>
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get('name')?.errors?.minlength"
+            jhiTranslate="entity.validation.minlength"
+            [translateValues]="{ min: 3 }"
+          >
+            This field is required to be at least 3 characters.
+          </small>
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get('name')?.errors?.maxlength"
+            jhiTranslate="entity.validation.maxlength"
+            [translateValues]="{ max: 128 }"
+          >
+            This field cannot be longer than 128 characters.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="field_status" jhiTranslate="workmonitorApp.task.status">Status</label>
+        <select-input id="field_status" formControlName="status" [data]="StatusConstants"></select-input>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label jhiTranslate="workmonitorApp.task.profession" for="field_professions">Profession</label>
+        <select-input
+          formControlName="profession"
+          id="field_profession"
+          devopsLabelField="name"
+          devopsMode="multiple"
+          [devopsShowSearch]="true"
+          [devopsServerSearch]="true"
+          [requestUrl]="professionService.resourceUrl"
+        >
+        </select-input>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="form-control-label" jhiTranslate="workmonitorApp.task.job" for="field_job">Job</label>
+        <select-input
+          formControlName="job"
+          id="field_job"
+          devopsLabelField="name"
+          [devopsShowSearch]="true"
+          [devopsServerSearch]="true"
+          [requestUrl]="jobService.resourceUrl"
+        >
+        </select-input>
+      </div>
+      <div *ngIf="editForm.get(['job'])!.invalid && (editForm.get(['job'])!.dirty || editForm.get(['job'])!.touched)">
+        <small class="form-text text-danger" *ngIf="editForm.get(['job'])?.errors?.required" jhiTranslate="entity.validation.required">
+          This field is required.
+        </small>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="form-control-label" jhiTranslate="workmonitorApp.task.taskInfo" for="field_taskInfo">Task Info</label>
+        <select-input
+          formControlName="taskInfo"
+          id="field_taskInfo"
+          devopsLabelField="id"
+          [devopsShowSearch]="true"
+          [devopsServerSearch]="true"
+          [requestUrl]="taskInfoService.resourceUrl"
+        >
+        </select-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" nzSize="large" nz-button id="cancel-save" (click)="activeModal.dismiss()">
+      <span jhiTranslate="entity.action.cancel">Cancel</span>
+    </button>
+
+    <button nz-button nzSize="large" nzType="primary" [nzLoading]="loading" [input-validator-button]="editForm">
+      {{ 'entity.action.save' | translate }}
+    </button>
+  </div>
+</form>

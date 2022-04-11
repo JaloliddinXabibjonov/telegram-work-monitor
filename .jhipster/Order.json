@@ -1,0 +1,56 @@
+{
+  "name": "Order",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "javadoc": "Наименование",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMinlength": "3",
+      "fieldValidateRulesMaxlength": "128"
+    },
+    {
+      "fieldName": "chatId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "employee",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "startedDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "job",
+      "otherEntityRelationshipName": "order",
+      "relationshipValidateRules": "required",
+      "relationshipName": "job",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "taskInfo",
+      "otherEntityRelationshipName": "order",
+      "relationshipName": "taskInfo"
+    }
+  ],
+  "javadoc": "Заказы на работу",
+  "entityTableName": "jhi_order",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20220411072417"
+}

@@ -1,0 +1,29 @@
+{
+  "workmonitorApp": {
+    "profession": {
+      "home": {
+        "title": "Professions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Profession",
+        "createOrEditLabel": "Create or edit a Profession",
+        "notFound": "No Professions found"
+      },
+      "created": "A new Profession is created with identifier {{ param }}",
+      "updated": "A Profession is updated with identifier {{ param }}",
+      "deleted": "A Profession is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Profession {{ id }}?"
+      },
+      "detail": {
+        "title": "Profession"
+      },
+      "name": "Name",
+      "description": "Description",
+      "task": "Task",
+      "help": {
+        "name": "Наименование",
+        "description": "Описание профессии"
+      }
+    }
+  }
+}

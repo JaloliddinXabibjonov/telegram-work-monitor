@@ -1,0 +1,63 @@
+<form class="fade-in" [formGroup]="editForm" (ngSubmit)="save()">
+  <div class="modal-header">
+    <h4 class="modal-title" jhiTranslate="workmonitorApp.profession.home.createOrEditLabel">Create or edit a Profession</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="activeModal.dismiss()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <jhi-alert-error> </jhi-alert-error>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_name"
+          class="label-required"
+          jhiTranslate="workmonitorApp.profession.name"
+          [ngbTooltip]="'workmonitorApp.profession.help.name' | translate"
+          >Name</label
+        >
+        <input id="field_name" nz-input nzSize="large" formControlName="name" [readonly]="editForm.get('name')!.value != null" />
+        <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+            This field is required.
+          </small>
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get('name')?.errors?.minlength"
+            jhiTranslate="entity.validation.minlength"
+            [translateValues]="{ min: 3 }"
+          >
+            This field is required to be at least 3 characters.
+          </small>
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get('name')?.errors?.maxlength"
+            jhiTranslate="entity.validation.maxlength"
+            [translateValues]="{ max: 128 }"
+          >
+            This field cannot be longer than 128 characters.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_description"
+          jhiTranslate="workmonitorApp.profession.description"
+          [ngbTooltip]="'workmonitorApp.profession.help.description' | translate"
+          >Description</label
+        >
+        <input id="field_description" nz-input nzSize="large" formControlName="description" />
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" nzSize="large" nz-button id="cancel-save" (click)="activeModal.dismiss()">
+      <span jhiTranslate="entity.action.cancel">Cancel</span>
+    </button>
+
+    <button nz-button nzSize="large" nzType="primary" [nzLoading]="loading" [input-validator-button]="editForm">
+      {{ 'entity.action.save' | translate }}
+    </button>
+  </div>
+</form>

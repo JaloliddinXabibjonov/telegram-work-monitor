@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="taskInfo">
+      <h2 data-cy="taskInfoDetailsHeading"><span jhiTranslate="workmonitorApp.taskInfo.detail.title">Task Info</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ taskInfo.id }}</span>
+        </dd>
+        <dt>
+          <span jhiTranslate="workmonitorApp.taskInfo.price" [ngbTooltip]="'workmonitorApp.taskInfo.help.price' | translate">Price</span>
+        </dt>
+        <dd>
+          <span>{{ taskInfo.price }}</span>
+        </dd>
+        <dt><span jhiTranslate="workmonitorApp.taskInfo.status">Status</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'workmonitorApp.Status.' + taskInfo.status }}">{{ taskInfo.status }}</span>
+        </dd>
+        <dt>
+          <span jhiTranslate="workmonitorApp.taskInfo.description" [ngbTooltip]="'workmonitorApp.taskInfo.help.description' | translate"
+            >Description</span
+          >
+        </dt>
+        <dd>
+          <span>{{ taskInfo.description }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/task-info', taskInfo.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>
