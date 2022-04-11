@@ -30,7 +30,7 @@ public class TaskInfo implements Serializable {
      * Цена заказа
      */
     @Column(name = "price")
-    private Long price;
+    private String price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -44,12 +44,12 @@ public class TaskInfo implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "taskInfo")
+    @OneToMany(mappedBy = "taskInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "professions", "job", "taskInfo" }, allowSetters = true)
     private Set<Task> tasks = new HashSet<>();
 
-    @OneToMany(mappedBy = "taskInfo")
+    @OneToMany(mappedBy = "taskInfo", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "job", "taskInfo" }, allowSetters = true)
     private Set<Order> orders = new HashSet<>();
@@ -69,16 +69,16 @@ public class TaskInfo implements Serializable {
         this.id = id;
     }
 
-    public Long getPrice() {
+    public String getPrice() {
         return this.price;
     }
 
-    public TaskInfo price(Long price) {
+    public TaskInfo price(String price) {
         this.setPrice(price);
         return this;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

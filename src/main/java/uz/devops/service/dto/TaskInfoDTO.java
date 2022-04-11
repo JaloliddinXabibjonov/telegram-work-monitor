@@ -17,7 +17,7 @@ public class TaskInfoDTO implements Serializable {
      * Цена заказа
      */
     @ApiModelProperty(value = "Цена заказа")
-    private Long price;
+    private String price;
 
     private Status status;
 
@@ -36,11 +36,11 @@ public class TaskInfoDTO implements Serializable {
         this.id = id;
     }
 
-    public Long getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

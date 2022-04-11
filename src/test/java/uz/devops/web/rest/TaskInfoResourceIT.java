@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import uz.devops.IntegrationTest;
 import uz.devops.domain.TaskInfo;
 import uz.devops.domain.enumeration.Status;
@@ -33,8 +32,8 @@ import uz.devops.service.mapper.TaskInfoMapper;
 @WithMockUser
 class TaskInfoResourceIT {
 
-    private static final Long DEFAULT_PRICE = 1L;
-    private static final Long UPDATED_PRICE = 2L;
+    private static final String DEFAULT_PRICE = "12";
+    private static final String UPDATED_PRICE = "2L";
 
     private static final Status DEFAULT_STATUS = Status.NEW;
     private static final Status UPDATED_STATUS = Status.ACTIVE;
@@ -139,7 +138,6 @@ class TaskInfoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(taskInfo.getId().intValue())))
-            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.intValue())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
@@ -156,7 +154,6 @@ class TaskInfoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(taskInfo.getId().intValue()))
-            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.intValue()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }

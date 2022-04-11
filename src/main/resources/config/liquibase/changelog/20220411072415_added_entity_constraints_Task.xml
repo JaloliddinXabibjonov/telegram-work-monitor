@@ -10,25 +10,25 @@
 
         <addForeignKeyConstraint baseColumnNames="task_id"
                                  baseTableName="rel_task__profession"
-                                 constraintName="fk_rel_task__profession__task_id"
+                                 constraintName="fk_task_id"
                                  referencedColumnNames="id"
                                  referencedTableName="task"/>
 
         <addForeignKeyConstraint baseColumnNames="profession_name"
                                  baseTableName="rel_task__profession"
-                                 constraintName="fk_rel_task__profession__profession_id"
+                                 constraintName="fk_profession_name"
                                  referencedColumnNames="name"
                                  referencedTableName="profession"/>
 
         <addForeignKeyConstraint baseColumnNames="job_id"
                                  baseTableName="task"
-                                 constraintName="fk_task__job_id"
+                                 constraintName="fk_job_id"
                                  referencedColumnNames="id"
                                  referencedTableName="job"/>
 
         <addForeignKeyConstraint baseColumnNames="task_info_id"
                                  baseTableName="task"
-                                 constraintName="fk_task__task_info_id"
+                                 constraintName="fk_task_info_id"
                                  referencedColumnNames="id"
                                  referencedTableName="task_info"/>
     </changeSet>

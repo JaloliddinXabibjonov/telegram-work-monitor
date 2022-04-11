@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -34,7 +35,7 @@ public class Profession implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "professions")
+    @ManyToMany(mappedBy = "professions", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "professions", "job", "taskInfo" }, allowSetters = true)
     private Set<Task> tasks = new HashSet<>();

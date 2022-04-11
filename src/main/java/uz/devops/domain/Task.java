@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uz.devops.domain.enumeration.Status;
@@ -16,7 +17,7 @@ import uz.devops.domain.enumeration.Status;
 @Entity
 @Table(name = "task")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Task implements Serializable {
+public class Task extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +39,7 @@ public class Task implements Serializable {
     @Column(name = "status")
     private Status status;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
         name = "rel_task__profession",
         joinColumns = @JoinColumn(name = "task_id"),
@@ -49,7 +50,6 @@ public class Task implements Serializable {
     private Set<Profession> professions = new HashSet<>();
 
     @ManyToOne(optional = false)
-    @NotNull
     @JsonIgnoreProperties(value = { "tasks", "orders" }, allowSetters = true)
     private Job job;
 

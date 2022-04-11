@@ -8,7 +8,6 @@ import java.util.Locale;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +15,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import uz.devops.config.Constants;
+import uz.devops.domain.enumeration.BotState;
 
 /**
  * A user.
@@ -32,16 +32,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
-    @Column(length = 50, unique = true, nullable = false)
+    @Column(length = 50, unique = true)
     private String login;
 
     @JsonIgnore
-    @NotNull
     @Size(min = 60, max = 60)
-    @Column(name = "password_hash", length = 60, nullable = false)
+    @Column(name = "password_hash", length = 60)
     private String password;
 
     @Size(max = 50)
@@ -57,7 +55,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(length = 254, unique = true)
     private String email;
 
-    @NotNull
     @Column(nullable = false)
     private boolean activated = false;
 
@@ -81,6 +78,43 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "reset_date")
     private Instant resetDate = null;
+
+    @Column(name = "chat_id")
+    private String chatId;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "confirmed")
+    private Boolean confirmed = false;
+
+    @Column(name = "tg_username")
+    private String tgUsername;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state")
+    private BotState state;
+
+    @Column(name = "confirmed_date")
+    private Instant confirmedDate;
+
+    @Column(name = "temp_table_id")
+    private Long tempTableId;
+
+    @Column(name = "busy")
+    private Boolean busy = false;
+
+    @Column(name = "free_table_id")
+    private Long extraTableId;
+
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_profession",
+        joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "profession_name", referencedColumnName = "name") }
+    )
+    private Set<Profession> professions = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
@@ -190,6 +224,86 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.langKey = langKey;
     }
 
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public String getTgUsername() {
+        return tgUsername;
+    }
+
+    public void setTgUsername(String tgUsername) {
+        this.tgUsername = tgUsername;
+    }
+
+    public BotState getState() {
+        return state;
+    }
+
+    public void setState(BotState state) {
+        this.state = state;
+    }
+
+    public Instant getConfirmedDate() {
+        return confirmedDate;
+    }
+
+    public void setConfirmedDate(Instant confirmedDate) {
+        this.confirmedDate = confirmedDate;
+    }
+
+    public Long getTempTableId() {
+        return tempTableId;
+    }
+
+    public void setTempTableId(Long tempTableId) {
+        this.tempTableId = tempTableId;
+    }
+
+    public Boolean getBusy() {
+        return busy;
+    }
+
+    public void setBusy(Boolean busy) {
+        this.busy = busy;
+    }
+
+    public Long getExtraTableId() {
+        return extraTableId;
+    }
+
+    public void setExtraTableId(Long extraTableId) {
+        this.extraTableId = extraTableId;
+    }
+
+    public Set<Profession> getProfessions() {
+        return professions;
+    }
+
+    public void setProfessions(Set<Profession> professions) {
+        this.professions = professions;
+    }
+
     public Set<Authority> getAuthorities() {
         return authorities;
     }
@@ -215,18 +329,54 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
-        return "User{" +
-            "login='" + login + '\'' +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", imageUrl='" + imageUrl + '\'' +
-            ", activated='" + activated + '\'' +
-            ", langKey='" + langKey + '\'' +
-            ", activationKey='" + activationKey + '\'' +
-            "}";
+        return (
+            "User{" +
+            "login='" +
+            login +
+            '\'' +
+            ", firstName='" +
+            firstName +
+            '\'' +
+            ", lastName='" +
+            lastName +
+            '\'' +
+            ", email='" +
+            email +
+            '\'' +
+            ", activated='" +
+            activated +
+            '\'' +
+            ", langKey='" +
+            langKey +
+            '\'' +
+            ", imageUrl='" +
+            imageUrl +
+            '\'' +
+            ", activationKey='" +
+            activationKey +
+            '\'' +
+            ", chatId='" +
+            chatId +
+            '\'' +
+            ", phoneNumber='" +
+            phoneNumber +
+            '\'' +
+            ", confirmed=" +
+            confirmed +
+            ", tgUsername='" +
+            tgUsername +
+            '\'' +
+            ", state=" +
+            state +
+            ", tempTableId=" +
+            tempTableId +
+            ", busy=" +
+            busy +
+            ", extraTableId=" +
+            extraTableId +
+            '}'
+        );
     }
 }
