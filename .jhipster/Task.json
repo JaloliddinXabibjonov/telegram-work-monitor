@@ -1,47 +1,55 @@
 {
-  "applications": ["WorkMonitor"],
-  "changelogDate": "20220408112704",
-  "dto": "mapstruct",
-  "embedded": false,
-  "entityTableName": "task",
+  "name": "Task",
   "fields": [
     {
       "fieldName": "name",
       "fieldType": "String",
+      "javadoc": "Наименование",
       "fieldValidateRules": ["required", "minlength", "maxlength"],
-      "fieldValidateRulesMaxlength": "128",
       "fieldValidateRulesMinlength": "3",
-      "javadoc": "Наименование"
+      "fieldValidateRulesMaxlength": "128"
     },
     {
-      "fieldName": "status",
-      "fieldType": "Status",
-      "fieldValues": "NEW,ACTIVE,DOING,INACTIVE,DELETED,DONE"
+      "fieldName": "price",
+      "fieldType": "String",
+      "javadoc": "Цена"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "javadoc": "Описания"
+    },
+    {
+      "fieldName": "priority",
+      "fieldType": "Integer",
+      "javadoc": "Приоритет"
     }
   ],
-  "fluentMethods": true,
-  "javadoc": "Справочник для описания вида этапа задачи",
-  "jpaMetamodelFiltering": false,
-  "name": "Task",
-  "pagination": "pagination",
-  "readOnly": false,
   "relationships": [
     {
-      "otherEntityField": "name",
-      "otherEntityName": "profession",
-      "otherEntityRelationshipName": "task",
-      "ownerSide": true,
-      "relationshipName": "profession",
-      "relationshipType": "many-to-many"
-    },
-    {
-      "otherEntityField": "name",
+      "relationshipType": "many-to-one",
       "otherEntityName": "job",
       "otherEntityRelationshipName": "task",
-      "relationshipName": "job",
-      "relationshipType": "many-to-one",
-      "relationshipValidateRules": "required"
+      "relationshipName": "job"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "profession",
+      "otherEntityRelationshipName": "task",
+      "relationshipName": "profession",
+      "otherEntityField": "name",
+      "ownerSide": true
     }
   ],
-  "service": "serviceImpl"
+  "javadoc": "Справочник для описания вида этапа задачи",
+  "entityTableName": "task",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20220412053921"
 }

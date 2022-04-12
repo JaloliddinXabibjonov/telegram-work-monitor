@@ -19,14 +19,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import uz.devops.IntegrationTest;
-import uz.devops.domain.Job;
 import uz.devops.domain.Task;
-import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.TaskRepository;
 import uz.devops.service.TaskService;
 import uz.devops.service.dto.TaskDTO;
@@ -44,8 +43,14 @@ class TaskResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final Status DEFAULT_STATUS = Status.NEW;
-    private static final Status UPDATED_STATUS = Status.ACTIVE;
+    private static final String DEFAULT_PRICE = "AAAAAAAAAA";
+    private static final String UPDATED_PRICE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_PRIORITY = 1;
+    private static final Integer UPDATED_PRIORITY = 2;
 
     private static final String ENTITY_API_URL = "/api/tasks";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -80,17 +85,7 @@ class TaskResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Task createEntity(EntityManager em) {
-        Task task = new Task().name(DEFAULT_NAME).status(DEFAULT_STATUS);
-        // Add required entity
-        Job job;
-        if (TestUtil.findAll(em, Job.class).isEmpty()) {
-            job = JobResourceIT.createEntity(em);
-            em.persist(job);
-            em.flush();
-        } else {
-            job = TestUtil.findAll(em, Job.class).get(0);
-        }
-        task.setJob(job);
+        Task task = new Task().name(DEFAULT_NAME).price(DEFAULT_PRICE).description(DEFAULT_DESCRIPTION).priority(DEFAULT_PRIORITY);
         return task;
     }
 
@@ -101,17 +96,7 @@ class TaskResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Task createUpdatedEntity(EntityManager em) {
-        Task task = new Task().name(UPDATED_NAME).status(UPDATED_STATUS);
-        // Add required entity
-        Job job;
-        if (TestUtil.findAll(em, Job.class).isEmpty()) {
-            job = JobResourceIT.createUpdatedEntity(em);
-            em.persist(job);
-            em.flush();
-        } else {
-            job = TestUtil.findAll(em, Job.class).get(0);
-        }
-        task.setJob(job);
+        Task task = new Task().name(UPDATED_NAME).price(UPDATED_PRICE).description(UPDATED_DESCRIPTION).priority(UPDATED_PRIORITY);
         return task;
     }
 
@@ -135,7 +120,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeCreate + 1);
         Task testTask = taskList.get(taskList.size() - 1);
         assertThat(testTask.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testTask.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testTask.getPrice()).isEqualTo(DEFAULT_PRICE);
+        assertThat(testTask.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testTask.getPriority()).isEqualTo(DEFAULT_PRIORITY);
     }
 
     @Test
@@ -188,7 +175,9 @@ class TaskResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(task.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
+            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].priority").value(hasItem(DEFAULT_PRIORITY)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -222,7 +211,9 @@ class TaskResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(task.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
+            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.priority").value(DEFAULT_PRIORITY));
     }
 
     @Test
@@ -244,7 +235,7 @@ class TaskResourceIT {
         Task updatedTask = taskRepository.findById(task.getId()).get();
         // Disconnect from session so that the updates on updatedTask are not directly saved in db
         em.detach(updatedTask);
-        updatedTask.name(UPDATED_NAME).status(UPDATED_STATUS);
+        updatedTask.name(UPDATED_NAME).price(UPDATED_PRICE).description(UPDATED_DESCRIPTION).priority(UPDATED_PRIORITY);
         TaskDTO taskDTO = taskMapper.toDto(updatedTask);
 
         restTaskMockMvc
@@ -260,7 +251,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeUpdate);
         Task testTask = taskList.get(taskList.size() - 1);
         assertThat(testTask.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testTask.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testTask.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testTask.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testTask.getPriority()).isEqualTo(UPDATED_PRIORITY);
     }
 
     @Test
@@ -340,7 +333,7 @@ class TaskResourceIT {
         Task partialUpdatedTask = new Task();
         partialUpdatedTask.setId(task.getId());
 
-        partialUpdatedTask.status(UPDATED_STATUS);
+        partialUpdatedTask.price(UPDATED_PRICE).priority(UPDATED_PRIORITY);
 
         restTaskMockMvc
             .perform(
@@ -355,7 +348,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeUpdate);
         Task testTask = taskList.get(taskList.size() - 1);
         assertThat(testTask.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testTask.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testTask.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testTask.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testTask.getPriority()).isEqualTo(UPDATED_PRIORITY);
     }
 
     @Test
@@ -370,7 +365,7 @@ class TaskResourceIT {
         Task partialUpdatedTask = new Task();
         partialUpdatedTask.setId(task.getId());
 
-        partialUpdatedTask.name(UPDATED_NAME).status(UPDATED_STATUS);
+        partialUpdatedTask.name(UPDATED_NAME).price(UPDATED_PRICE).description(UPDATED_DESCRIPTION).priority(UPDATED_PRIORITY);
 
         restTaskMockMvc
             .perform(
@@ -385,7 +380,9 @@ class TaskResourceIT {
         assertThat(taskList).hasSize(databaseSizeBeforeUpdate);
         Task testTask = taskList.get(taskList.size() - 1);
         assertThat(testTask.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testTask.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testTask.getPrice()).isEqualTo(UPDATED_PRICE);
+        assertThat(testTask.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testTask.getPriority()).isEqualTo(UPDATED_PRIORITY);
     }
 
     @Test

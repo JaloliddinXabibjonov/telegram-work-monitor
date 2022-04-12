@@ -11,8 +11,8 @@ import { EntityViewOptions } from '../../../shared/entity/entity-view/entity-vie
 import { TaskUpdateComponent } from '../update/task-update.component';
 import { createRequestOption } from 'app/core/request/request-util';
 import { ITask, getTaskIdentifier } from '../task.model';
-import { ProfessionService } from '../../profession/service/profession.service';
 import { JobService } from '../../job/service/job.service';
+import { ProfessionService } from '../../profession/service/profession.service';
 import { NglFilterField, NglFilterFieldType } from 'ngl-filter-field';
 
 export type EntityResponseType = HttpResponse<ITask>;
@@ -26,8 +26,8 @@ export class TaskService implements IEntityConfig {
     protected http: HttpClient,
     protected applicationConfigService: ApplicationConfigService,
     private entityService: EntityService,
-    private professionService: ProfessionService,
-    private jobService: JobService
+    private jobService: JobService,
+    private professionService: ProfessionService
   ) {}
 
   create(task: ITask): Observable<EntityResponseType> {
@@ -86,9 +86,29 @@ export class TaskService implements IEntityConfig {
         translation: 'workMonitorApp.task.name',
       },
       {
-        name: 'status.in',
+        name: 'price.contains',
+        type: NglFilterFieldType.TEXT,
+        translation: 'workMonitorApp.task.price',
+      },
+      {
+        name: 'description.contains',
+        type: NglFilterFieldType.TEXT,
+        translation: 'workMonitorApp.task.description',
+      },
+      {
+        name: 'priority.equals',
+        type: NglFilterFieldType.NUMBER,
+        translation: 'workMonitorApp.task.priority',
+      },
+      {
+        name: 'jobId.in',
         type: NglFilterFieldType.MULTI_SELECT,
-        translation: 'workMonitorApp.task.status',
+        translation: 'workMonitorApp.task.job',
+        options: {
+          resourceUrl: this.jobService.resourceUrl,
+          labelField: 'id',
+          valueField: 'id',
+        },
       },
       {
         name: 'professionName.in',
@@ -96,16 +116,6 @@ export class TaskService implements IEntityConfig {
         translation: 'workMonitorApp.task.profession',
         options: {
           resourceUrl: this.professionService.resourceUrl,
-          labelField: 'name',
-          valueField: 'name',
-        },
-      },
-      {
-        name: 'jobName.in',
-        type: NglFilterFieldType.MULTI_SELECT,
-        translation: 'workMonitorApp.task.job',
-        options: {
-          resourceUrl: this.jobService.resourceUrl,
           labelField: 'name',
           valueField: 'name',
         },
@@ -139,21 +149,31 @@ export class TaskService implements IEntityConfig {
         type: 'translation',
       },
       {
-        title: 'workMonitorApp.task.status',
-        value: entity.status,
+        title: 'workMonitorApp.task.price',
+        value: entity.price,
         type: 'translation',
+      },
+      {
+        title: 'workMonitorApp.task.description',
+        value: entity.description,
+        type: 'translation',
+      },
+      {
+        title: 'workMonitorApp.task.priority',
+        value: entity.priority,
+        type: 'translation',
+      },
+      {
+        title: 'workMonitorApp.task.job',
+        value: entity.job?.id,
+        type: 'link',
+        link: () => this.jobService.openView(entity.job!),
       },
       {
         title: 'workMonitorApp.task.profession',
         value: entity.professions?.map(item => item.name),
         type: 'link',
         link: (value: any) => this.professionService.openView(entity.professions?.find(item => item.name === value)!),
-      },
-      {
-        title: 'workMonitorApp.task.job',
-        value: entity.job?.name,
-        type: 'link',
-        link: () => this.jobService.openView(entity.job!),
       },
     ];
 

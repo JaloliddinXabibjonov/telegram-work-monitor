@@ -40,14 +40,6 @@ public class ProfessionServiceImpl implements ProfessionService {
     }
 
     @Override
-    public ProfessionDTO update(ProfessionDTO professionDTO) {
-        log.debug("Request to save Profession : {}", professionDTO);
-        Profession profession = professionMapper.toEntity(professionDTO);
-        profession = professionRepository.save(profession);
-        return professionMapper.toDto(profession);
-    }
-
-    @Override
     public Optional<ProfessionDTO> partialUpdate(ProfessionDTO professionDTO) {
         log.debug("Request to partially update Profession : {}", professionDTO);
 
@@ -68,16 +60,17 @@ public class ProfessionServiceImpl implements ProfessionService {
         log.debug("Request to get all Professions");
         return professionRepository.findAll(pageable).map(professionMapper::toDto);
     }
-    //    @Override
-    //    @Transactional(readOnly = true)
-    //    public Optional<ProfessionDTO> findOne(String name) {
-    //        log.debug("Request to get Profession : {}", name);
-    //        return professionRepository.findById(name).map(professionMapper::toDto);
-    //    }
-    //
-    //    @Override
-    //    public void delete(String id) {
-    //        log.debug("Request to delete Profession : {}", id);
-    //        professionRepository.deleteById(name);
-    //    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<ProfessionDTO> findOne(String id) {
+        log.debug("Request to get Profession : {}", id);
+        return professionRepository.findById(id).map(professionMapper::toDto);
+    }
+
+    @Override
+    public void delete(String id) {
+        log.debug("Request to delete Profession : {}", id);
+        professionRepository.deleteById(id);
+    }
 }

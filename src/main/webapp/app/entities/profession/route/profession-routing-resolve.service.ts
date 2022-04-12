@@ -12,7 +12,7 @@ export class ProfessionRoutingResolveService implements Resolve<IProfession> {
   constructor(protected service: ProfessionService, protected router: Router) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<IProfession> | Observable<never> {
-    const id = route.params['id'];
+    const id = route.params['name'];
     if (id) {
       return this.service.find(id).pipe(
         mergeMap((profession: HttpResponse<Profession>) => {

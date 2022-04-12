@@ -1,0 +1,49 @@
+{
+  "name": "OrderTask",
+  "fields": [
+    {
+      "fieldName": "status",
+      "fieldType": "Status",
+      "fieldValues": "NEW,ACTIVE,TO_DO,DOING,INACTIVE,DELETED,DONE"
+    },
+    {
+      "fieldName": "startedDate",
+      "fieldType": "Instant",
+      "javadoc": "Дата начала"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "Instant",
+      "javadoc": "Дата окончания"
+    },
+    {
+      "fieldName": "employeeUsername",
+      "fieldType": "String",
+      "javadoc": "Имя сотрудника"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "task",
+      "otherEntityRelationshipName": "orderTask",
+      "relationshipName": "task"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "order",
+      "otherEntityRelationshipName": "orderTask",
+      "relationshipName": "order"
+    }
+  ],
+  "entityTableName": "order_task",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20220412053922"
+}

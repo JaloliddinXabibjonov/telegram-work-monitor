@@ -9,10 +9,10 @@ import { of, Subject } from 'rxjs';
 
 import { TaskService } from '../service/task.service';
 import { ITask, Task } from '../task.model';
-import { IProfession } from 'app/entities/profession/profession.model';
-import { ProfessionService } from 'app/entities/profession/service/profession.service';
 import { IJob } from 'app/entities/job/job.model';
 import { JobService } from 'app/entities/job/service/job.service';
+import { IProfession } from 'app/entities/profession/profession.model';
+import { ProfessionService } from 'app/entities/profession/service/profession.service';
 
 import { TaskUpdateComponent } from './task-update.component';
 
@@ -21,8 +21,8 @@ describe('Task Management Update Component', () => {
   let fixture: ComponentFixture<TaskUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let taskService: TaskService;
-  let professionService: ProfessionService;
   let jobService: JobService;
+  let professionService: ProfessionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -36,32 +36,13 @@ describe('Task Management Update Component', () => {
     fixture = TestBed.createComponent(TaskUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
     taskService = TestBed.inject(TaskService);
-    professionService = TestBed.inject(ProfessionService);
     jobService = TestBed.inject(JobService);
+    professionService = TestBed.inject(ProfessionService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Profession query and add missing value', () => {
-      const task: ITask = { id: 456 };
-      const professions: IProfession[] = [{ id: 81073 }];
-      task.professions = professions;
-
-      const professionCollection: IProfession[] = [{ id: 84167 }];
-      jest.spyOn(professionService, 'query').mockReturnValue(of(new HttpResponse({ body: professionCollection })));
-      const additionalProfessions = [...professions];
-      const expectedCollection: IProfession[] = [...additionalProfessions, ...professionCollection];
-      jest.spyOn(professionService, 'addProfessionToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ task });
-      comp.ngOnInit();
-
-      expect(professionService.query).toHaveBeenCalled();
-      expect(professionService.addProfessionToCollectionIfMissing).toHaveBeenCalledWith(professionCollection, ...additionalProfessions);
-      expect(comp.professionsSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call Job query and add missing value', () => {
       const task: ITask = { id: 456 };
       const job: IJob = { id: 75602 };
@@ -81,19 +62,38 @@ describe('Task Management Update Component', () => {
       expect(comp.jobsSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Profession query and add missing value', () => {
+      const task: ITask = { id: 456 };
+      const professions: IProfession[] = [{ name: 'cd1dcd9c-4d2d-46e3-a4aa-a3ba4460d294' }];
+      task.professions = professions;
+
+      const professionCollection: IProfession[] = [{ name: '807107c6-6741-4c0b-b4a8-0b88afb842f6' }];
+      jest.spyOn(professionService, 'query').mockReturnValue(of(new HttpResponse({ body: professionCollection })));
+      const additionalProfessions = [...professions];
+      const expectedCollection: IProfession[] = [...additionalProfessions, ...professionCollection];
+      jest.spyOn(professionService, 'addProfessionToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ task });
+      comp.ngOnInit();
+
+      expect(professionService.query).toHaveBeenCalled();
+      expect(professionService.addProfessionToCollectionIfMissing).toHaveBeenCalledWith(professionCollection, ...additionalProfessions);
+      expect(comp.professionsSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const task: ITask = { id: 456 };
-      const professions: IProfession = { id: 11827 };
-      task.professions = [professions];
       const job: IJob = { id: 64664 };
       task.job = job;
+      const professions: IProfession = { name: '47b888a9-8662-402e-90a4-ab8c14bdae28' };
+      task.professions = [professions];
 
       activatedRoute.data = of({ task });
       comp.ngOnInit();
 
       expect(comp.editForm.value).toEqual(expect.objectContaining(task));
-      expect(comp.professionsSharedCollection).toContain(professions);
       expect(comp.jobsSharedCollection).toContain(job);
+      expect(comp.professionsSharedCollection).toContain(professions);
     });
   });
 
@@ -162,14 +162,6 @@ describe('Task Management Update Component', () => {
   });
 
   describe('Tracking relationships identifiers', () => {
-    describe('trackProfessionById', () => {
-      it('Should return tracked Profession primary key', () => {
-        const entity = { id: 123 };
-        const trackResult = comp.trackProfessionById(0, entity);
-        expect(trackResult).toEqual(entity.id);
-      });
-    });
-
     describe('trackJobById', () => {
       it('Should return tracked Job primary key', () => {
         const entity = { id: 123 };
@@ -177,20 +169,28 @@ describe('Task Management Update Component', () => {
         expect(trackResult).toEqual(entity.id);
       });
     });
+
+    describe('trackProfessionByName', () => {
+      it('Should return tracked Profession primary key', () => {
+        const entity = { name: 'ABC' };
+        const trackResult = comp.trackProfessionByName(0, entity);
+        expect(trackResult).toEqual(entity.name);
+      });
+    });
   });
 
   describe('Getting selected relationships', () => {
     describe('getSelectedProfession', () => {
       it('Should return option if no Profession is selected', () => {
-        const option = { id: 123 };
+        const option = { name: 'ABC' };
         const result = comp.getSelectedProfession(option);
         expect(result === option).toEqual(true);
       });
 
       it('Should return selected Profession for according option', () => {
-        const option = { id: 123 };
-        const selected = { id: 123 };
-        const selected2 = { id: 456 };
+        const option = { name: 'ABC' };
+        const selected = { name: 'ABC' };
+        const selected2 = { name: 'CBA' };
         const result = comp.getSelectedProfession(option, [selected2, selected]);
         expect(result === selected).toEqual(true);
         expect(result === selected2).toEqual(false);
@@ -198,8 +198,8 @@ describe('Task Management Update Component', () => {
       });
 
       it('Should return option if this Profession is not selected', () => {
-        const option = { id: 123 };
-        const selected = { id: 456 };
+        const option = { name: 'ABC' };
+        const selected = { name: 'CBA' };
         const result = comp.getSelectedProfession(option, [selected]);
         expect(result === option).toEqual(true);
         expect(result === selected).toEqual(false);

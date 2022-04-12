@@ -2,35 +2,27 @@ package uz.devops.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import uz.devops.IntegrationTest;
-import uz.devops.domain.Job;
 import uz.devops.domain.Order;
 import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderRepository;
-import uz.devops.service.OrderService;
 import uz.devops.service.dto.OrderDTO;
 import uz.devops.service.mapper.OrderMapper;
 
@@ -38,34 +30,18 @@ import uz.devops.service.mapper.OrderMapper;
  * Integration tests for the {@link OrderResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class OrderResourceIT {
-
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
-
-    private static final Long DEFAULT_PRICE = 1L;
-    private static final Long UPDATED_PRICE = 2L;
-
-    private static final String DEFAULT_CHAT_ID = "AAAAAAAAAA";
-    private static final String UPDATED_CHAT_ID = "BBBBBBBBBB";
-
-    private static final String DEFAULT_EMPLOYEE = "AAAAAAAAAA";
-    private static final String UPDATED_EMPLOYEE = "BBBBBBBBBB";
-
-    private static final Status DEFAULT_STATUS = Status.TO_DO;
-    private static final Status UPDATED_STATUS = Status.DOING;
-
-    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     private static final Instant DEFAULT_STARTED_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_STARTED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final Instant DEFAULT_END_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_END_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final Status DEFAULT_STATUS = Status.NEW;
+    private static final Status UPDATED_STATUS = Status.ACTIVE;
 
     private static final String ENTITY_API_URL = "/api/orders";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -76,14 +52,8 @@ class OrderResourceIT {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Mock
-    private OrderRepository orderRepositoryMock;
-
     @Autowired
     private OrderMapper orderMapper;
-
-    @Mock
-    private OrderService orderServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -100,24 +70,7 @@ class OrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Order createEntity(EntityManager em) {
-        Order order = new Order()
-            .name(DEFAULT_NAME)
-            .price(DEFAULT_PRICE)
-            .chatId(DEFAULT_CHAT_ID)
-            .employee(DEFAULT_EMPLOYEE)
-            .description(DEFAULT_DESCRIPTION)
-            .startedDate(DEFAULT_STARTED_DATE)
-            .endDate(DEFAULT_END_DATE);
-        // Add required entity
-        Job job;
-        if (TestUtil.findAll(em, Job.class).isEmpty()) {
-            job = JobResourceIT.createEntity(em);
-            em.persist(job);
-            em.flush();
-        } else {
-            job = TestUtil.findAll(em, Job.class).get(0);
-        }
-        order.setJob(job);
+        Order order = new Order().startedDate(DEFAULT_STARTED_DATE).endDate(DEFAULT_END_DATE).status(DEFAULT_STATUS);
         return order;
     }
 
@@ -128,25 +81,7 @@ class OrderResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Order createUpdatedEntity(EntityManager em) {
-        Order order = new Order()
-            .name(UPDATED_NAME)
-            .price(UPDATED_PRICE)
-            .chatId(UPDATED_CHAT_ID)
-            .employee(UPDATED_EMPLOYEE)
-            .status(UPDATED_STATUS)
-            .description(UPDATED_DESCRIPTION)
-            .startedDate(UPDATED_STARTED_DATE)
-            .endDate(UPDATED_END_DATE);
-        // Add required entity
-        Job job;
-        if (TestUtil.findAll(em, Job.class).isEmpty()) {
-            job = JobResourceIT.createUpdatedEntity(em);
-            em.persist(job);
-            em.flush();
-        } else {
-            job = TestUtil.findAll(em, Job.class).get(0);
-        }
-        order.setJob(job);
+        Order order = new Order().startedDate(UPDATED_STARTED_DATE).endDate(UPDATED_END_DATE).status(UPDATED_STATUS);
         return order;
     }
 
@@ -169,14 +104,9 @@ class OrderResourceIT {
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeCreate + 1);
         Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testOrder.getPrice()).isEqualTo(DEFAULT_PRICE);
-        assertThat(testOrder.getChatId()).isEqualTo(DEFAULT_CHAT_ID);
-        assertThat(testOrder.getEmployee()).isEqualTo(DEFAULT_EMPLOYEE);
-        assertThat(testOrder.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testOrder.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testOrder.getStartedDate()).isEqualTo(DEFAULT_STARTED_DATE);
         assertThat(testOrder.getEndDate()).isEqualTo(DEFAULT_END_DATE);
+        assertThat(testOrder.getStatus()).isEqualTo(DEFAULT_STATUS);
     }
 
     @Test
@@ -200,24 +130,6 @@ class OrderResourceIT {
 
     @Test
     @Transactional
-    void checkNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = orderRepository.findAll().size();
-        // set the field null
-        order.setName(null);
-
-        // Create the Order, which fails.
-        OrderDTO orderDTO = orderMapper.toDto(order);
-
-        restOrderMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(orderDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Order> orderList = orderRepository.findAll();
-        assertThat(orderList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllOrders() throws Exception {
         // Initialize the database
         orderRepository.saveAndFlush(order);
@@ -228,32 +140,9 @@ class OrderResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(order.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.intValue())))
-            .andExpect(jsonPath("$.[*].chatId").value(hasItem(DEFAULT_CHAT_ID)))
-            .andExpect(jsonPath("$.[*].employee").value(hasItem(DEFAULT_EMPLOYEE)))
-            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].startedDate").value(hasItem(DEFAULT_STARTED_DATE.toString())))
-            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())));
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllOrdersWithEagerRelationshipsIsEnabled() throws Exception {
-        when(orderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restOrderMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(orderServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllOrdersWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(orderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restOrderMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(orderServiceMock, times(1)).findAllWithEagerRelationships(any());
+            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())))
+            .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())));
     }
 
     @Test
@@ -268,14 +157,9 @@ class OrderResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(order.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.intValue()))
-            .andExpect(jsonPath("$.chatId").value(DEFAULT_CHAT_ID))
-            .andExpect(jsonPath("$.employee").value(DEFAULT_EMPLOYEE))
-            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.startedDate").value(DEFAULT_STARTED_DATE.toString()))
-            .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()));
+            .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()))
+            .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()));
     }
 
     @Test
@@ -297,15 +181,7 @@ class OrderResourceIT {
         Order updatedOrder = orderRepository.findById(order.getId()).get();
         // Disconnect from session so that the updates on updatedOrder are not directly saved in db
         em.detach(updatedOrder);
-        updatedOrder
-            .name(UPDATED_NAME)
-            .price(UPDATED_PRICE)
-            .chatId(UPDATED_CHAT_ID)
-            .employee(UPDATED_EMPLOYEE)
-            .status(UPDATED_STATUS)
-            .description(UPDATED_DESCRIPTION)
-            .startedDate(UPDATED_STARTED_DATE)
-            .endDate(UPDATED_END_DATE);
+        updatedOrder.startedDate(UPDATED_STARTED_DATE).endDate(UPDATED_END_DATE).status(UPDATED_STATUS);
         OrderDTO orderDTO = orderMapper.toDto(updatedOrder);
 
         restOrderMockMvc
@@ -320,14 +196,9 @@ class OrderResourceIT {
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeUpdate);
         Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testOrder.getPrice()).isEqualTo(UPDATED_PRICE);
-        assertThat(testOrder.getChatId()).isEqualTo(UPDATED_CHAT_ID);
-        assertThat(testOrder.getEmployee()).isEqualTo(UPDATED_EMPLOYEE);
-        assertThat(testOrder.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testOrder.getStartedDate()).isEqualTo(UPDATED_STARTED_DATE);
         assertThat(testOrder.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testOrder.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test
@@ -407,14 +278,7 @@ class OrderResourceIT {
         Order partialUpdatedOrder = new Order();
         partialUpdatedOrder.setId(order.getId());
 
-        partialUpdatedOrder
-            .name(UPDATED_NAME)
-            .chatId(UPDATED_CHAT_ID)
-            .employee(UPDATED_EMPLOYEE)
-            .status(UPDATED_STATUS)
-            .description(UPDATED_DESCRIPTION)
-            .startedDate(UPDATED_STARTED_DATE)
-            .endDate(UPDATED_END_DATE);
+        partialUpdatedOrder.startedDate(UPDATED_STARTED_DATE).status(UPDATED_STATUS);
 
         restOrderMockMvc
             .perform(
@@ -428,14 +292,9 @@ class OrderResourceIT {
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeUpdate);
         Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testOrder.getPrice()).isEqualTo(DEFAULT_PRICE);
-        assertThat(testOrder.getChatId()).isEqualTo(UPDATED_CHAT_ID);
-        assertThat(testOrder.getEmployee()).isEqualTo(UPDATED_EMPLOYEE);
-        assertThat(testOrder.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testOrder.getStartedDate()).isEqualTo(UPDATED_STARTED_DATE);
-        assertThat(testOrder.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testOrder.getEndDate()).isEqualTo(DEFAULT_END_DATE);
+        assertThat(testOrder.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test
@@ -450,15 +309,7 @@ class OrderResourceIT {
         Order partialUpdatedOrder = new Order();
         partialUpdatedOrder.setId(order.getId());
 
-        partialUpdatedOrder
-            .name(UPDATED_NAME)
-            .price(UPDATED_PRICE)
-            .chatId(UPDATED_CHAT_ID)
-            .employee(UPDATED_EMPLOYEE)
-            .status(UPDATED_STATUS)
-            .description(UPDATED_DESCRIPTION)
-            .startedDate(UPDATED_STARTED_DATE)
-            .endDate(UPDATED_END_DATE);
+        partialUpdatedOrder.startedDate(UPDATED_STARTED_DATE).endDate(UPDATED_END_DATE).status(UPDATED_STATUS);
 
         restOrderMockMvc
             .perform(
@@ -472,14 +323,9 @@ class OrderResourceIT {
         List<Order> orderList = orderRepository.findAll();
         assertThat(orderList).hasSize(databaseSizeBeforeUpdate);
         Order testOrder = orderList.get(orderList.size() - 1);
-        assertThat(testOrder.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testOrder.getPrice()).isEqualTo(UPDATED_PRICE);
-        assertThat(testOrder.getChatId()).isEqualTo(UPDATED_CHAT_ID);
-        assertThat(testOrder.getEmployee()).isEqualTo(UPDATED_EMPLOYEE);
-        assertThat(testOrder.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testOrder.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testOrder.getStartedDate()).isEqualTo(UPDATED_STARTED_DATE);
         assertThat(testOrder.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testOrder.getStatus()).isEqualTo(UPDATED_STATUS);
     }
 
     @Test

@@ -7,16 +7,6 @@
     <div class="form-row">
       <jhi-alert-error> </jhi-alert-error>
 
-      <div class="form-group col-md-6" [hidden]="editForm.get('id')!.value == null">
-        <label for="field_id" jhiTranslate="global.field.id">ID</label>
-        <nz-input-number
-          nzSize="large"
-          formControlName="id"
-          id="field_id"
-          [nzDisabled]="editForm.get('id')!.value != null"
-        ></nz-input-number>
-      </div>
-
       <div class="form-group col-md-6">
         <label
           for="field_name"
@@ -25,7 +15,7 @@
           [ngbTooltip]="'workMonitorApp.profession.help.name' | translate"
           >Name</label
         >
-        <input id="field_name" nz-input nzSize="large" formControlName="name" />
+        <input id="field_name" nz-input nzSize="large" formControlName="name" [readonly]="editForm.get('name')!.value != null" />
         <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
           <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
             This field is required.

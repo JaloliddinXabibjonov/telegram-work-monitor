@@ -1,18 +1,17 @@
 package uz.devops.service.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import uz.devops.domain.enumeration.Status;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link uz.devops.domain.Task} entity.
  */
-@Schema(description = "Справочник для описания вида этапа задачи")
+@ApiModel(description = "Справочник для описания вида этапа задачи")
 public class TaskDTO implements Serializable {
 
     private Long id;
@@ -22,14 +21,30 @@ public class TaskDTO implements Serializable {
      */
     @NotNull
     @Size(min = 3, max = 128)
-    @Schema(description = "Наименование", required = true)
+    @ApiModelProperty(value = "Наименование", required = true)
     private String name;
 
-    private Status status;
+    /**
+     * Цена
+     */
+    @ApiModelProperty(value = "Цена")
+    private String price;
 
-    private Set<ProfessionDTO> professions = new HashSet<>();
+    /**
+     * Описания
+     */
+    @ApiModelProperty(value = "Описания")
+    private String description;
+
+    /**
+     * Приоритет
+     */
+    @ApiModelProperty(value = "Приоритет")
+    private Integer priority;
 
     private JobDTO job;
+
+    private Set<ProfessionDTO> professions = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -47,20 +62,28 @@ public class TaskDTO implements Serializable {
         this.name = name;
     }
 
-    public Status getStatus() {
-        return status;
+    public String getPrice() {
+        return price;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public Set<ProfessionDTO> getProfessions() {
-        return professions;
+    public String getDescription() {
+        return description;
     }
 
-    public void setProfessions(Set<ProfessionDTO> professions) {
-        this.professions = professions;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public JobDTO getJob() {
@@ -69,6 +92,14 @@ public class TaskDTO implements Serializable {
 
     public void setJob(JobDTO job) {
         this.job = job;
+    }
+
+    public Set<ProfessionDTO> getProfessions() {
+        return professions;
+    }
+
+    public void setProfessions(Set<ProfessionDTO> professions) {
+        this.professions = professions;
     }
 
     @Override
@@ -98,9 +129,11 @@ public class TaskDTO implements Serializable {
         return "TaskDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", status='" + getStatus() + "'" +
-            ", professions=" + getProfessions() +
+            ", price='" + getPrice() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", priority=" + getPriority() +
             ", job=" + getJob() +
+            ", professions=" + getProfessions() +
             "}";
     }
 }

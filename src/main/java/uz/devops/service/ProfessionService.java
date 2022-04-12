@@ -18,14 +18,6 @@ public interface ProfessionService {
     ProfessionDTO save(ProfessionDTO professionDTO);
 
     /**
-     * Updates a profession.
-     *
-     * @param professionDTO the entity to update.
-     * @return the persisted entity.
-     */
-    ProfessionDTO update(ProfessionDTO professionDTO);
-
-    /**
      * Partially updates a profession.
      *
      * @param professionDTO the entity to update partially.
@@ -40,18 +32,19 @@ public interface ProfessionService {
      * @return the list of entities.
      */
     Page<ProfessionDTO> findAll(Pageable pageable);
+
     /**
      * Get the "id" profession.
      *
      * @param id the id of the entity.
      * @return the entity.
      */
-    //    Optional<ProfessionDTO> findOne(Long id);
-    //
-    //    /**
-    //     * Delete the "id" profession.
-    //     *
-    //     * @param id the id of the entity.
-    //     */
-    //    void delete(Long id);
+    Optional<ProfessionDTO> findOne(String id);
+
+    /**
+     * Delete the "id" profession.
+     *
+     * @param id the id of the entity.
+     */
+    void delete(String id);
 }

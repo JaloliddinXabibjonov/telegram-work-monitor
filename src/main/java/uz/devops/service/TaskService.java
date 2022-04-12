@@ -3,8 +3,6 @@ package uz.devops.service;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import uz.devops.domain.Task;
-import uz.devops.domain.TaskInfo;
 import uz.devops.service.dto.TaskDTO;
 
 /**
@@ -18,14 +16,6 @@ public interface TaskService {
      * @return the persisted entity.
      */
     TaskDTO save(TaskDTO taskDTO);
-
-    /**
-     * Updates a task.
-     *
-     * @param taskDTO the entity to update.
-     * @return the persisted entity.
-     */
-    TaskDTO update(TaskDTO taskDTO);
 
     /**
      * Partially updates a task.
@@ -65,20 +55,4 @@ public interface TaskService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    void addProfessionToTask(String profName, Task task);
-
-    void checkTaskProfession(String data, Long taskId);
-
-    TaskInfo findTaskInfoByTaskId(Long taskId);
-
-    TaskInfo getTaskInfo(Long orderId);
-
-    Task findTaskByInfoId(Long taskInfoId);
-
-    void changeTaskStatus(Long taskInfoId);
-
-    TaskInfo findTaskInfoById(Long taskInfoId);
-
-    void addTaskToTaskInfo(TaskInfo taskInfo, Long taskId);
 }

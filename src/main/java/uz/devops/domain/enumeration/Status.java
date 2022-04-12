@@ -1,9 +1,12 @@
 package uz.devops.domain.enumeration;
 
+/**
+ * The Status enumeration.
+ */
 public enum Status {
     NEW,
-    TO_DO,
     ACTIVE,
+    TO_DO,
     DOING,
     INACTIVE,
     DELETED,

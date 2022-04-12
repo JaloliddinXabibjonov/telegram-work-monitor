@@ -119,31 +119,6 @@ export class OrderService implements IEntityConfig {
         translation: 'workMonitorApp.order.id',
       },
       {
-        name: 'name.contains',
-        type: NglFilterFieldType.TEXT,
-        translation: 'workMonitorApp.order.name',
-      },
-      {
-        name: 'price.equals',
-        type: NglFilterFieldType.NUMBER,
-        translation: 'workMonitorApp.order.price',
-      },
-      {
-        name: 'chatId.contains',
-        type: NglFilterFieldType.TEXT,
-        translation: 'workMonitorApp.order.chatId',
-      },
-      {
-        name: 'employee.contains',
-        type: NglFilterFieldType.TEXT,
-        translation: 'workMonitorApp.order.employee',
-      },
-      {
-        name: 'status.in',
-        type: NglFilterFieldType.MULTI_SELECT,
-        translation: 'workMonitorApp.order.status',
-      },
-      {
         name: 'startedDate.greaterThanOrEqual',
         type: NglFilterFieldType.DATE,
         translation: 'workMonitorApp.order.startedDate',
@@ -164,13 +139,18 @@ export class OrderService implements IEntityConfig {
         translation: 'global.field.toDate',
       },
       {
-        name: 'jobName.in',
+        name: 'status.in',
+        type: NglFilterFieldType.MULTI_SELECT,
+        translation: 'workMonitorApp.order.status',
+      },
+      {
+        name: 'jobId.in',
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.order.job',
         options: {
           resourceUrl: this.jobService.resourceUrl,
-          labelField: 'name',
-          valueField: 'name',
+          labelField: 'id',
+          valueField: 'id',
         },
       },
     ];
@@ -197,31 +177,6 @@ export class OrderService implements IEntityConfig {
         type: 'translation',
       },
       {
-        title: 'workMonitorApp.order.name',
-        value: entity.name,
-        type: 'translation',
-      },
-      {
-        title: 'workMonitorApp.order.price',
-        value: entity.price,
-        type: 'translation',
-      },
-      {
-        title: 'workMonitorApp.order.chatId',
-        value: entity.chatId,
-        type: 'translation',
-      },
-      {
-        title: 'workMonitorApp.order.employee',
-        value: entity.employee,
-        type: 'translation',
-      },
-      {
-        title: 'workMonitorApp.order.status',
-        value: entity.status,
-        type: 'translation',
-      },
-      {
         title: 'workMonitorApp.order.startedDate',
         value: entity.startedDate,
         type: 'date',
@@ -232,8 +187,13 @@ export class OrderService implements IEntityConfig {
         type: 'date',
       },
       {
+        title: 'workMonitorApp.order.status',
+        value: entity.status,
+        type: 'translation',
+      },
+      {
         title: 'workMonitorApp.order.job',
-        value: entity.job?.name,
+        value: entity.job?.id,
         type: 'link',
         link: () => this.jobService.openView(entity.job!),
       },

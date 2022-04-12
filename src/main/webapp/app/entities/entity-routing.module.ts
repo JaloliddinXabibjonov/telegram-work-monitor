@@ -24,6 +24,11 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'workMonitorApp.profession.home.title' },
         loadChildren: () => import('./profession/profession.module').then(m => m.ProfessionModule),
       },
+      {
+        path: 'order-task',
+        data: { pageTitle: 'workMonitorApp.orderTask.home.title' },
+        loadChildren: () => import('./order-task/order-task.module').then(m => m.OrderTaskModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

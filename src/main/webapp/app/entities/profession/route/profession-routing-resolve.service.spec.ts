@@ -33,8 +33,8 @@ describe('Profession routing resolve service', () => {
   describe('resolve', () => {
     it('should return IProfession returned by find', () => {
       // GIVEN
-      service.find = jest.fn(id => of(new HttpResponse({ body: { id } })));
-      mockActivatedRouteSnapshot.params = { id: 123 };
+      service.find = jest.fn(name => of(new HttpResponse({ body: { name } })));
+      mockActivatedRouteSnapshot.params = { name: 'ABC' };
 
       // WHEN
       routingResolveService.resolve(mockActivatedRouteSnapshot).subscribe(result => {
@@ -42,8 +42,8 @@ describe('Profession routing resolve service', () => {
       });
 
       // THEN
-      expect(service.find).toBeCalledWith(123);
-      expect(resultProfession).toEqual({ id: 123 });
+      expect(service.find).toBeCalledWith('ABC');
+      expect(resultProfession).toEqual({ name: 'ABC' });
     });
 
     it('should return new IProfession if id is not provided', () => {
@@ -64,7 +64,7 @@ describe('Profession routing resolve service', () => {
     it('should route to 404 page if data not found in server', () => {
       // GIVEN
       jest.spyOn(service, 'find').mockReturnValue(of(new HttpResponse({ body: null as unknown as Profession })));
-      mockActivatedRouteSnapshot.params = { id: 123 };
+      mockActivatedRouteSnapshot.params = { name: 'ABC' };
 
       // WHEN
       routingResolveService.resolve(mockActivatedRouteSnapshot).subscribe(result => {
@@ -72,7 +72,7 @@ describe('Profession routing resolve service', () => {
       });
 
       // THEN
-      expect(service.find).toBeCalledWith(123);
+      expect(service.find).toBeCalledWith('ABC');
       expect(resultProfession).toEqual(undefined);
       expect(mockRouter.navigate).toHaveBeenCalledWith(['404']);
     });

@@ -9,5 +9,5 @@ export interface IEntityConfig {
 
   openDelete(id: number | string): void;
 
-  openHistory(id: number): void;
+  openHistory?(id: number): void;
 }

@@ -19,8 +19,6 @@
       },
       "id": "ID",
       "name": "Name",
-      "task": "Task",
-      "order": "Order",
       "help": {
         "name": "Наименование"
       }

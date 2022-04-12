@@ -1,0 +1,70 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="orderTask">
+      <h2 data-cy="orderTaskDetailsHeading"><span jhiTranslate="workMonitorApp.orderTask.detail.title">Order Task</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ orderTask.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.orderTask.status">Status</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'workMonitorApp.Status.' + orderTask.status }}">{{ orderTask.status }}</span>
+        </dd>
+        <dt>
+          <span jhiTranslate="workMonitorApp.orderTask.startedDate" [ngbTooltip]="'workMonitorApp.orderTask.help.startedDate' | translate"
+            >Started Date</span
+          >
+        </dt>
+        <dd>
+          <span>{{ orderTask.startedDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt>
+          <span jhiTranslate="workMonitorApp.orderTask.endDate" [ngbTooltip]="'workMonitorApp.orderTask.help.endDate' | translate"
+            >End Date</span
+          >
+        </dt>
+        <dd>
+          <span>{{ orderTask.endDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt>
+          <span
+            jhiTranslate="workMonitorApp.orderTask.employeeUsername"
+            [ngbTooltip]="'workMonitorApp.orderTask.help.employeeUsername' | translate"
+            >Employee Username</span
+          >
+        </dt>
+        <dd>
+          <span>{{ orderTask.employeeUsername }}</span>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.orderTask.task">Task</span></dt>
+        <dd>
+          <div *ngIf="orderTask.task">
+            <a [routerLink]="['/task', orderTask.task?.id, 'view']">{{ orderTask.task?.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.orderTask.order">Order</span></dt>
+        <dd>
+          <div *ngIf="orderTask.order">
+            <a [routerLink]="['/order', orderTask.order?.id, 'view']">{{ orderTask.order?.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/order-task', orderTask.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

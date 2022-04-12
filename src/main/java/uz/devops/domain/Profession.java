@@ -5,8 +5,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -26,7 +25,7 @@ public class Profession implements Serializable {
     @NotNull
     @Size(min = 3, max = 128)
     @Id
-    @Column(name = "name", length = 128)
+    @Column(name = "name", length = 128, nullable = false)
     private String name;
 
     /**
@@ -35,9 +34,9 @@ public class Profession implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(mappedBy = "professions", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "professions")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "professions", "job" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "job", "professions" }, allowSetters = true)
     private Set<Task> tasks = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -103,10 +102,13 @@ public class Profession implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Profession that = (Profession) o;
-        return name.equals(that.name);
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Profession)) {
+            return false;
+        }
+        return name != null && name.equals(((Profession) o).name);
     }
 
     @Override
@@ -119,7 +121,7 @@ public class Profession implements Serializable {
     @Override
     public String toString() {
         return "Profession{" +
-            ", name='" + getName() + "'" +
+            "name=" + getName() +
             ", description='" + getDescription() + "'" +
             "}";
     }

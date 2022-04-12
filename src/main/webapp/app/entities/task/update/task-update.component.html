@@ -50,8 +50,42 @@
       </div>
 
       <div class="form-group col-md-6">
-        <label for="field_status" jhiTranslate="workMonitorApp.task.status">Status</label>
-        <select-input id="field_status" formControlName="status" [data]="StatusConstants"></select-input>
+        <label for="field_price" jhiTranslate="workMonitorApp.task.price" [ngbTooltip]="'workMonitorApp.task.help.price' | translate"
+          >Price</label
+        >
+        <input id="field_price" nz-input nzSize="large" formControlName="price" />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_description"
+          jhiTranslate="workMonitorApp.task.description"
+          [ngbTooltip]="'workMonitorApp.task.help.description' | translate"
+          >Description</label
+        >
+        <input id="field_description" nz-input nzSize="large" formControlName="description" />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_priority"
+          jhiTranslate="workMonitorApp.task.priority"
+          [ngbTooltip]="'workMonitorApp.task.help.priority' | translate"
+          >Priority</label
+        >
+        <nz-input-number nzSize="large" formControlName="priority" id="field_priority"></nz-input-number>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="form-control-label" jhiTranslate="workMonitorApp.task.job" for="field_job">Job</label>
+        <select-input
+          formControlName="job"
+          id="field_job"
+          devopsLabelField="id"
+          [devopsShowSearch]="true"
+          [devopsServerSearch]="true"
+          [requestUrl]="jobService.resourceUrl"
+        >
+        </select-input>
       </div>
 
       <div class="form-group col-md-6">
@@ -66,23 +100,6 @@
           [requestUrl]="professionService.resourceUrl"
         >
         </select-input>
-      </div>
-      <div class="form-group col-md-6">
-        <label class="form-control-label" jhiTranslate="workMonitorApp.task.job" for="field_job">Job</label>
-        <select-input
-          formControlName="job"
-          id="field_job"
-          devopsLabelField="name"
-          [devopsShowSearch]="true"
-          [devopsServerSearch]="true"
-          [requestUrl]="jobService.resourceUrl"
-        >
-        </select-input>
-      </div>
-      <div *ngIf="editForm.get(['job'])!.invalid && (editForm.get(['job'])!.dirty || editForm.get(['job'])!.touched)">
-        <small class="form-text text-danger" *ngIf="editForm.get(['job'])?.errors?.required" jhiTranslate="entity.validation.required">
-          This field is required.
-        </small>
       </div>
     </div>
   </div>

@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { Status } from 'app/entities/enumerations/status.model';
 import { ITask, Task } from '../task.model';
 
 import { TaskService } from './task.service';
@@ -23,7 +22,9 @@ describe('Task Service', () => {
     elemDefault = {
       id: 0,
       name: 'AAAAAAA',
-      status: Status.NEW,
+      price: 'AAAAAAA',
+      description: 'AAAAAAA',
+      priority: 0,
     };
   });
 
@@ -60,7 +61,9 @@ describe('Task Service', () => {
         {
           id: 1,
           name: 'BBBBBB',
-          status: 'BBBBBB',
+          price: 'BBBBBB',
+          description: 'BBBBBB',
+          priority: 1,
         },
         elemDefault
       );
@@ -75,7 +78,12 @@ describe('Task Service', () => {
     });
 
     it('should partial update a Task', () => {
-      const patchObject = Object.assign({}, new Task());
+      const patchObject = Object.assign(
+        {
+          description: 'BBBBBB',
+        },
+        new Task()
+      );
 
       const returnedFromService = Object.assign(patchObject, elemDefault);
 
@@ -93,7 +101,9 @@ describe('Task Service', () => {
         {
           id: 1,
           name: 'BBBBBB',
-          status: 'BBBBBB',
+          price: 'BBBBBB',
+          description: 'BBBBBB',
+          priority: 1,
         },
         elemDefault
       );
@@ -145,7 +155,7 @@ describe('Task Service', () => {
       });
 
       it('should add only unique Task to an array', () => {
-        const taskArray: ITask[] = [{ id: 123 }, { id: 456 }, { id: 90209 }];
+        const taskArray: ITask[] = [{ id: 123 }, { id: 456 }, { id: 37755 }];
         const taskCollection: ITask[] = [{ id: 123 }];
         expectedResult = service.addTaskToCollectionIfMissing(taskCollection, ...taskArray);
         expect(expectedResult).toHaveLength(3);

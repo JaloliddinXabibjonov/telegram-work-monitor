@@ -3,6 +3,8 @@ export enum Status {
 
   ACTIVE = 'ACTIVE',
 
+  TO_DO = 'TO_DO',
+
   DOING = 'DOING',
 
   INACTIVE = 'INACTIVE',

@@ -1,6 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TaskService } from '../../task/service/task.service';
-import { OrderService } from '../../order/service/order.service';
 import { Subscription } from 'rxjs';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,8 +33,6 @@ export class JobComponent extends BaseComponent implements OnInit, OnDestroy {
 
   constructor(
     public jobService: JobService,
-    public taskService: TaskService,
-    public orderService: OrderService,
     private eventManager: EventManager,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
@@ -51,6 +47,7 @@ export class JobComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   loadPage(page?: number, dontNavigate?: boolean): void {
+    this.handleNavigation();
     this.loading = true;
     const pageToLoad: number = page ?? this.page ?? 1;
 

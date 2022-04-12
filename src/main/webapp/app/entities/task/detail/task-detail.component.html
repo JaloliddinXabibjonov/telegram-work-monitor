@@ -18,22 +18,36 @@
         <dd>
           <span>{{ task.name }}</span>
         </dd>
-        <dt><span jhiTranslate="workMonitorApp.task.status">Status</span></dt>
+        <dt><span jhiTranslate="workMonitorApp.task.price" [ngbTooltip]="'workMonitorApp.task.help.price' | translate">Price</span></dt>
         <dd>
-          <span jhiTranslate="{{ 'workMonitorApp.Status.' + task.status }}">{{ task.status }}</span>
+          <span>{{ task.price }}</span>
         </dd>
-        <dt><span jhiTranslate="workMonitorApp.task.profession">Profession</span></dt>
+        <dt>
+          <span jhiTranslate="workMonitorApp.task.description" [ngbTooltip]="'workMonitorApp.task.help.description' | translate"
+            >Description</span
+          >
+        </dt>
         <dd>
-          <span *ngFor="let profession of task.professions; let last = last">
-            <a [routerLink]="['/profession', profession?.id, 'view']">{{ profession.name }}</a
-            >{{ last ? '' : ', ' }}
-          </span>
+          <span>{{ task.description }}</span>
+        </dd>
+        <dt>
+          <span jhiTranslate="workMonitorApp.task.priority" [ngbTooltip]="'workMonitorApp.task.help.priority' | translate">Priority</span>
+        </dt>
+        <dd>
+          <span>{{ task.priority }}</span>
         </dd>
         <dt><span jhiTranslate="workMonitorApp.task.job">Job</span></dt>
         <dd>
           <div *ngIf="task.job">
-            <a [routerLink]="['/job', task.job?.id, 'view']">{{ task.job?.name }}</a>
+            <a [routerLink]="['/job', task.job?.id, 'view']">{{ task.job?.id }}</a>
           </div>
+        </dd>
+        <dt><span jhiTranslate="workMonitorApp.task.profession">Profession</span></dt>
+        <dd>
+          <span *ngFor="let profession of task.professions; let last = last">
+            <a [routerLink]="['/profession', profession?.name, 'view']">{{ profession.name }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
         </dd>
       </dl>
 

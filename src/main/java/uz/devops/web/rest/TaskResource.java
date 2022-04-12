@@ -95,7 +95,7 @@ public class TaskResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        TaskDTO result = taskService.update(taskDTO);
+        TaskDTO result = taskService.save(taskDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, taskDTO.getId().toString()))
@@ -148,7 +148,7 @@ public class TaskResource {
     @GetMapping("/tasks")
     public ResponseEntity<List<TaskDTO>> getAllTasks(
         Pageable pageable,
-        @RequestParam(required = false, defaultValue = "true") boolean eagerload
+        @RequestParam(required = false, defaultValue = "false") boolean eagerload
     ) {
         log.debug("REST request to get a page of Tasks");
         Page<TaskDTO> page;

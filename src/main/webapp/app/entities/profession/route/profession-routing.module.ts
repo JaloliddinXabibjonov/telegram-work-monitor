@@ -8,7 +8,7 @@ const professionRoute: Routes = [
     path: '',
     component: ProfessionComponent,
     data: {
-      defaultSort: 'id,asc',
+      defaultSort: 'name,asc',
     },
   },
 ];

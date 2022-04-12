@@ -17,7 +17,6 @@ export class ProfessionUpdateComponent extends BaseComponent implements OnInit {
   readonly profession!: IProfession;
 
   editForm = this.fb.group({
-    id: [],
     name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(128)]],
     description: [],
   });
@@ -43,7 +42,7 @@ export class ProfessionUpdateComponent extends BaseComponent implements OnInit {
   save(): void {
     this.loading = true;
     const profession = this.createFromForm();
-    if (profession.id) {
+    if (profession.name) {
       this.update(profession);
     } else {
       this.create(profession);
@@ -57,18 +56,18 @@ export class ProfessionUpdateComponent extends BaseComponent implements OnInit {
         takeUntil(this.destroy$),
         finalize(() => (this.loading = false))
       )
-      .subscribe(() => this.onSuccess('updated', profession.id));
+      .subscribe(() => this.onSuccess('updated', profession.name));
   }
 
   private create(profession: IProfession): void {
     this.professionService
       .create(profession)
       .pipe(
-        pluck('id'),
+        pluck('name'),
         takeUntil(this.destroy$),
         finalize(() => (this.loading = false))
       )
-      .subscribe(id => this.onSuccess('created', id));
+      .subscribe(name => this.onSuccess('created', name));
   }
 
   private onSuccess(action: 'created' | 'updated', id: any): void {
@@ -79,7 +78,6 @@ export class ProfessionUpdateComponent extends BaseComponent implements OnInit {
 
   protected updateForm(profession: IProfession): void {
     this.editForm.patchValue({
-      id: profession.id,
       name: profession.name,
       description: profession.description,
     });
@@ -88,7 +86,6 @@ export class ProfessionUpdateComponent extends BaseComponent implements OnInit {
   protected createFromForm(): IProfession {
     return {
       ...new Profession(),
-      id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
     };

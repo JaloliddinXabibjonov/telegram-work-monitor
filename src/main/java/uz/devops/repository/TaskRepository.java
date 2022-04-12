@@ -13,28 +13,16 @@ import uz.devops.domain.Task;
  * Spring Data SQL repository for the Task entity.
  */
 @Repository
-public interface TaskRepository extends TaskRepositoryWithBagRelationships, JpaRepository<Task, Long> {
-    default Optional<Task> findOneWithEagerRelationships(Long id) {
-        return this.fetchBagRelationships(this.findOneWithToOneRelationships(id));
-    }
-
-    default List<Task> findAllWithEagerRelationships() {
-        return this.fetchBagRelationships(this.findAllWithToOneRelationships());
-    }
-
-    default Page<Task> findAllWithEagerRelationships(Pageable pageable) {
-        return this.fetchBagRelationships(this.findAllWithToOneRelationships(pageable));
-    }
-
+public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(
-        value = "select distinct task from Task task left join fetch task.job",
+        value = "select distinct task from Task task left join fetch task.professions",
         countQuery = "select count(distinct task) from Task task"
     )
-    Page<Task> findAllWithToOneRelationships(Pageable pageable);
+    Page<Task> findAllWithEagerRelationships(Pageable pageable);
 
-    @Query("select distinct task from Task task left join fetch task.job")
-    List<Task> findAllWithToOneRelationships();
+    @Query("select distinct task from Task task left join fetch task.professions")
+    List<Task> findAllWithEagerRelationships();
 
-    @Query("select task from Task task left join fetch task.job where task.id =:id")
-    Optional<Task> findOneWithToOneRelationships(@Param("id") Long id);
+    @Query("select task from Task task left join fetch task.professions where task.id =:id")
+    Optional<Task> findOneWithEagerRelationships(@Param("id") Long id);
 }

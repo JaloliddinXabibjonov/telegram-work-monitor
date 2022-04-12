@@ -25,14 +25,14 @@
     "enableHibernateCache": true,
     "enableSwaggerCodegen": false,
     "enableTranslation": true,
-    "entities": ["Job", "Task", "Order", "Profession"],
+    "entities": ["Job", "Task", "OrderTask", "Order", "Profession"],
     "entitySuffix": "",
     "gradleEnterpriseHost": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.8.1",
     "jwtSecretKey": "MWQyOGMzMTU4MTNiZTFlZjYzYTE3ODA4MjljMDcyNzNmNmZkYjEwNDQzODQ1YzUzNzM1ZjZkYjE2MTI1MDQwZjYwN2VjZGUzZThkZmExNDU3OTYzMTY1ZGY3ZWE2YjdmOWExNzI1MGZhMjE5ZmY5YWMwMDVjODdiNjU1YWQzZDY=",
     "languages": ["en"],
-    "lastLiquibaseTimestamp": 1649417226000,
+    "lastLiquibaseTimestamp": 1649741964000,
     "messageBroker": false,
     "nativeLanguage": "en",
     "otherModules": [
@@ -55,8 +55,6 @@
     "skipUserManagement": false,
     "testFrameworks": [],
     "websocket": false,
-    "withAdminUi": true,
-    "entities": ["Job", "Task", "TaskInfo", "Order", "Profession"],
-    "lastLiquibaseTimestamp": 1649661858000
+    "withAdminUi": true
   }
 }

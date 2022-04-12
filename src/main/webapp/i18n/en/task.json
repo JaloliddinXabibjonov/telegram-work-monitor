@@ -19,11 +19,16 @@
       },
       "id": "ID",
       "name": "Name",
-      "status": "Status",
-      "profession": "Profession",
+      "price": "Price",
+      "description": "Description",
+      "priority": "Priority",
       "job": "Job",
+      "profession": "Profession",
       "help": {
-        "name": "Наименование"
+        "name": "Наименование",
+        "price": "Цена",
+        "description": "Описания",
+        "priority": "Приоритет"
       }
     }
   }

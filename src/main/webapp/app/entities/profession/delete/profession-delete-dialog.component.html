@@ -1,4 +1,4 @@
-<form *ngIf="profession" name="deleteForm" (ngSubmit)="confirmDelete(profession.id!)">
+<form *ngIf="profession" name="deleteForm" (ngSubmit)="confirmDelete(profession.name!)">
   <div class="modal-header">
     <h4 class="modal-title" data-cy="professionDeleteDialogHeading" jhiTranslate="entity.delete.title">Confirm delete operation</h4>
 
@@ -11,7 +11,7 @@
     <p
       id="jhi-delete-profession-heading"
       jhiTranslate="workMonitorApp.profession.delete.question"
-      [translateValues]="{ id: profession.id }"
+      [translateValues]="{ id: profession.name }"
     >
       Are you sure you want to delete this Profession?
     </p>

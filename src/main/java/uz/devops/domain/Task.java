@@ -5,11 +5,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import uz.devops.domain.enumeration.Status;
 
 /**
  * Справочник для описания вида этапа задачи
@@ -17,7 +15,7 @@ import uz.devops.domain.enumeration.Status;
 @Entity
 @Table(name = "task")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Task extends AbstractAuditingEntity implements Serializable {
+public class Task implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,11 +33,28 @@ public class Task extends AbstractAuditingEntity implements Serializable {
     @Column(name = "name", length = 128, nullable = false)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
+    /**
+     * Цена
+     */
+    @Column(name = "price")
+    private String price;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    /**
+     * Описания
+     */
+    @Column(name = "description")
+    private String description;
+
+    /**
+     * Приоритет
+     */
+    @Column(name = "priority")
+    private Integer priority;
+
+    @ManyToOne
+    private Job job;
+
+    @ManyToMany
     @JoinTable(
         name = "rel_task__profession",
         joinColumns = @JoinColumn(name = "task_id"),
@@ -48,10 +63,6 @@ public class Task extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "tasks" }, allowSetters = true)
     private Set<Profession> professions = new HashSet<>();
-
-    @ManyToOne(optional = false)
-    @JsonIgnoreProperties(value = { "tasks", "orders" }, allowSetters = true)
-    private Job job;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -81,17 +92,56 @@ public class Task extends AbstractAuditingEntity implements Serializable {
         this.name = name;
     }
 
-    public Status getStatus() {
-        return this.status;
+    public String getPrice() {
+        return this.price;
     }
 
-    public Task status(Status status) {
-        this.setStatus(status);
+    public Task price(String price) {
+        this.setPrice(price);
         return this;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public Task description(String description) {
+        this.setDescription(description);
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getPriority() {
+        return this.priority;
+    }
+
+    public Task priority(Integer priority) {
+        this.setPriority(priority);
+        return this;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public Job getJob() {
+        return this.job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    public Task job(Job job) {
+        this.setJob(job);
+        return this;
     }
 
     public Set<Profession> getProfessions() {
@@ -116,19 +166,6 @@ public class Task extends AbstractAuditingEntity implements Serializable {
     public Task removeProfession(Profession profession) {
         this.professions.remove(profession);
         profession.getTasks().remove(this);
-        return this;
-    }
-
-    public Job getJob() {
-        return this.job;
-    }
-
-    public void setJob(Job job) {
-        this.job = job;
-    }
-
-    public Task job(Job job) {
-        this.setJob(job);
         return this;
     }
 
@@ -157,7 +194,9 @@ public class Task extends AbstractAuditingEntity implements Serializable {
         return "Task{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", status='" + getStatus() + "'" +
+            ", price='" + getPrice() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", priority=" + getPriority() +
             "}";
     }
 }

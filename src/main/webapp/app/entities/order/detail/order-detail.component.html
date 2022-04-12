@@ -14,34 +14,6 @@
         <dd>
           <span>{{ order.id }}</span>
         </dd>
-        <dt><span jhiTranslate="workMonitorApp.order.name" [ngbTooltip]="'workMonitorApp.order.help.name' | translate">Name</span></dt>
-        <dd>
-          <span>{{ order.name }}</span>
-        </dd>
-        <dt><span jhiTranslate="workMonitorApp.order.price" [ngbTooltip]="'workMonitorApp.order.help.price' | translate">Price</span></dt>
-        <dd>
-          <span>{{ order.price }}</span>
-        </dd>
-        <dt><span jhiTranslate="workMonitorApp.order.chatId">Chat Id</span></dt>
-        <dd>
-          <span>{{ order.chatId }}</span>
-        </dd>
-        <dt><span jhiTranslate="workMonitorApp.order.employee">Employee</span></dt>
-        <dd>
-          <span>{{ order.employee }}</span>
-        </dd>
-        <dt><span jhiTranslate="workMonitorApp.order.status">Status</span></dt>
-        <dd>
-          <span jhiTranslate="{{ 'workMonitorApp.OrderStatus.' + order.status }}">{{ order.status }}</span>
-        </dd>
-        <dt>
-          <span jhiTranslate="workMonitorApp.order.description" [ngbTooltip]="'workMonitorApp.order.help.description' | translate"
-            >Description</span
-          >
-        </dt>
-        <dd>
-          <span>{{ order.description }}</span>
-        </dd>
         <dt><span jhiTranslate="workMonitorApp.order.startedDate">Started Date</span></dt>
         <dd>
           <span>{{ order.startedDate | formatMediumDatetime }}</span>
@@ -50,10 +22,14 @@
         <dd>
           <span>{{ order.endDate | formatMediumDatetime }}</span>
         </dd>
+        <dt><span jhiTranslate="workMonitorApp.order.status">Status</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'workMonitorApp.Status.' + order.status }}">{{ order.status }}</span>
+        </dd>
         <dt><span jhiTranslate="workMonitorApp.order.job">Job</span></dt>
         <dd>
           <div *ngIf="order.job">
-            <a [routerLink]="['/job', order.job?.id, 'view']">{{ order.job?.name }}</a>
+            <a [routerLink]="['/job', order.job?.id, 'view']">{{ order.job?.id }}</a>
           </div>
         </dd>
       </dl>

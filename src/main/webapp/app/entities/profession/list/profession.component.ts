@@ -49,6 +49,7 @@ export class ProfessionComponent extends BaseComponent implements OnInit, OnDest
   }
 
   loadPage(page?: number, dontNavigate?: boolean): void {
+    this.handleNavigation();
     this.loading = true;
     const pageToLoad: number = page ?? this.page ?? 1;
 
@@ -80,14 +81,14 @@ export class ProfessionComponent extends BaseComponent implements OnInit, OnDest
     this.modifySubscription = this.eventManager.subscribe('professionListModification', () => this.loadPage());
   }
 
-  trackId(index: number, item: IProfession): number {
-    return item.id!;
+  trackName(index: number, item: IProfession): string {
+    return item.name!;
   }
 
   protected sort(): string[] {
     const result = [this.predicate + ',' + (this.ascending ? ASC : DESC)];
-    if (this.predicate !== 'id') {
-      result.push('id');
+    if (this.predicate !== 'name') {
+      result.push('name');
     }
     return result;
   }

@@ -25,13 +25,13 @@ describe('Profession Management Component', () => {
           provide: ActivatedRoute,
           useValue: {
             data: of({
-              defaultSort: 'id,asc',
+              defaultSort: 'name,asc',
             }),
             queryParamMap: of(
               jest.requireActual('@angular/router').convertToParamMap({
                 page: '1',
                 size: '1',
-                sort: 'id,desc',
+                sort: 'name,desc',
               })
             ),
           },
@@ -49,7 +49,7 @@ describe('Profession Management Component', () => {
     jest.spyOn(service, 'query').mockReturnValue(
       of(
         new HttpResponse({
-          body: [{ id: 123 }],
+          body: [{ name: 'ABC' }],
           headers,
         })
       )
@@ -62,7 +62,7 @@ describe('Profession Management Component', () => {
 
     // THEN
     expect(service.query).toHaveBeenCalled();
-    expect(comp.professions?.[0]).toEqual(expect.objectContaining({ id: 123 }));
+    expect(comp.professions?.[0]).toEqual(expect.objectContaining({ name: 'ABC' }));
   });
 
   it('should load a page', () => {
@@ -71,7 +71,7 @@ describe('Profession Management Component', () => {
 
     // THEN
     expect(service.query).toHaveBeenCalled();
-    expect(comp.professions?.[0]).toEqual(expect.objectContaining({ id: 123 }));
+    expect(comp.professions?.[0]).toEqual(expect.objectContaining({ name: 'ABC' }));
   });
 
   it('should calculate the sort attribute for an id', () => {
@@ -79,7 +79,7 @@ describe('Profession Management Component', () => {
     comp.ngOnInit();
 
     // THEN
-    expect(service.query).toHaveBeenCalledWith(expect.objectContaining({ sort: ['id,desc'] }));
+    expect(service.query).toHaveBeenCalledWith(expect.objectContaining({ sort: ['name,desc'] }));
   });
 
   it('should calculate the sort attribute for a non-id attribute', () => {
@@ -93,6 +93,6 @@ describe('Profession Management Component', () => {
     comp.loadPage(1);
 
     // THEN
-    expect(service.query).toHaveBeenLastCalledWith(expect.objectContaining({ sort: ['name,desc', 'id'] }));
+    expect(service.query).toHaveBeenLastCalledWith(expect.objectContaining({ sort: ['name,desc', 'name'] }));
   });
 });

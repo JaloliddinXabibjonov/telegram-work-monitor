@@ -8,11 +8,10 @@ import { EventManager } from 'app/core/util/event-manager.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../../../core/util/alert.service';
 import { BaseComponent } from '../../../shared/class/base-component.model';
-import { IProfession } from 'app/entities/profession/profession.model';
-import { ProfessionService } from 'app/entities/profession/service/profession.service';
 import { IJob } from 'app/entities/job/job.model';
 import { JobService } from 'app/entities/job/service/job.service';
-import { Status } from 'app/entities/enumerations/status.model';
+import { IProfession } from 'app/entities/profession/profession.model';
+import { ProfessionService } from 'app/entities/profession/service/profession.service';
 
 @Component({
   templateUrl: './task-update.component.html',
@@ -20,26 +19,26 @@ import { Status } from 'app/entities/enumerations/status.model';
 export class TaskUpdateComponent extends BaseComponent implements OnInit {
   isSaving = false;
   readonly task!: ITask;
-  statusValues = Object.keys(Status);
 
-  professions: IProfession[] = [];
   jobs: IJob[] = [];
-  StatusConstants = Object.keys(Status);
+  professions: IProfession[] = [];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(128)]],
-    status: [],
+    price: [],
+    description: [],
+    priority: [],
+    job: [],
     professions: [],
-    job: [null, Validators.required],
   });
 
   constructor(
     private readonly eventManager: EventManager,
     private readonly alertService: AlertService,
     public readonly taskService: TaskService,
-    public readonly professionService: ProfessionService,
     public readonly jobService: JobService,
+    public readonly professionService: ProfessionService,
     public readonly activeModal: NgbActiveModal,
     private readonly fb: FormBuilder
   ) {
@@ -52,21 +51,21 @@ export class TaskUpdateComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateForm(this.task);
-    this.loadProfessions();
     this.loadJobs();
+    this.loadProfessions();
   }
 
-  private loadProfessions() {
-    this.professionService
-      .query()
-      .pipe(pluck('body'), takeUntil(this.destroy$))
-      .subscribe(professions => (this.professions = professions ?? []));
-  }
   private loadJobs() {
     this.jobService
       .query()
       .pipe(pluck('body'), takeUntil(this.destroy$))
       .subscribe(jobs => (this.jobs = jobs ?? []));
+  }
+  private loadProfessions() {
+    this.professionService
+      .query()
+      .pipe(pluck('body'), takeUntil(this.destroy$))
+      .subscribe(professions => (this.professions = professions ?? []));
   }
 
   save(): void {
@@ -110,9 +109,11 @@ export class TaskUpdateComponent extends BaseComponent implements OnInit {
     this.editForm.patchValue({
       id: task.id,
       name: task.name,
-      status: task.status,
-      professions: task.professions,
+      price: task.price,
+      description: task.description,
+      priority: task.priority,
       job: task.job,
+      professions: task.professions,
     });
   }
 
@@ -121,22 +122,12 @@ export class TaskUpdateComponent extends BaseComponent implements OnInit {
       ...new Task(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      status: this.editForm.get(['status'])!.value,
-      professions: this.editForm.get(['professions'])!.value,
+      price: this.editForm.get(['price'])!.value,
+      description: this.editForm.get(['description'])!.value,
+      priority: this.editForm.get(['priority'])!.value,
       job: this.editForm.get(['job'])!.value,
+      professions: this.editForm.get(['professions'])!.value,
     };
-  }
-
-  loadProfessionModification(value: any): void {
-    this.eventManager.subscribe('ProfessionListModified', () => {
-      const query = {
-        'id.equals': value,
-      };
-      this.professionService
-        .query(query)
-        .pipe(takeUntil(this.destroy$), debounceTime(1000))
-        .subscribe(res => (this.professions = res.body ?? []));
-    });
   }
 
   loadJobModification(value: any): void {
@@ -148,6 +139,18 @@ export class TaskUpdateComponent extends BaseComponent implements OnInit {
         .query(query)
         .pipe(takeUntil(this.destroy$), debounceTime(1000))
         .subscribe(res => (this.jobs = res.body ?? []));
+    });
+  }
+
+  loadProfessionModification(value: any): void {
+    this.eventManager.subscribe('ProfessionListModified', () => {
+      const query = {
+        'id.equals': value,
+      };
+      this.professionService
+        .query(query)
+        .pipe(takeUntil(this.destroy$), debounceTime(1000))
+        .subscribe(res => (this.professions = res.body ?? []));
     });
   }
 }

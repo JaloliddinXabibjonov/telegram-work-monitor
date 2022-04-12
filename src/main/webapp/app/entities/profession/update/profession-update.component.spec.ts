@@ -36,7 +36,7 @@ describe('Profession Management Update Component', () => {
 
   describe('ngOnInit', () => {
     it('Should update editForm', () => {
-      const profession: IProfession = { id: 456 };
+      const profession: IProfession = { name: 'CBA' };
 
       activatedRoute.data = of({ profession });
       comp.ngOnInit();
@@ -49,7 +49,7 @@ describe('Profession Management Update Component', () => {
     it('Should call update service on save for existing entity', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<Profession>>();
-      const profession = { id: 123 };
+      const profession = { name: 'ABC' };
       jest.spyOn(professionService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ profession });
@@ -91,7 +91,7 @@ describe('Profession Management Update Component', () => {
     it('Should set isSaving to false on error', () => {
       // GIVEN
       const saveSubject = new Subject<HttpResponse<Profession>>();
-      const profession = { id: 123 };
+      const profession = { name: 'ABC' };
       jest.spyOn(professionService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ profession });

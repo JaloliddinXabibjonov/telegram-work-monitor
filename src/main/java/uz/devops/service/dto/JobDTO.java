@@ -1,6 +1,7 @@
 package uz.devops.service.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.validation.constraints.*;
@@ -8,7 +9,7 @@ import javax.validation.constraints.*;
 /**
  * A DTO for the {@link uz.devops.domain.Job} entity.
  */
-@Schema(description = "Справочник для описания вида этапа работы")
+@ApiModel(description = "Справочник для описания вида этапа работы")
 public class JobDTO implements Serializable {
 
     private Long id;
@@ -18,7 +19,7 @@ public class JobDTO implements Serializable {
      */
     @NotNull
     @Size(min = 3, max = 128)
-    @Schema(description = "Наименование", required = true)
+    @ApiModelProperty(value = "Наименование", required = true)
     private String name;
 
     public Long getId() {

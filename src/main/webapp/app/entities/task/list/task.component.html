@@ -41,8 +41,12 @@
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
           <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
           <th jhiSortBy="name"><span jhiTranslate="workMonitorApp.task.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="status"><span jhiTranslate="workMonitorApp.task.status">Status</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="job.name"><span jhiTranslate="workMonitorApp.task.job">Job</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="price"><span jhiTranslate="workMonitorApp.task.price">Price</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="description">
+            <span jhiTranslate="workMonitorApp.task.description">Description</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th jhiSortBy="priority"><span jhiTranslate="workMonitorApp.task.priority">Priority</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="job.id"><span jhiTranslate="workMonitorApp.task.job">Job</span> <fa-icon icon="sort"></fa-icon></th>
           <th></th>
         </tr>
       </thead>
@@ -52,10 +56,12 @@
             <a href="javascript:void(0)" (click)="taskService.openView(task)">{{ task.id }}</a>
           </td>
           <td>{{ task.name }}</td>
-          <td jhiTranslate="{{ 'workMonitorApp.Status.' + task.status }}">{{ task.status }}</td>
+          <td>{{ task.price }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.priority }}</td>
           <td>
             <div *ngIf="task.job">
-              <a href="javascript:void(0)" click="jobService.openView(task.job)">{{ task.job?.name }}</a>
+              <a href="javascript:void(0)" click="jobService.openView(task.job)">{{ task.job?.id }}</a>
             </div>
           </td>
           <td [width]="10" class="text-right">

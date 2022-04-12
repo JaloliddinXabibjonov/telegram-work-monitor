@@ -40,19 +40,12 @@
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
           <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="name"><span jhiTranslate="workMonitorApp.order.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="price"><span jhiTranslate="workMonitorApp.order.price">Price</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="chatId"><span jhiTranslate="workMonitorApp.order.chatId">Chat Id</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="employee"><span jhiTranslate="workMonitorApp.order.employee">Employee</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="status"><span jhiTranslate="workMonitorApp.order.status">Status</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="description">
-            <span jhiTranslate="workMonitorApp.order.description">Description</span> <fa-icon icon="sort"></fa-icon>
-          </th>
           <th jhiSortBy="startedDate">
             <span jhiTranslate="workMonitorApp.order.startedDate">Started Date</span> <fa-icon icon="sort"></fa-icon>
           </th>
           <th jhiSortBy="endDate"><span jhiTranslate="workMonitorApp.order.endDate">End Date</span> <fa-icon icon="sort"></fa-icon></th>
-          <th jhiSortBy="job.name"><span jhiTranslate="workMonitorApp.order.job">Job</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="status"><span jhiTranslate="workMonitorApp.order.status">Status</span> <fa-icon icon="sort"></fa-icon></th>
+          <th jhiSortBy="job.id"><span jhiTranslate="workMonitorApp.order.job">Job</span> <fa-icon icon="sort"></fa-icon></th>
           <th></th>
         </tr>
       </thead>
@@ -61,17 +54,12 @@
           <td>
             <a href="javascript:void(0)" (click)="orderService.openView(order)">{{ order.id }}</a>
           </td>
-          <td>{{ order.name }}</td>
-          <td>{{ order.price }}</td>
-          <td>{{ order.chatId }}</td>
-          <td>{{ order.employee }}</td>
-          <td jhiTranslate="{{ 'workMonitorApp.OrderStatus.' + order.status }}">{{ order.status }}</td>
-          <td>{{ order.description }}</td>
           <td>{{ order.startedDate | formatMediumDatetime }}</td>
           <td>{{ order.endDate | formatMediumDatetime }}</td>
+          <td jhiTranslate="{{ 'workMonitorApp.Status.' + order.status }}">{{ order.status }}</td>
           <td>
             <div *ngIf="order.job">
-              <a href="javascript:void(0)" click="jobService.openView(order.job)">{{ order.job?.name }}</a>
+              <a href="javascript:void(0)" click="jobService.openView(order.job)">{{ order.job?.id }}</a>
             </div>
           </td>
           <td [width]="10" class="text-right">

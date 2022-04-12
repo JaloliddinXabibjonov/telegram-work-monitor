@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import * as dayjs from 'dayjs';
 
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
-import { OrderStatus } from 'app/entities/enumerations/order-status.model';
+import { Status } from 'app/entities/enumerations/status.model';
 import { IOrder, Order } from '../order.model';
 
 import { OrderService } from './order.service';
@@ -26,14 +26,9 @@ describe('Order Service', () => {
 
     elemDefault = {
       id: 0,
-      name: 'AAAAAAA',
-      price: 0,
-      chatId: 'AAAAAAA',
-      employee: 'AAAAAAA',
-      status: OrderStatus.TO_DO,
-      description: 'AAAAAAA',
       startedDate: currentDate,
       endDate: currentDate,
+      status: Status.NEW,
     };
   });
 
@@ -83,14 +78,9 @@ describe('Order Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
-          name: 'BBBBBB',
-          price: 1,
-          chatId: 'BBBBBB',
-          employee: 'BBBBBB',
-          status: 'BBBBBB',
-          description: 'BBBBBB',
           startedDate: currentDate.format(DATE_TIME_FORMAT),
           endDate: currentDate.format(DATE_TIME_FORMAT),
+          status: 'BBBBBB',
         },
         elemDefault
       );
@@ -113,8 +103,7 @@ describe('Order Service', () => {
     it('should partial update a Order', () => {
       const patchObject = Object.assign(
         {
-          name: 'BBBBBB',
-          chatId: 'BBBBBB',
+          startedDate: currentDate.format(DATE_TIME_FORMAT),
           status: 'BBBBBB',
         },
         new Order()
@@ -141,14 +130,9 @@ describe('Order Service', () => {
       const returnedFromService = Object.assign(
         {
           id: 1,
-          name: 'BBBBBB',
-          price: 1,
-          chatId: 'BBBBBB',
-          employee: 'BBBBBB',
-          status: 'BBBBBB',
-          description: 'BBBBBB',
           startedDate: currentDate.format(DATE_TIME_FORMAT),
           endDate: currentDate.format(DATE_TIME_FORMAT),
+          status: 'BBBBBB',
         },
         elemDefault
       );
@@ -206,7 +190,7 @@ describe('Order Service', () => {
       });
 
       it('should add only unique Order to an array', () => {
-        const orderArray: IOrder[] = [{ id: 123 }, { id: 456 }, { id: 99279 }];
+        const orderArray: IOrder[] = [{ id: 123 }, { id: 456 }, { id: 19267 }];
         const orderCollection: IOrder[] = [{ id: 123 }];
         expectedResult = service.addOrderToCollectionIfMissing(orderCollection, ...orderArray);
         expect(expectedResult).toHaveLength(3);

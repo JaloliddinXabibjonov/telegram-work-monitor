@@ -1,14 +1,8 @@
 package uz.devops.service;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import uz.devops.command.SimpleResultData;
-import uz.devops.domain.Job;
-import uz.devops.domain.Order;
-import uz.devops.domain.Task;
 import uz.devops.service.dto.JobDTO;
 
 /**
@@ -22,14 +16,6 @@ public interface JobService {
      * @return the persisted entity.
      */
     JobDTO save(JobDTO jobDTO);
-
-    /**
-     * Updates a job.
-     *
-     * @param jobDTO the entity to update.
-     * @return the persisted entity.
-     */
-    JobDTO update(JobDTO jobDTO);
 
     /**
      * Partially updates a job.
@@ -61,16 +47,4 @@ public interface JobService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    SimpleResultData<Task> getAvailableTask(Long jobId);
-
-    Job createNewJob(Message message);
-
-    void addOrderToJob(Long jobId, Order order);
-
-    SimpleResultData<List<Job>> findAvailableJobs();
-
-    SimpleResultData<List<Job>> findDoneJobs();
-
-    Job findJobByOrderId(Long orderId);
 }

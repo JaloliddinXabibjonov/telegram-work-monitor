@@ -1,17 +1,16 @@
 {
-  "applications": ["WorkMonitor"],
-  "changelogDate": "20220408112706",
-  "dto": "mapstruct",
-  "embedded": false,
-  "entityTableName": "profession",
+  "name": "Profession",
   "fields": [
     {
       "fieldName": "name",
       "fieldType": "String",
+      "javadoc": "Наименование",
       "fieldValidateRules": ["required", "minlength", "maxlength"],
-      "fieldValidateRulesMaxlength": "128",
       "fieldValidateRulesMinlength": "3",
-      "javadoc": "Наименование"
+      "fieldValidateRulesMaxlength": "128",
+      "options": {
+        "id": true
+      }
     },
     {
       "fieldName": "description",
@@ -19,21 +18,25 @@
       "javadoc": "Описание профессии"
     }
   ],
-  "fluentMethods": true,
-  "javadoc": "Роли",
-  "jpaMetamodelFiltering": false,
-  "name": "Profession",
-  "pagination": "pagination",
-  "readOnly": false,
   "relationships": [
     {
-      "otherEntityField": "name",
+      "relationshipType": "many-to-many",
       "otherEntityName": "task",
       "otherEntityRelationshipName": "profession",
-      "ownerSide": false,
       "relationshipName": "task",
-      "relationshipType": "many-to-many"
+      "otherEntityField": "name",
+      "ownerSide": false
     }
   ],
-  "service": "serviceImpl"
+  "javadoc": "Роли",
+  "entityTableName": "profession",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20220412053924"
 }

@@ -3,7 +3,6 @@ package uz.devops.service;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import uz.devops.domain.Order;
 import uz.devops.service.dto.OrderDTO;
 
 /**
@@ -17,14 +16,6 @@ public interface OrderService {
      * @return the persisted entity.
      */
     OrderDTO save(OrderDTO orderDTO);
-
-    /**
-     * Updates a order.
-     *
-     * @param orderDTO the entity to update.
-     * @return the persisted entity.
-     */
-    OrderDTO update(OrderDTO orderDTO);
 
     /**
      * Partially updates a order.
@@ -43,14 +34,6 @@ public interface OrderService {
     Page<OrderDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the orders with eager load of many-to-many relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<OrderDTO> findAllWithEagerRelationships(Pageable pageable);
-
-    /**
      * Get the "id" order.
      *
      * @param id the id of the entity.
@@ -64,8 +47,4 @@ public interface OrderService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    Optional<Order> findOrderById(Long orderId);
-
-    void addOrderToTaskInfo(Long orderId, Long taskInfoId);
 }

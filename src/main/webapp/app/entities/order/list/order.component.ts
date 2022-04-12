@@ -13,7 +13,6 @@ import { IOrder } from '../order.model';
 import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants';
 import { EventManager } from '../../../core/util/event-manager.service';
 import { OrderService } from '../service/order.service';
-import { DataUtils } from 'app/core/util/data-util.service';
 
 @Component({
   selector: 'jhi-order',
@@ -38,7 +37,6 @@ export class OrderComponent extends BaseComponent implements OnInit, OnDestroy {
     public jobService: JobService,
     private eventManager: EventManager,
     protected activatedRoute: ActivatedRoute,
-    protected dataUtils: DataUtils,
     protected router: Router,
     protected modalService: NgbModal
   ) {
@@ -51,6 +49,7 @@ export class OrderComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   loadPage(page?: number, dontNavigate?: boolean): void {
+    this.handleNavigation();
     this.loading = true;
     const pageToLoad: number = page ?? this.page ?? 1;
 
@@ -84,14 +83,6 @@ export class OrderComponent extends BaseComponent implements OnInit, OnDestroy {
 
   trackId(index: number, item: IOrder): number {
     return item.id!;
-  }
-
-  byteSize(base64String: string): string {
-    return this.dataUtils.byteSize(base64String);
-  }
-
-  openFile(base64String: string, contentType: string | null | undefined): void {
-    return this.dataUtils.openFile(base64String, contentType);
   }
 
   protected sort(): string[] {

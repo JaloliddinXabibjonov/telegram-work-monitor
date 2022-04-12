@@ -31,18 +31,18 @@ export class ProfessionService implements IEntityConfig {
   }
 
   update(profession: IProfession): Observable<EntityResponseType> {
-    return this.http.put<IProfession>(`${this.resourceUrl}/${getProfessionIdentifier(profession) as number}`, profession, {
+    return this.http.put<IProfession>(`${this.resourceUrl}/${getProfessionIdentifier(profession) as string}`, profession, {
       observe: 'response',
     });
   }
 
   partialUpdate(profession: IProfession): Observable<EntityResponseType> {
-    return this.http.patch<IProfession>(`${this.resourceUrl}/${getProfessionIdentifier(profession) as number}`, profession, {
+    return this.http.patch<IProfession>(`${this.resourceUrl}/${getProfessionIdentifier(profession) as string}`, profession, {
       observe: 'response',
     });
   }
 
-  find(id: number): Observable<EntityResponseType> {
+  find(id: string): Observable<EntityResponseType> {
     return this.http.get<IProfession>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
@@ -51,7 +51,7 @@ export class ProfessionService implements IEntityConfig {
     return this.http.get<IProfession[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  delete(id: number): Observable<HttpResponse<{}>> {
+  delete(id: string): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
@@ -77,12 +77,7 @@ export class ProfessionService implements IEntityConfig {
 
   getFilterFields(): NglFilterField[] {
     return [
-      { name: 'id.equals', type: NglFilterFieldType.NUMBER, translation: 'global.field.id' },
-      {
-        name: 'id.equals',
-        type: NglFilterFieldType.NUMBER,
-        translation: 'workMonitorApp.profession.id',
-      },
+      { name: 'name.contains', type: NglFilterFieldType.TEXT, translation: 'global.field.name' },
       {
         name: 'name.contains',
         type: NglFilterFieldType.TEXT,
@@ -110,12 +105,7 @@ export class ProfessionService implements IEntityConfig {
 
   openView(entity: IProfession): void {
     const options: EntityViewOptions[] = [
-      { title: 'global.field.id', value: entity.id },
-      {
-        title: 'workMonitorApp.profession.id',
-        value: entity.id,
-        type: 'translation',
-      },
+      { title: 'global.field.name', value: entity.name },
       {
         title: 'workMonitorApp.profession.name',
         value: entity.name,
@@ -128,9 +118,9 @@ export class ProfessionService implements IEntityConfig {
       },
     ];
 
-    this.entityService.view(options, entity.id);
+    this.entityService.view(options, entity.name);
   }
-  openDelete(id: number): void {
+  openDelete(id: string): void {
     const options = {
       useFunction: this.delete(id),
       event: 'professionListModification',
@@ -141,13 +131,13 @@ export class ProfessionService implements IEntityConfig {
     this.entityService.delete(options);
   }
 
-  openHistory(id: number): void {
-    const options = {
-      qualifiedName: 'PROFESSION',
-      entityId: id,
-      i18nPrefix: 'workMonitorApp.profession',
-    };
-
-    this.entityService.history(options);
-  }
+  // openHistory(name: string): void {
+  //   const options = {
+  //     qualifiedName: 'PROFESSION',
+  //     entityId: name,
+  //     i18nPrefix: 'workMonitorApp.profession',
+  //   };
+  //
+  //   this.entityService.history(options);
+  // }
 }

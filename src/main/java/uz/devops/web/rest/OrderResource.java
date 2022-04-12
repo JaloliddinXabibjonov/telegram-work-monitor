@@ -5,8 +5,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,7 +54,7 @@ public class OrderResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/orders")
-    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) throws URISyntaxException {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) throws URISyntaxException {
         log.debug("REST request to save Order : {}", orderDTO);
         if (orderDTO.getId() != null) {
             throw new BadRequestAlertException("A new order cannot already have an ID", ENTITY_NAME, "idexists");
@@ -81,7 +79,7 @@ public class OrderResource {
     @PutMapping("/orders/{id}")
     public ResponseEntity<OrderDTO> updateOrder(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody OrderDTO orderDTO
+        @RequestBody OrderDTO orderDTO
     ) throws URISyntaxException {
         log.debug("REST request to update Order : {}, {}", id, orderDTO);
         if (orderDTO.getId() == null) {
@@ -95,7 +93,7 @@ public class OrderResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        OrderDTO result = orderService.update(orderDTO);
+        OrderDTO result = orderService.save(orderDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, orderDTO.getId().toString()))
@@ -116,7 +114,7 @@ public class OrderResource {
     @PatchMapping(value = "/orders/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<OrderDTO> partialUpdateOrder(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody OrderDTO orderDTO
+        @RequestBody OrderDTO orderDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update Order partially : {}, {}", id, orderDTO);
         if (orderDTO.getId() == null) {
@@ -142,21 +140,12 @@ public class OrderResource {
      * {@code GET  /orders} : get all the orders.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orders in body.
      */
     @GetMapping("/orders")
-    public ResponseEntity<List<OrderDTO>> getAllOrders(
-        Pageable pageable,
-        @RequestParam(required = false, defaultValue = "true") boolean eagerload
-    ) {
+    public ResponseEntity<List<OrderDTO>> getAllOrders(Pageable pageable) {
         log.debug("REST request to get a page of Orders");
-        Page<OrderDTO> page;
-        if (eagerload) {
-            page = orderService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = orderService.findAll(pageable);
-        }
+        Page<OrderDTO> page = orderService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

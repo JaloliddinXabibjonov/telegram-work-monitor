@@ -39,7 +39,6 @@
     <nz-table [nzLoading]="loading" [nzShowPagination]="false" nzSize="small" nzOuterBordered nzTemplateMode>
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="loadPage()">
-          <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
           <th jhiSortBy="name"><span jhiTranslate="workMonitorApp.profession.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
           <th jhiSortBy="description">
             <span jhiTranslate="workMonitorApp.profession.description">Description</span> <fa-icon icon="sort"></fa-icon>
@@ -48,11 +47,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let profession of professions; trackBy: trackId">
+        <tr *ngFor="let profession of professions; trackBy: trackName">
           <td>
-            <a href="javascript:void(0)" (click)="professionService.openView(profession)">{{ profession.id }}</a>
+            <a href="javascript:void(0)" (click)="professionService.openView(profession)">{{ profession.name }}</a>
           </td>
-          <td>{{ profession.name }}</td>
           <td>{{ profession.description }}</td>
           <td [width]="10" class="text-right">
             <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_profession_WRITE'">
@@ -63,7 +61,7 @@
                 <i nz-icon nzType="edit" class="icon-btn"></i>
               </button>
 
-              <button nz-button (click)="professionService.openDelete(profession.id)">
+              <button nz-button (click)="professionService.openDelete(profession.name)">
                 <i nz-icon nzType="delete" class="icon-btn"></i>
               </button>
             </nz-button-group>

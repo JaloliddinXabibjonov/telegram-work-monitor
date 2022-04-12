@@ -14,7 +14,7 @@ describe('Profession Management Detail Component', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { data: of({ profession: { id: 123 } }) },
+          useValue: { data: of({ profession: { name: 'ABC' } }) },
         },
       ],
     })
@@ -30,7 +30,7 @@ describe('Profession Management Detail Component', () => {
       comp.ngOnInit();
 
       // THEN
-      expect(comp.profession).toEqual(expect.objectContaining({ id: 123 }));
+      expect(comp.profession).toEqual(expect.objectContaining({ name: 'ABC' }));
     });
   });
 });

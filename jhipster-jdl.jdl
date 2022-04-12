@@ -1,18 +1,7 @@
-
-application {
-  config {
-    baseName WorkMonitor,
-    applicationType monolith,
-    packageName uz.devops,
-    authenticationType jwt,
-    clientFramework angular
-  }
-  entities *
-}
-
 /**
  * Справочник для описания вида этапа работы
  */
+ // Task category
 entity Job {
 name String required minlength(3) maxlength(128) /** Наименование */
 }
@@ -21,42 +10,44 @@ name String required minlength(3) maxlength(128) /** Наименование */
  * Справочник для описания вида этапа задачи
  */
 entity Task {
-name String required minlength(3) maxlength(128) /** Наименование */
+name String required minlength(3 ) maxlength(128) /** Наименование */
+price String /** Цена*/
+description String /** Описания*/
+priority Integer /** Приоритет */
+}
+
+entity OrderTask { 
 status Status //** Статус задачи*/
+startedDate Instant /** Дата начала*/
+endDate Instant /** Дата окончания*/
+employeeUsername String /** Имя сотрудника*/
 }
 
 /**
  * Заказы на работу
  */
 entity Order {
-	name String required minlength(3) maxlength(128) /** Наименование */
-    price Long /** Цена заказа */
-    chatId String //** ID чата */
-    employee String //** Сотрудник*/
-    status OrderStatus //** Статус заказа*/
-    description TextBlob /** Описание заказа  */
     startedDate Instant //** Дата начала */
-    endDate Instant //** Дата окончания */
+	endDate Instant //** Дата окончания */
+    status Status
 }
 
 /**
  * Роли
  */
 entity Profession {
-name String required minlength(3) maxlength(128) /** Наименование */
+@Id name String required minlength(3) maxlength(128) /** Наименование */
 description String /** Описание профессии  */
 }
 
-enum OrderStatus {
-	TO_DO, DOING, DONE
-}
 enum Status {
-	NEW, ACTIVE, DOING INACTIVE, DELETED, DONE
+	NEW, ACTIVE, TO_DO, DOING, INACTIVE, DELETED, DONE
 }
-
-relationship OneToMany {
-  Job to Task{job(name) required},
-  Job to Order{job(name) required}
+relationship ManyToOne {
+	OrderTask{task} to Task
+  	OrderTask{order} to Order
+    Task{job} to Job
+    Order{job} to Job
 }
 
 relationship ManyToMany {

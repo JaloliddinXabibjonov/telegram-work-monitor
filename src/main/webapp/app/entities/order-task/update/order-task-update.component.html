@@ -1,0 +1,90 @@
+<form class="fade-in" [formGroup]="editForm" (ngSubmit)="save()">
+  <div class="modal-header">
+    <h4 class="modal-title" jhiTranslate="workMonitorApp.orderTask.home.createOrEditLabel">Create or edit a Order Task</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="activeModal.dismiss()">&times;</button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <jhi-alert-error> </jhi-alert-error>
+
+      <div class="form-group col-md-6" [hidden]="editForm.get('id')!.value == null">
+        <label for="field_id" jhiTranslate="global.field.id">ID</label>
+        <nz-input-number
+          nzSize="large"
+          formControlName="id"
+          id="field_id"
+          [nzDisabled]="editForm.get('id')!.value != null"
+        ></nz-input-number>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="field_status" jhiTranslate="workMonitorApp.orderTask.status">Status</label>
+        <select-input id="field_status" formControlName="status" [data]="StatusConstants"></select-input>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_startedDate"
+          jhiTranslate="workMonitorApp.orderTask.startedDate"
+          [ngbTooltip]="'workMonitorApp.orderTask.help.startedDate' | translate"
+          >Started Date</label
+        >
+        <nz-date-picker id="field_startedDate" formControlName="recipientDate" nzSize="large" nzFormat="dd.MM.yyyy HH:mm"></nz-date-picker>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_endDate"
+          jhiTranslate="workMonitorApp.orderTask.endDate"
+          [ngbTooltip]="'workMonitorApp.orderTask.help.endDate' | translate"
+          >End Date</label
+        >
+        <nz-date-picker id="field_endDate" formControlName="recipientDate" nzSize="large" nzFormat="dd.MM.yyyy HH:mm"></nz-date-picker>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label
+          for="field_employeeUsername"
+          jhiTranslate="workMonitorApp.orderTask.employeeUsername"
+          [ngbTooltip]="'workMonitorApp.orderTask.help.employeeUsername' | translate"
+          >Employee Username</label
+        >
+        <input id="field_employeeUsername" nz-input nzSize="large" formControlName="employeeUsername" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="form-control-label" jhiTranslate="workMonitorApp.orderTask.task" for="field_task">Task</label>
+        <select-input
+          formControlName="task"
+          id="field_task"
+          devopsLabelField="id"
+          [devopsShowSearch]="true"
+          [devopsServerSearch]="true"
+          [requestUrl]="taskService.resourceUrl"
+        >
+        </select-input>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="form-control-label" jhiTranslate="workMonitorApp.orderTask.order" for="field_order">Order</label>
+        <select-input
+          formControlName="order"
+          id="field_order"
+          devopsLabelField="id"
+          [devopsShowSearch]="true"
+          [devopsServerSearch]="true"
+          [requestUrl]="orderService.resourceUrl"
+        >
+        </select-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" nzSize="large" nz-button id="cancel-save" (click)="activeModal.dismiss()">
+      <span jhiTranslate="entity.action.cancel">Cancel</span>
+    </button>
+
+    <button nz-button nzSize="large" nzType="primary" [nzLoading]="loading" [input-validator-button]="editForm">
+      {{ 'entity.action.save' | translate }}
+    </button>
+  </div>
+</form>

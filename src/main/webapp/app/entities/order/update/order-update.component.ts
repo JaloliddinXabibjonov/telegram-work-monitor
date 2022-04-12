@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { debounceTime, finalize, pluck, takeUntil } from 'rxjs/operators';
 
 import * as dayjs from 'dayjs';
@@ -7,16 +7,13 @@ import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import { IOrder, Order } from '../order.model';
 import { OrderService } from '../service/order.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../../../core/util/alert.service';
 import { BaseComponent } from '../../../shared/class/base-component.model';
-import { AlertError } from 'app/shared/alert/alert-error.model';
-import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-
 import { IJob } from 'app/entities/job/job.model';
 import { JobService } from 'app/entities/job/service/job.service';
-import { OrderStatus } from 'app/entities/enumerations/order-status.model';
+import { Status } from 'app/entities/enumerations/status.model';
 
 @Component({
   templateUrl: './order-update.component.html',
@@ -24,26 +21,20 @@ import { OrderStatus } from 'app/entities/enumerations/order-status.model';
 export class OrderUpdateComponent extends BaseComponent implements OnInit {
   isSaving = false;
   readonly order!: IOrder;
-  orderStatusValues = Object.keys(OrderStatus);
+  statusValues = Object.keys(Status);
 
   jobs: IJob[] = [];
-  OrderStatusConstants = Object.keys(OrderStatus);
+  StatusConstants = Object.keys(Status);
 
   editForm = this.fb.group({
     id: [],
-    name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(128)]],
-    price: [],
-    chatId: [],
-    employee: [],
-    status: [],
-    description: [],
     startedDate: [],
     endDate: [],
-    job: [null, Validators.required],
+    status: [],
+    job: [],
   });
 
   constructor(
-    private readonly dataUtils: DataUtils,
     private readonly eventManager: EventManager,
     private readonly alertService: AlertService,
     public readonly orderService: OrderService,
@@ -61,21 +52,6 @@ export class OrderUpdateComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.updateForm(this.order);
     this.loadJobs();
-  }
-
-  byteSize(base64String: string): string {
-    return this.dataUtils.byteSize(base64String);
-  }
-
-  openFile(base64String: string, contentType: string | null | undefined): void {
-    this.dataUtils.openFile(base64String, contentType);
-  }
-
-  setFileData(event: Event, field: string, isImage: boolean): void {
-    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
-      error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertError>('workMonitorApp.error', { ...err, key: 'error.file.' + err.key })),
-    });
   }
 
   private loadJobs() {
@@ -125,14 +101,9 @@ export class OrderUpdateComponent extends BaseComponent implements OnInit {
   protected updateForm(order: IOrder): void {
     this.editForm.patchValue({
       id: order.id,
-      name: order.name,
-      price: order.price,
-      chatId: order.chatId,
-      employee: order.employee,
-      status: order.status,
-      description: order.description,
       startedDate: order.startedDate ? order.startedDate.format(DATE_TIME_FORMAT) : null,
       endDate: order.endDate ? order.endDate.format(DATE_TIME_FORMAT) : null,
+      status: order.status,
       job: order.job,
     });
   }
@@ -141,16 +112,11 @@ export class OrderUpdateComponent extends BaseComponent implements OnInit {
     return {
       ...new Order(),
       id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      price: this.editForm.get(['price'])!.value,
-      chatId: this.editForm.get(['chatId'])!.value,
-      employee: this.editForm.get(['employee'])!.value,
-      status: this.editForm.get(['status'])!.value,
-      description: this.editForm.get(['description'])!.value,
       startedDate: this.editForm.get(['startedDate'])!.value
         ? dayjs(this.editForm.get(['startedDate'])!.value, DATE_TIME_FORMAT)
         : undefined,
       endDate: this.editForm.get(['endDate'])!.value ? dayjs(this.editForm.get(['endDate'])!.value, DATE_TIME_FORMAT) : undefined,
+      status: this.editForm.get(['status'])!.value,
       job: this.editForm.get(['job'])!.value,
     };
   }

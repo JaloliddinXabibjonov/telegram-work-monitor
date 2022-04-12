@@ -1,38 +1,25 @@
 {
-  "applications": ["WorkMonitor"],
-  "changelogDate": "20220408112703",
-  "dto": "mapstruct",
-  "embedded": false,
-  "entityTableName": "job",
+  "name": "Job",
   "fields": [
     {
       "fieldName": "name",
       "fieldType": "String",
+      "javadoc": "Наименование",
       "fieldValidateRules": ["required", "minlength", "maxlength"],
-      "fieldValidateRulesMaxlength": "128",
       "fieldValidateRulesMinlength": "3",
-      "javadoc": "Наименование"
+      "fieldValidateRulesMaxlength": "128"
     }
   ],
-  "fluentMethods": true,
+  "relationships": [],
   "javadoc": "Справочник для описания вида этапа работы",
-  "jpaMetamodelFiltering": false,
-  "name": "Job",
+  "entityTableName": "job",
+  "dto": "mapstruct",
   "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
   "readOnly": false,
-  "relationships": [
-    {
-      "otherEntityName": "task",
-      "otherEntityRelationshipName": "job",
-      "relationshipName": "task",
-      "relationshipType": "one-to-many"
-    },
-    {
-      "otherEntityName": "order",
-      "otherEntityRelationshipName": "job",
-      "relationshipName": "order",
-      "relationshipType": "one-to-many"
-    }
-  ],
-  "service": "serviceImpl"
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20220412053920"
 }
