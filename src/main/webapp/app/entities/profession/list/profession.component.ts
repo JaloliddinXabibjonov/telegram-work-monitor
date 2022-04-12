@@ -28,7 +28,7 @@ export class ProfessionComponent extends BaseComponent implements OnInit, OnDest
   ascending!: boolean;
   ngbPaginationPage = 1;
   query: any = {};
-
+  showFilter = false;
   exclude = [];
   filterFields = this.professionService.getFilterFields();
 

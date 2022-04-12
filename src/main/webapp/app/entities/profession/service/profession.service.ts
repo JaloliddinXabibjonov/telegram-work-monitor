@@ -77,7 +77,6 @@ export class ProfessionService implements IEntityConfig {
 
   getFilterFields(): NglFilterField[] {
     return [
-      { name: 'name.contains', type: NglFilterFieldType.TEXT, translation: 'global.field.name' },
       {
         name: 'name.contains',
         type: NglFilterFieldType.TEXT,
@@ -105,16 +104,13 @@ export class ProfessionService implements IEntityConfig {
 
   openView(entity: IProfession): void {
     const options: EntityViewOptions[] = [
-      { title: 'global.field.name', value: entity.name },
       {
         title: 'workMonitorApp.profession.name',
         value: entity.name,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.profession.description',
         value: entity.description,
-        type: 'translation',
       },
     ];
 

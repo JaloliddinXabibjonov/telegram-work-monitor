@@ -2,9 +2,21 @@
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2 class="m-0" jhiTranslate="workMonitorApp.job.home.title">Jobs</h2>
 
-    <ngl-export-as
-      *ngIf="jobs?.length"
+    <button
       class="ml-auto"
+      type="button"
+      nz-button
+      nzSize="large"
+      nzType="default"
+      jhiTranslate="entity.action.filter"
+      (click)="showFilter = !showFilter"
+    >
+      Filter
+    </button>
+
+    <ngl-export-as
+      class="ml-2"
+      *ngIf="jobs?.length"
       [data]="jobs"
       requestUrl="{{ jobService.resourceUrl }}"
       [requestOption]="getOption"
@@ -21,12 +33,14 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
-      *jhiHasAnyAuthority="'ROLE_JOB_WRITE'"
       (click)="jobService.openUpdate()"
     >
       Add
     </button>
   </div>
+
+  <ngl-filter-field *ngIf="showFilter" [fields]="filterFields" (onFilter)="filter($event)"></ngl-filter-field>
+
   <jhi-alert-error></jhi-alert-error>
 
   <jhi-alert></jhi-alert>
@@ -51,7 +65,7 @@
           </td>
           <td>{{ job.name }}</td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_job_WRITE'">
+            <nz-button-group nzSize="small">
               <button nz-button (click)="jobService.openView(job)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>

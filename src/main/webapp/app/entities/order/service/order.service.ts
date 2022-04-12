@@ -112,7 +112,6 @@ export class OrderService implements IEntityConfig {
 
   getFilterFields(): NglFilterField[] {
     return [
-      { name: 'id.equals', type: NglFilterFieldType.NUMBER, translation: 'global.field.id' },
       {
         name: 'id.equals',
         type: NglFilterFieldType.NUMBER,
@@ -124,33 +123,28 @@ export class OrderService implements IEntityConfig {
         translation: 'workMonitorApp.order.startedDate',
       },
       {
-        name: 'startedDate.lessThanOrEqual',
-        type: NglFilterFieldType.DATE,
-        translation: 'global.field.toDate',
-      },
-      {
         name: 'endDate.greaterThanOrEqual',
         type: NglFilterFieldType.DATE,
         translation: 'workMonitorApp.order.endDate',
       },
       {
-        name: 'endDate.lessThanOrEqual',
-        type: NglFilterFieldType.DATE,
-        translation: 'global.field.toDate',
-      },
-      {
         name: 'status.in',
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.order.status',
+        options: {
+          'select.resourceUrl': this.resourceUrl,
+          'select.nzLabel': 'status',
+          'select.nzValue': 'status',
+        },
       },
       {
         name: 'jobId.in',
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.order.job',
         options: {
-          resourceUrl: this.jobService.resourceUrl,
-          labelField: 'id',
-          valueField: 'id',
+          'select.resourceUrl': this.jobService.resourceUrl,
+          'select.nzLabel': 'name',
+          'select.nzValue': 'name',
         },
       },
     ];
@@ -172,11 +166,6 @@ export class OrderService implements IEntityConfig {
     const options: EntityViewOptions[] = [
       { title: 'global.field.id', value: entity.id },
       {
-        title: 'workMonitorApp.order.id',
-        value: entity.id,
-        type: 'translation',
-      },
-      {
         title: 'workMonitorApp.order.startedDate',
         value: entity.startedDate,
         type: 'date',
@@ -189,11 +178,10 @@ export class OrderService implements IEntityConfig {
       {
         title: 'workMonitorApp.order.status',
         value: entity.status,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.order.job',
-        value: entity.job?.id,
+        value: entity.job?.name,
         type: 'link',
         link: () => this.jobService.openView(entity.job!),
       },

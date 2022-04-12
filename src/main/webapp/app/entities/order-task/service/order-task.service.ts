@@ -117,7 +117,6 @@ export class OrderTaskService implements IEntityConfig {
 
   getFilterFields(): NglFilterField[] {
     return [
-      { name: 'id.equals', type: NglFilterFieldType.NUMBER, translation: 'global.field.id' },
       {
         name: 'id.equals',
         type: NglFilterFieldType.NUMBER,
@@ -134,19 +133,9 @@ export class OrderTaskService implements IEntityConfig {
         translation: 'workMonitorApp.orderTask.startedDate',
       },
       {
-        name: 'startedDate.lessThanOrEqual',
-        type: NglFilterFieldType.DATE,
-        translation: 'global.field.toDate',
-      },
-      {
         name: 'endDate.greaterThanOrEqual',
         type: NglFilterFieldType.DATE,
         translation: 'workMonitorApp.orderTask.endDate',
-      },
-      {
-        name: 'endDate.lessThanOrEqual',
-        type: NglFilterFieldType.DATE,
-        translation: 'global.field.toDate',
       },
       {
         name: 'employeeUsername.contains',
@@ -158,9 +147,9 @@ export class OrderTaskService implements IEntityConfig {
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.orderTask.task',
         options: {
-          resourceUrl: this.taskService.resourceUrl,
-          labelField: 'id',
-          valueField: 'id',
+          'select.resourceUrl': this.taskService.resourceUrl,
+          'select.nzLabel': 'name',
+          'select.nzValue': 'name',
         },
       },
       {
@@ -168,9 +157,9 @@ export class OrderTaskService implements IEntityConfig {
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.orderTask.order',
         options: {
-          resourceUrl: this.orderService.resourceUrl,
-          labelField: 'id',
-          valueField: 'id',
+          'select.resourceUrl': this.orderService.resourceUrl,
+          'select.nzLabel': 'id',
+          'select.nzValue': 'id',
         },
       },
     ];
@@ -190,16 +179,13 @@ export class OrderTaskService implements IEntityConfig {
 
   openView(entity: IOrderTask): void {
     const options: EntityViewOptions[] = [
-      { title: 'global.field.id', value: entity.id },
       {
         title: 'workMonitorApp.orderTask.id',
         value: entity.id,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.orderTask.status',
         value: entity.status,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.orderTask.startedDate',
@@ -214,7 +200,6 @@ export class OrderTaskService implements IEntityConfig {
       {
         title: 'workMonitorApp.orderTask.employeeUsername',
         value: entity.employeeUsername,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.orderTask.task',

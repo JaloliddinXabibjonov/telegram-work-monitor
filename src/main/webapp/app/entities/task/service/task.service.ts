@@ -14,6 +14,8 @@ import { ITask, getTaskIdentifier } from '../task.model';
 import { JobService } from '../../job/service/job.service';
 import { ProfessionService } from '../../profession/service/profession.service';
 import { NglFilterField, NglFilterFieldType } from 'ngl-filter-field';
+import { find } from 'rxjs/operators';
+import { IJob } from '../../job/job.model';
 
 export type EntityResponseType = HttpResponse<ITask>;
 export type EntityArrayResponseType = HttpResponse<ITask[]>;
@@ -74,7 +76,6 @@ export class TaskService implements IEntityConfig {
 
   getFilterFields(): NglFilterField[] {
     return [
-      { name: 'id.equals', type: NglFilterFieldType.NUMBER, translation: 'global.field.id' },
       {
         name: 'id.equals',
         type: NglFilterFieldType.NUMBER,
@@ -105,9 +106,9 @@ export class TaskService implements IEntityConfig {
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.task.job',
         options: {
-          resourceUrl: this.jobService.resourceUrl,
-          labelField: 'id',
-          valueField: 'id',
+          'select.resourceUrl': this.jobService.resourceUrl,
+          'select.nzLabel': 'name',
+          'select.nzValue': 'name',
         },
       },
       {
@@ -115,9 +116,9 @@ export class TaskService implements IEntityConfig {
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.task.profession',
         options: {
-          resourceUrl: this.professionService.resourceUrl,
-          labelField: 'name',
-          valueField: 'name',
+          'select.resourceUrl': this.professionService.resourceUrl,
+          'select.nzLabel': 'name',
+          'select.nzValue': 'name',
         },
       },
     ];
@@ -137,37 +138,31 @@ export class TaskService implements IEntityConfig {
 
   openView(entity: ITask): void {
     const options: EntityViewOptions[] = [
-      { title: 'global.field.id', value: entity.id },
       {
         title: 'workMonitorApp.task.id',
         value: entity.id,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.task.name',
         value: entity.name,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.task.price',
         value: entity.price,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.task.description',
         value: entity.description,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.task.priority',
         value: entity.priority,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.task.job',
         value: entity.job?.id,
         type: 'link',
-        link: () => this.jobService.openView(entity.job!),
+        link: () => this.jobService.openView(entity.job),
       },
       {
         title: 'workMonitorApp.task.profession',
@@ -182,8 +177,8 @@ export class TaskService implements IEntityConfig {
   openDelete(id: number): void {
     const options = {
       useFunction: this.delete(id),
-      event: 'taskListModification',
-      alertTranslation: 'workMonitorApp.task.deleted',
+      event: 'TaskListModified',
+      // alertTranslation: 'workMonitorApp.task.deleted',
       alertTranslationValue: id,
     };
 

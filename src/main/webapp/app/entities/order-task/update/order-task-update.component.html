@@ -24,22 +24,36 @@
 
       <div class="form-group col-md-6">
         <label
+          class="d-block"
           for="field_startedDate"
           jhiTranslate="workMonitorApp.orderTask.startedDate"
           [ngbTooltip]="'workMonitorApp.orderTask.help.startedDate' | translate"
           >Started Date</label
         >
-        <nz-date-picker id="field_startedDate" formControlName="recipientDate" nzSize="large" nzFormat="dd.MM.yyyy HH:mm"></nz-date-picker>
+        <nz-date-picker
+          class="w-100"
+          id="field_startedDate"
+          formControlName="recipientDate"
+          nzSize="large"
+          nzFormat="dd.MM.yyyy HH:mm"
+        ></nz-date-picker>
       </div>
 
       <div class="form-group col-md-6">
         <label
+          class="d-block"
           for="field_endDate"
           jhiTranslate="workMonitorApp.orderTask.endDate"
           [ngbTooltip]="'workMonitorApp.orderTask.help.endDate' | translate"
           >End Date</label
         >
-        <nz-date-picker id="field_endDate" formControlName="recipientDate" nzSize="large" nzFormat="dd.MM.yyyy HH:mm"></nz-date-picker>
+        <nz-date-picker
+          class="w-100"
+          id="field_endDate"
+          formControlName="recipientDate"
+          nzSize="large"
+          nzFormat="dd.MM.yyyy HH:mm"
+        ></nz-date-picker>
       </div>
 
       <div class="form-group col-md-6">

@@ -1,10 +1,21 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2 class="m-0" jhiTranslate="workMonitorApp.orderTask.home.title">Order Tasks</h2>
+    <button
+      class="ml-auto"
+      type="button"
+      nz-button
+      nzSize="large"
+      nzType="default"
+      jhiTranslate="entity.action.filter"
+      (click)="showFilter = !showFilter"
+    >
+      Filter
+    </button>
 
     <ngl-export-as
       *ngIf="orderTasks?.length"
-      class="ml-auto"
+      class="ml-2"
       [data]="orderTasks"
       requestUrl="{{ orderTaskService.resourceUrl }}"
       [requestOption]="getOption"
@@ -21,12 +32,14 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
-      *jhiHasAnyAuthority="'ROLE_ORDER TASK_WRITE'"
       (click)="orderTaskService.openUpdate()"
     >
       Add
     </button>
   </div>
+
+  <ngl-filter-field *ngIf="showFilter" [fields]="filterFields" (onFilter)="filter($event)"></ngl-filter-field>
+
   <jhi-alert-error></jhi-alert-error>
 
   <jhi-alert></jhi-alert>
@@ -64,16 +77,16 @@
           <td>{{ orderTask.employeeUsername }}</td>
           <td>
             <div *ngIf="orderTask.task">
-              <a href="javascript:void(0)" click="taskService.openView(orderTask.task)">{{ orderTask.task?.id }}</a>
+              <a href="javascript:void(0)" (click)="taskService.openView(orderTask.task)">{{ orderTask.task.id }}</a>
             </div>
           </td>
           <td>
             <div *ngIf="orderTask.order">
-              <a href="javascript:void(0)" click="orderService.openView(orderTask.order)">{{ orderTask.order?.id }}</a>
+              <a href="javascript:void(0)" (click)="orderService.openView(orderTask.order)">{{ orderTask.order.id }}</a>
             </div>
           </td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_orderTask_WRITE'">
+            <nz-button-group nzSize="small">
               <button nz-button (click)="orderTaskService.openView(orderTask)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>

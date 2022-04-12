@@ -70,7 +70,6 @@ export class JobService implements IEntityConfig {
 
   getFilterFields(): NglFilterField[] {
     return [
-      { name: 'id.equals', type: NglFilterFieldType.NUMBER, translation: 'global.field.id' },
       {
         name: 'id.equals',
         type: NglFilterFieldType.NUMBER,
@@ -98,16 +97,13 @@ export class JobService implements IEntityConfig {
 
   openView(entity: IJob): void {
     const options: EntityViewOptions[] = [
-      { title: 'global.field.id', value: entity.id },
       {
         title: 'workMonitorApp.job.id',
         value: entity.id,
-        type: 'translation',
       },
       {
         title: 'workMonitorApp.job.name',
         value: entity.name,
-        type: 'translation',
       },
     ];
 

@@ -1,6 +1,6 @@
 <div class="fade-in">
   <div class="modal-header border-bottom-0 pb-0">
-    <h4 class="modal-title" [jhiTranslate]="titleTranslation || 'global.entity-view'" [translateValues]="{ id: id }">View</h4>
+    <h4 class="modal-title" [jhiTranslate]="titleTranslation" [translateValues]="{ id: id }">View</h4>
 
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="close()">&times;</button>
   </div>
@@ -13,7 +13,7 @@
 
           <div class="ml-3">
             <!--Date-->
-            <span *ngIf="item.type === 'date'">{{ item.value | date: 'dd.MM.yyyy' }}</span>
+            <span *ngIf="item.type === 'date'">{{ item.value | formatMediumDatetime }}</span>
 
             <!--Mask-->
             <span *ngIf="item.type === 'mask'">{{ item.value | mask: item.mask }}</span>

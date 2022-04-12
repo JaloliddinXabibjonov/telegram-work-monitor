@@ -24,16 +24,16 @@ import { translatePartialLoader, missingTranslationHandler } from './config/tran
 import { MainComponent } from './layouts/main/main.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
-import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { ErrorComponent } from './layouts/error/error.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NZ_I18N, ru_RU } from 'ng-zorro-antd/i18n';
+import { en_US, NZ_I18N, ru_RU } from 'ng-zorro-antd/i18n';
 import { NZ_ICONS } from 'ng-zorro-antd/icon';
 import { NZ_ICONS_CONFIG } from './config/nz-icon.config';
 import { EntityAuditModule } from './shared/entity/entity-audit/entity-audit.module';
 import { EntityViewModule } from './shared/entity/entity-view/entity-view.module';
 import { EntityDeleteModule } from './shared/entity/entity-delete/entity-delete.module';
+import ru from '@angular/common/locales/ru';
 
 @NgModule({
   imports: [
@@ -73,11 +73,12 @@ import { EntityDeleteModule } from './shared/entity/entity-delete/entity-delete.
       useValue: NZ_ICONS_CONFIG,
     },
     Title,
-    { provide: LOCALE_ID, useValue: 'en' },
+    { provide: LOCALE_ID, useValue: ru_RU },
+    { provide: LOCALE_ID, useValue: en_US },
     { provide: NgbDateAdapter, useClass: NgbDateDayjsAdapter },
     httpInterceptorProviders,
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, ActiveMenuDirective, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, ActiveMenuDirective, FooterComponent],
   bootstrap: [MainComponent],
 })
 export class AppModule {
@@ -89,7 +90,7 @@ export class AppModule {
     sessionStorageService: SessionStorageService
   ) {
     applicationConfigService.setEndpointPrefix(SERVER_API_URL);
-    registerLocaleData(locale);
+    registerLocaleData(ru);
     iconLibrary.addIcons(...fontAwesomeIcons);
     dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
     translateService.setDefaultLang('en');

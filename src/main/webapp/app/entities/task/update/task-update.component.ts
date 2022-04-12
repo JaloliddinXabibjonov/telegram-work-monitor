@@ -101,7 +101,7 @@ export class TaskUpdateComponent extends BaseComponent implements OnInit {
 
   private onSuccess(action: 'created' | 'updated', id: any): void {
     this.eventManager.broadcast('TaskListModified');
-    this.alertService.success('workMonitorApp.task.' + action, id, true);
+    // this.alertService.success('workMonitorApp.task.' + action, id, true);
     this.activeModal.dismiss();
   }
 
