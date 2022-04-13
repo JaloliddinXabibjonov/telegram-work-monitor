@@ -96,7 +96,16 @@
     }
   },
   "download": {
-    "excel": "Excel"
+    "excel": "Excel",
+    "onePage": "One Page",
+    "all": "All",
+    "custom": "Custom",
+    "confirm": {
+      "modal": {
+        "totalItems": "Total Items",
+        "title": "Excel export"
+      }
+    }
   },
   "entity-view": "Подробнее",
   "entity": {
@@ -112,7 +121,8 @@
       "view": "View",
       "add": "Add",
       "clear": "Clear",
-      "filter": "Filter"
+      "filter": "Filter",
+      "confirm": "Confirm"
     },
     "detail": {
       "field": "Field",
