@@ -4,8 +4,8 @@ import { Status } from 'app/entities/enumerations/status.model';
 
 export interface IOrder {
   id?: number;
-  startedDate?: dayjs.Dayjs;
-  endDate?: dayjs.Dayjs;
+  startedDate?: dayjs.Dayjs | null;
+  endDate?: dayjs.Dayjs | null;
   status?: Status | null;
   job?: IJob | null;
 }
@@ -13,8 +13,8 @@ export interface IOrder {
 export class Order implements IOrder {
   constructor(
     public id?: number,
-    public startedDate?: dayjs.Dayjs,
-    public endDate?: dayjs.Dayjs,
+    public startedDate?: dayjs.Dayjs | null,
+    public endDate?: dayjs.Dayjs | null,
     public status?: Status | null,
     public job?: IJob | null
   ) {}

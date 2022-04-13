@@ -17,10 +17,6 @@
             <column name="name" type="varchar(128)" remarks="Наименование">
                 <constraints nullable="false" />
             </column>
-            <column name="created_by" type="varchar(50)"/>
-            <column name="created_date" type="timestamp" defaultValueDate="${now}"/>
-            <column name="last_modified_by" type="varchar(50)"/>
-            <column name="last_modified_date" type="timestamp"/>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>

@@ -14,8 +14,6 @@ import { ITask, getTaskIdentifier } from '../task.model';
 import { JobService } from '../../job/service/job.service';
 import { ProfessionService } from '../../profession/service/profession.service';
 import { NglFilterField, NglFilterFieldType } from 'ngl-filter-field';
-import { find } from 'rxjs/operators';
-import { IJob } from '../../job/job.model';
 
 export type EntityResponseType = HttpResponse<ITask>;
 export type EntityArrayResponseType = HttpResponse<ITask[]>;
@@ -107,8 +105,8 @@ export class TaskService implements IEntityConfig {
         translation: 'workMonitorApp.task.job',
         options: {
           'select.resourceUrl': this.jobService.resourceUrl,
-          'select.nzLabel': 'name',
-          'select.nzValue': 'name',
+          'select.nzLabel': 'id',
+          'select.nzValue': 'id',
         },
       },
       {
@@ -162,7 +160,7 @@ export class TaskService implements IEntityConfig {
         title: 'workMonitorApp.task.job',
         value: entity.job?.id,
         type: 'link',
-        link: () => this.jobService.openView(entity.job),
+        link: () => this.jobService.openView(entity.job!),
       },
       {
         title: 'workMonitorApp.task.profession',
@@ -177,8 +175,8 @@ export class TaskService implements IEntityConfig {
   openDelete(id: number): void {
     const options = {
       useFunction: this.delete(id),
-      event: 'TaskListModified',
-      // alertTranslation: 'workMonitorApp.task.deleted',
+      event: 'taskListModification',
+      alertTranslation: 'workMonitorApp.task.deleted',
       alertTranslationValue: id,
     };
 

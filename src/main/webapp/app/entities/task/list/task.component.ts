@@ -29,7 +29,7 @@ export class TaskComponent extends BaseComponent implements OnInit, OnDestroy {
   ascending!: boolean;
   ngbPaginationPage = 1;
   query: any = {};
-  showFilter = false;
+
   exclude = [];
   filterFields = this.taskService.getFilterFields();
 
@@ -80,7 +80,7 @@ export class TaskComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   private registerChangeList(): void {
-    this.modifySubscription = this.eventManager.subscribe('TaskListModified', () => this.loadPage());
+    this.modifySubscription = this.eventManager.subscribe('taskListModification', () => this.loadPage());
   }
 
   trackId(index: number, item: ITask): number {

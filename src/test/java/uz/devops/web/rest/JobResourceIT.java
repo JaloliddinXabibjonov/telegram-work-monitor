@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uz.devops.IntegrationTest;
 import uz.devops.domain.Job;
 import uz.devops.repository.JobRepository;
+import uz.devops.service.criteria.JobCriteria;
 import uz.devops.service.dto.JobDTO;
 import uz.devops.service.mapper.JobMapper;
 
@@ -163,6 +164,140 @@ class JobResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(job.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+    }
+
+    @Test
+    @Transactional
+    void getJobsByIdFiltering() throws Exception {
+        // Initialize the database
+        jobRepository.saveAndFlush(job);
+
+        Long id = job.getId();
+
+        defaultJobShouldBeFound("id.equals=" + id);
+        defaultJobShouldNotBeFound("id.notEquals=" + id);
+
+        defaultJobShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultJobShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultJobShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultJobShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllJobsByNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        jobRepository.saveAndFlush(job);
+
+        // Get all the jobList where name equals to DEFAULT_NAME
+        defaultJobShouldBeFound("name.equals=" + DEFAULT_NAME);
+
+        // Get all the jobList where name equals to UPDATED_NAME
+        defaultJobShouldNotBeFound("name.equals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllJobsByNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        jobRepository.saveAndFlush(job);
+
+        // Get all the jobList where name not equals to DEFAULT_NAME
+        defaultJobShouldNotBeFound("name.notEquals=" + DEFAULT_NAME);
+
+        // Get all the jobList where name not equals to UPDATED_NAME
+        defaultJobShouldBeFound("name.notEquals=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllJobsByNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        jobRepository.saveAndFlush(job);
+
+        // Get all the jobList where name in DEFAULT_NAME or UPDATED_NAME
+        defaultJobShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
+
+        // Get all the jobList where name equals to UPDATED_NAME
+        defaultJobShouldNotBeFound("name.in=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllJobsByNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        jobRepository.saveAndFlush(job);
+
+        // Get all the jobList where name is not null
+        defaultJobShouldBeFound("name.specified=true");
+
+        // Get all the jobList where name is null
+        defaultJobShouldNotBeFound("name.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllJobsByNameContainsSomething() throws Exception {
+        // Initialize the database
+        jobRepository.saveAndFlush(job);
+
+        // Get all the jobList where name contains DEFAULT_NAME
+        defaultJobShouldBeFound("name.contains=" + DEFAULT_NAME);
+
+        // Get all the jobList where name contains UPDATED_NAME
+        defaultJobShouldNotBeFound("name.contains=" + UPDATED_NAME);
+    }
+
+    @Test
+    @Transactional
+    void getAllJobsByNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        jobRepository.saveAndFlush(job);
+
+        // Get all the jobList where name does not contain DEFAULT_NAME
+        defaultJobShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
+
+        // Get all the jobList where name does not contain UPDATED_NAME
+        defaultJobShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultJobShouldBeFound(String filter) throws Exception {
+        restJobMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(job.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+
+        // Check, that the count call also returns 1
+        restJobMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultJobShouldNotBeFound(String filter) throws Exception {
+        restJobMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restJobMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

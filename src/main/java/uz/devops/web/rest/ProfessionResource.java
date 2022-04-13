@@ -21,7 +21,9 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 import uz.devops.repository.ProfessionRepository;
+import uz.devops.service.ProfessionQueryService;
 import uz.devops.service.ProfessionService;
+import uz.devops.service.criteria.ProfessionCriteria;
 import uz.devops.service.dto.ProfessionDTO;
 import uz.devops.web.rest.errors.BadRequestAlertException;
 
@@ -43,9 +45,16 @@ public class ProfessionResource {
 
     private final ProfessionRepository professionRepository;
 
-    public ProfessionResource(ProfessionService professionService, ProfessionRepository professionRepository) {
+    private final ProfessionQueryService professionQueryService;
+
+    public ProfessionResource(
+        ProfessionService professionService,
+        ProfessionRepository professionRepository,
+        ProfessionQueryService professionQueryService
+    ) {
         this.professionService = professionService;
         this.professionRepository = professionRepository;
+        this.professionQueryService = professionQueryService;
     }
 
     /**
@@ -142,14 +151,27 @@ public class ProfessionResource {
      * {@code GET  /professions} : get all the professions.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of professions in body.
      */
     @GetMapping("/professions")
-    public ResponseEntity<List<ProfessionDTO>> getAllProfessions(Pageable pageable) {
-        log.debug("REST request to get a page of Professions");
-        Page<ProfessionDTO> page = professionService.findAll(pageable);
+    public ResponseEntity<List<ProfessionDTO>> getAllProfessions(ProfessionCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Professions by criteria: {}", criteria);
+        Page<ProfessionDTO> page = professionQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /professions/count} : count all the professions.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/professions/count")
+    public ResponseEntity<Long> countProfessions(ProfessionCriteria criteria) {
+        log.debug("REST request to count Professions by criteria: {}", criteria);
+        return ResponseEntity.ok().body(professionQueryService.countByCriteria(criteria));
     }
 
     /**

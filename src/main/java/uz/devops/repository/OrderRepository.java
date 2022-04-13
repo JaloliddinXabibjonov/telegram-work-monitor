@@ -9,4 +9,4 @@ import uz.devops.domain.Order;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrderRepository extends JpaRepository<Order, Long> {}
+public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {}

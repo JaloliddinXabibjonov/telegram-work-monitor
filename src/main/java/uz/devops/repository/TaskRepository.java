@@ -13,7 +13,7 @@ import uz.devops.domain.Task;
  * Spring Data SQL repository for the Task entity.
  */
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
     @Query(
         value = "select distinct task from Task task left join fetch task.professions",
         countQuery = "select count(distinct task) from Task task"

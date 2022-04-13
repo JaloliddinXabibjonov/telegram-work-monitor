@@ -21,7 +21,9 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 import uz.devops.repository.JobRepository;
+import uz.devops.service.JobQueryService;
 import uz.devops.service.JobService;
+import uz.devops.service.criteria.JobCriteria;
 import uz.devops.service.dto.JobDTO;
 import uz.devops.web.rest.errors.BadRequestAlertException;
 
@@ -43,9 +45,12 @@ public class JobResource {
 
     private final JobRepository jobRepository;
 
-    public JobResource(JobService jobService, JobRepository jobRepository) {
+    private final JobQueryService jobQueryService;
+
+    public JobResource(JobService jobService, JobRepository jobRepository, JobQueryService jobQueryService) {
         this.jobService = jobService;
         this.jobRepository = jobRepository;
+        this.jobQueryService = jobQueryService;
     }
 
     /**
@@ -140,14 +145,27 @@ public class JobResource {
      * {@code GET  /jobs} : get all the jobs.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of jobs in body.
      */
     @GetMapping("/jobs")
-    public ResponseEntity<List<JobDTO>> getAllJobs(Pageable pageable) {
-        log.debug("REST request to get a page of Jobs");
-        Page<JobDTO> page = jobService.findAll(pageable);
+    public ResponseEntity<List<JobDTO>> getAllJobs(JobCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Jobs by criteria: {}", criteria);
+        Page<JobDTO> page = jobQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /jobs/count} : count all the jobs.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/jobs/count")
+    public ResponseEntity<Long> countJobs(JobCriteria criteria) {
+        log.debug("REST request to count Jobs by criteria: {}", criteria);
+        return ResponseEntity.ok().body(jobQueryService.countByCriteria(criteria));
     }
 
     /**

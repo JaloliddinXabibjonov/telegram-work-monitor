@@ -122,20 +122,17 @@ export class OrderService implements IEntityConfig {
         type: NglFilterFieldType.DATE,
         translation: 'workMonitorApp.order.startedDate',
       },
+
       {
         name: 'endDate.greaterThanOrEqual',
         type: NglFilterFieldType.DATE,
         translation: 'workMonitorApp.order.endDate',
       },
+
       {
         name: 'status.in',
         type: NglFilterFieldType.MULTI_SELECT,
         translation: 'workMonitorApp.order.status',
-        options: {
-          'select.resourceUrl': this.resourceUrl,
-          'select.nzLabel': 'status',
-          'select.nzValue': 'status',
-        },
       },
       {
         name: 'jobId.in',
@@ -143,8 +140,8 @@ export class OrderService implements IEntityConfig {
         translation: 'workMonitorApp.order.job',
         options: {
           'select.resourceUrl': this.jobService.resourceUrl,
-          'select.nzLabel': 'name',
-          'select.nzValue': 'name',
+          'select.nzLabel': 'id',
+          'select.nzValue': 'id',
         },
       },
     ];
@@ -164,7 +161,10 @@ export class OrderService implements IEntityConfig {
 
   openView(entity: IOrder): void {
     const options: EntityViewOptions[] = [
-      { title: 'global.field.id', value: entity.id },
+      {
+        title: 'workMonitorApp.order.id',
+        value: entity.id,
+      },
       {
         title: 'workMonitorApp.order.startedDate',
         value: entity.startedDate,
@@ -181,7 +181,7 @@ export class OrderService implements IEntityConfig {
       },
       {
         title: 'workMonitorApp.order.job',
-        value: entity.job?.name,
+        value: entity.job?.id,
         type: 'link',
         link: () => this.jobService.openView(entity.job!),
       },

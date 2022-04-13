@@ -18,7 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import uz.devops.IntegrationTest;
 import uz.devops.domain.Profession;
+import uz.devops.domain.Task;
 import uz.devops.repository.ProfessionRepository;
+import uz.devops.service.criteria.ProfessionCriteria;
 import uz.devops.service.dto.ProfessionDTO;
 import uz.devops.service.mapper.ProfessionMapper;
 
@@ -143,6 +145,160 @@ class ProfessionResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.name").value(profession.getName()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
+    }
+
+    @Test
+    @Transactional
+    void getProfessionsByIdFiltering() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+
+        String id = profession.getName();
+
+        defaultProfessionShouldBeFound("name.equals=" + id);
+        defaultProfessionShouldNotBeFound("name.notEquals=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllProfessionsByDescriptionIsEqualToSomething() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+
+        // Get all the professionList where description equals to DEFAULT_DESCRIPTION
+        defaultProfessionShouldBeFound("description.equals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the professionList where description equals to UPDATED_DESCRIPTION
+        defaultProfessionShouldNotBeFound("description.equals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllProfessionsByDescriptionIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+
+        // Get all the professionList where description not equals to DEFAULT_DESCRIPTION
+        defaultProfessionShouldNotBeFound("description.notEquals=" + DEFAULT_DESCRIPTION);
+
+        // Get all the professionList where description not equals to UPDATED_DESCRIPTION
+        defaultProfessionShouldBeFound("description.notEquals=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllProfessionsByDescriptionIsInShouldWork() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+
+        // Get all the professionList where description in DEFAULT_DESCRIPTION or UPDATED_DESCRIPTION
+        defaultProfessionShouldBeFound("description.in=" + DEFAULT_DESCRIPTION + "," + UPDATED_DESCRIPTION);
+
+        // Get all the professionList where description equals to UPDATED_DESCRIPTION
+        defaultProfessionShouldNotBeFound("description.in=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllProfessionsByDescriptionIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+
+        // Get all the professionList where description is not null
+        defaultProfessionShouldBeFound("description.specified=true");
+
+        // Get all the professionList where description is null
+        defaultProfessionShouldNotBeFound("description.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllProfessionsByDescriptionContainsSomething() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+
+        // Get all the professionList where description contains DEFAULT_DESCRIPTION
+        defaultProfessionShouldBeFound("description.contains=" + DEFAULT_DESCRIPTION);
+
+        // Get all the professionList where description contains UPDATED_DESCRIPTION
+        defaultProfessionShouldNotBeFound("description.contains=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllProfessionsByDescriptionNotContainsSomething() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+
+        // Get all the professionList where description does not contain DEFAULT_DESCRIPTION
+        defaultProfessionShouldNotBeFound("description.doesNotContain=" + DEFAULT_DESCRIPTION);
+
+        // Get all the professionList where description does not contain UPDATED_DESCRIPTION
+        defaultProfessionShouldBeFound("description.doesNotContain=" + UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void getAllProfessionsByTaskIsEqualToSomething() throws Exception {
+        // Initialize the database
+        professionRepository.saveAndFlush(profession);
+        Task task;
+        if (TestUtil.findAll(em, Task.class).isEmpty()) {
+            task = TaskResourceIT.createEntity(em);
+            em.persist(task);
+            em.flush();
+        } else {
+            task = TestUtil.findAll(em, Task.class).get(0);
+        }
+        em.persist(task);
+        em.flush();
+        profession.addTask(task);
+        professionRepository.saveAndFlush(profession);
+        Long taskId = task.getId();
+
+        // Get all the professionList where task equals to taskId
+        defaultProfessionShouldBeFound("taskId.equals=" + taskId);
+
+        // Get all the professionList where task equals to (taskId + 1)
+        defaultProfessionShouldNotBeFound("taskId.equals=" + (taskId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultProfessionShouldBeFound(String filter) throws Exception {
+        restProfessionMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=name,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(profession.getName())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+
+        // Check, that the count call also returns 1
+        restProfessionMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=name,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultProfessionShouldNotBeFound(String filter) throws Exception {
+        restProfessionMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=name,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restProfessionMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=name,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

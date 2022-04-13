@@ -127,10 +127,10 @@ export class ProfessionService implements IEntityConfig {
     this.entityService.delete(options);
   }
 
-  // openHistory(name: string): void {
+  // openHistory(id: string): void {
   //   const options = {
   //     qualifiedName: 'PROFESSION',
-  //     entityId: name,
+  //     entityId: id,
   //     i18nPrefix: 'workMonitorApp.profession',
   //   };
   //

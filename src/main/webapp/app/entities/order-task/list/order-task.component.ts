@@ -29,7 +29,7 @@ export class OrderTaskComponent extends BaseComponent implements OnInit, OnDestr
   ascending!: boolean;
   ngbPaginationPage = 1;
   query: any = {};
-  showFilter = false;
+
   exclude = [];
   filterFields = this.orderTaskService.getFilterFields();
 

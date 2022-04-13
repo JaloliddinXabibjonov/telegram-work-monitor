@@ -148,8 +148,8 @@ export class OrderTaskService implements IEntityConfig {
         translation: 'workMonitorApp.orderTask.task',
         options: {
           'select.resourceUrl': this.taskService.resourceUrl,
-          'select.nzLabel': 'name',
-          'select.nzValue': 'name',
+          'select.nzLabel': 'id',
+          'select.nzValue': 'id',
         },
       },
       {

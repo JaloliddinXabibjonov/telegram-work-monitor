@@ -5,7 +5,7 @@
         "title": "Orders",
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Order",
-        "editLabel": "Edit Order",
+        "createOrEditLabel": "Create or edit a Order",
         "notFound": "No Orders found"
       },
       "created": "A new Order is created with identifier {{ param }}",

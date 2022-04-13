@@ -2,21 +2,9 @@
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2 class="m-0" jhiTranslate="workMonitorApp.order.home.title">Orders</h2>
 
-    <button
-      class="ml-auto"
-      type="button"
-      nz-button
-      nzSize="large"
-      nzType="default"
-      jhiTranslate="entity.action.filter"
-      (click)="showFilter = !showFilter"
-    >
-      Filter
-    </button>
-
     <ngl-export-as
       *ngIf="orders?.length"
-      class="ml-2"
+      class="ml-auto"
       [data]="orders"
       requestUrl="{{ orderService.resourceUrl }}"
       [requestOption]="getOption"
@@ -33,14 +21,15 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
+      *jhiHasAnyAuthority="'ROLE_ORDER_WRITE'"
       (click)="orderService.openUpdate()"
     >
       Add
     </button>
   </div>
-
-  <ngl-filter-field *ngIf="showFilter" [fields]="filterFields" (onFilter)="filter($event)"></ngl-filter-field>
-
+  <div class="mb-4">
+    <ngl-filter-field [fields]="filterFields" (onFilter)="filter($event)"></ngl-filter-field>
+  </div>
   <jhi-alert-error></jhi-alert-error>
 
   <jhi-alert></jhi-alert>
@@ -73,11 +62,11 @@
           <td jhiTranslate="{{ 'workMonitorApp.Status.' + order.status }}">{{ order.status }}</td>
           <td>
             <div *ngIf="order.job">
-              <a href="javascript:void(0)" (click)="jobService.openView(order.job)">{{ order.job }}</a>
+              <a href="javascript:void(0)" click="jobService.openView(order.job)">{{ order.job?.id }}</a>
             </div>
           </td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small">
+            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_order_WRITE'">
               <button nz-button (click)="orderService.openView(order)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>

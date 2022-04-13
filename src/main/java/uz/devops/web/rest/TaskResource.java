@@ -21,7 +21,9 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 import uz.devops.repository.TaskRepository;
+import uz.devops.service.TaskQueryService;
 import uz.devops.service.TaskService;
+import uz.devops.service.criteria.TaskCriteria;
 import uz.devops.service.dto.TaskDTO;
 import uz.devops.web.rest.errors.BadRequestAlertException;
 
@@ -43,9 +45,12 @@ public class TaskResource {
 
     private final TaskRepository taskRepository;
 
-    public TaskResource(TaskService taskService, TaskRepository taskRepository) {
+    private final TaskQueryService taskQueryService;
+
+    public TaskResource(TaskService taskService, TaskRepository taskRepository, TaskQueryService taskQueryService) {
         this.taskService = taskService;
         this.taskRepository = taskRepository;
+        this.taskQueryService = taskQueryService;
     }
 
     /**
@@ -142,23 +147,27 @@ public class TaskResource {
      * {@code GET  /tasks} : get all the tasks.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tasks in body.
      */
     @GetMapping("/tasks")
-    public ResponseEntity<List<TaskDTO>> getAllTasks(
-        Pageable pageable,
-        @RequestParam(required = false, defaultValue = "false") boolean eagerload
-    ) {
-        log.debug("REST request to get a page of Tasks");
-        Page<TaskDTO> page;
-        if (eagerload) {
-            page = taskService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = taskService.findAll(pageable);
-        }
+    public ResponseEntity<List<TaskDTO>> getAllTasks(TaskCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Tasks by criteria: {}", criteria);
+        Page<TaskDTO> page = taskQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /tasks/count} : count all the tasks.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/tasks/count")
+    public ResponseEntity<Long> countTasks(TaskCriteria criteria) {
+        log.debug("REST request to count Tasks by criteria: {}", criteria);
+        return ResponseEntity.ok().body(taskQueryService.countByCriteria(criteria));
     }
 
     /**

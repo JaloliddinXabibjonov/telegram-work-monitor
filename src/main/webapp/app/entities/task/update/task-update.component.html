@@ -5,10 +5,10 @@
   </div>
   <div class="modal-body">
     <div class="form-row">
-      <jhi-alert-error></jhi-alert-error>
+      <jhi-alert-error> </jhi-alert-error>
 
       <div class="form-group col-md-6" [hidden]="editForm.get('id')!.value == null">
-        <label class="form-control-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+        <label for="field_id" jhiTranslate="global.field.id">ID</label>
         <nz-input-number
           nzSize="large"
           formControlName="id"
@@ -75,9 +75,8 @@
         >
         <nz-input-number nzSize="large" formControlName="priority" id="field_priority"></nz-input-number>
       </div>
-
       <div class="form-group col-md-6">
-        <label class="form-control-label d-block" jhiTranslate="workMonitorApp.task.job" for="field_job">Job</label>
+        <label class="form-control-label" jhiTranslate="workMonitorApp.task.job" for="field_job">Job</label>
         <select-input
           formControlName="job"
           id="field_job"
@@ -90,10 +89,10 @@
       </div>
 
       <div class="form-group col-md-6">
-        <label class="d-block" jhiTranslate="workMonitorApp.task.profession" for="field_professions">Profession</label>
+        <label jhiTranslate="workMonitorApp.task.profession" for="field_professions">Profession</label>
         <select-input
-          formControlName="professions"
-          id="field_professions"
+          formControlName="profession"
+          id="field_profession"
           devopsLabelField="name"
           devopsMode="multiple"
           [devopsShowSearch]="true"

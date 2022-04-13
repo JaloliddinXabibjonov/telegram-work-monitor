@@ -19,7 +19,9 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 import uz.devops.repository.OrderTaskRepository;
+import uz.devops.service.OrderTaskQueryService;
 import uz.devops.service.OrderTaskService;
+import uz.devops.service.criteria.OrderTaskCriteria;
 import uz.devops.service.dto.OrderTaskDTO;
 import uz.devops.web.rest.errors.BadRequestAlertException;
 
@@ -41,9 +43,16 @@ public class OrderTaskResource {
 
     private final OrderTaskRepository orderTaskRepository;
 
-    public OrderTaskResource(OrderTaskService orderTaskService, OrderTaskRepository orderTaskRepository) {
+    private final OrderTaskQueryService orderTaskQueryService;
+
+    public OrderTaskResource(
+        OrderTaskService orderTaskService,
+        OrderTaskRepository orderTaskRepository,
+        OrderTaskQueryService orderTaskQueryService
+    ) {
         this.orderTaskService = orderTaskService;
         this.orderTaskRepository = orderTaskRepository;
+        this.orderTaskQueryService = orderTaskQueryService;
     }
 
     /**
@@ -140,14 +149,27 @@ public class OrderTaskResource {
      * {@code GET  /order-tasks} : get all the orderTasks.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of orderTasks in body.
      */
     @GetMapping("/order-tasks")
-    public ResponseEntity<List<OrderTaskDTO>> getAllOrderTasks(Pageable pageable) {
-        log.debug("REST request to get a page of OrderTasks");
-        Page<OrderTaskDTO> page = orderTaskService.findAll(pageable);
+    public ResponseEntity<List<OrderTaskDTO>> getAllOrderTasks(OrderTaskCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get OrderTasks by criteria: {}", criteria);
+        Page<OrderTaskDTO> page = orderTaskQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /order-tasks/count} : count all the orderTasks.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/order-tasks/count")
+    public ResponseEntity<Long> countOrderTasks(OrderTaskCriteria criteria) {
+        log.debug("REST request to count OrderTasks by criteria: {}", criteria);
+        return ResponseEntity.ok().body(orderTaskQueryService.countByCriteria(criteria));
     }
 
     /**

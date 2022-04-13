@@ -2,21 +2,9 @@
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2 class="m-0" jhiTranslate="workMonitorApp.profession.home.title">Professions</h2>
 
-    <button
-      class="ml-auto"
-      type="button"
-      nz-button
-      nzSize="large"
-      nzType="default"
-      jhiTranslate="entity.action.filter"
-      (click)="showFilter = !showFilter"
-    >
-      Filter
-    </button>
-
     <ngl-export-as
       *ngIf="professions?.length"
-      class="ml-2"
+      class="ml-auto"
       [data]="professions"
       requestUrl="{{ professionService.resourceUrl }}"
       [requestOption]="getOption"
@@ -33,14 +21,15 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
+      *jhiHasAnyAuthority="'ROLE_PROFESSION_WRITE'"
       (click)="professionService.openUpdate()"
     >
       Add
     </button>
   </div>
-
-  <ngl-filter-field *ngIf="showFilter" [fields]="filterFields" (onFilter)="filter($event)"></ngl-filter-field>
-
+  <div class="mb-4">
+    <ngl-filter-field [fields]="filterFields" (onFilter)="filter($event)"></ngl-filter-field>
+  </div>
   <jhi-alert-error></jhi-alert-error>
 
   <jhi-alert></jhi-alert>
@@ -67,7 +56,7 @@
           </td>
           <td>{{ profession.description }}</td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small">
+            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_profession_WRITE'">
               <button nz-button (click)="professionService.openView(profession)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>

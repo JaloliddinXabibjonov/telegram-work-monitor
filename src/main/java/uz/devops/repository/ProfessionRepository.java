@@ -9,4 +9,4 @@ import uz.devops.domain.Profession;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ProfessionRepository extends JpaRepository<Profession, String> {}
+public interface ProfessionRepository extends JpaRepository<Profession, String>, JpaSpecificationExecutor<Profession> {}

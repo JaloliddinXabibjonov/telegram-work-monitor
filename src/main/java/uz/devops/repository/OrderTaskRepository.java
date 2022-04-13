@@ -9,4 +9,4 @@ import uz.devops.domain.OrderTask;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface OrderTaskRepository extends JpaRepository<OrderTask, Long> {}
+public interface OrderTaskRepository extends JpaRepository<OrderTask, Long>, JpaSpecificationExecutor<OrderTask> {}
