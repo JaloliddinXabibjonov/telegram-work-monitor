@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -37,7 +38,7 @@ public class Task implements Serializable {
      * Цена
      */
     @Column(name = "price")
-    private String price;
+    private Long price;
 
     /**
      * Описания
@@ -51,10 +52,10 @@ public class Task implements Serializable {
     @Column(name = "priority")
     private Integer priority;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Job job;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
         name = "rel_task__profession",
         joinColumns = @JoinColumn(name = "task_id"),
@@ -92,16 +93,16 @@ public class Task implements Serializable {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Long getPrice() {
         return this.price;
     }
 
-    public Task price(String price) {
+    public Task price(Long price) {
         this.setPrice(price);
         return this;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

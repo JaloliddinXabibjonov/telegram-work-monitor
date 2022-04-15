@@ -24,14 +24,17 @@ import uz.devops.config.ApplicationProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
-public class WorkmonitorApp {
+public class WorkmonitorApp implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(WorkmonitorApp.class);
 
     private final Environment env;
 
-    public WorkmonitorApp(Environment env) {
+    private final WorkMonitorBot workMonitorBot;
+
+    public WorkmonitorApp(Environment env, WorkMonitorBot workMonitorBot) {
         this.env = env;
+        this.workMonitorBot = workMonitorBot;
     }
 
     /**
@@ -103,5 +106,15 @@ public class WorkmonitorApp {
             contextPath,
             env.getActiveProfiles().length == 0 ? env.getDefaultProfiles() : env.getActiveProfiles()
         );
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+        try {
+            botsApi.registerBot(workMonitorBot);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 }

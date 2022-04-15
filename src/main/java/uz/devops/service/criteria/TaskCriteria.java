@@ -3,10 +3,7 @@ package uz.devops.service.criteria;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
 import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
@@ -28,7 +25,7 @@ public class TaskCriteria implements Serializable, Criteria {
 
     private StringFilter name;
 
-    private StringFilter price;
+    private LongFilter price;
 
     private StringFilter description;
 
@@ -88,18 +85,18 @@ public class TaskCriteria implements Serializable, Criteria {
         this.name = name;
     }
 
-    public StringFilter getPrice() {
+    public LongFilter getPrice() {
         return price;
     }
 
-    public StringFilter price() {
+    public LongFilter price() {
         if (price == null) {
-            price = new StringFilter();
+            price = new LongFilter();
         }
         return price;
     }
 
-    public void setPrice(StringFilter price) {
+    public void setPrice(LongFilter price) {
         this.price = price;
     }
 

@@ -13,7 +13,7 @@ import uz.devops.domain.enumeration.Status;
 @Entity
 @Table(name = "jhi_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Order implements Serializable {
+public class Order extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,7 +33,13 @@ public class Order implements Serializable {
     @Column(name = "status")
     private Status status;
 
-    @ManyToOne
+    @Column(name = "count")
+    private Integer count;
+
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Job job;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -90,6 +96,22 @@ public class Order implements Serializable {
         this.status = status;
     }
 
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Job getJob() {
         return this.job;
     }
@@ -122,14 +144,24 @@ public class Order implements Serializable {
         return getClass().hashCode();
     }
 
-    // prettier-ignore
     @Override
     public String toString() {
-        return "Order{" +
-            "id=" + getId() +
-            ", startedDate='" + getStartedDate() + "'" +
-            ", endDate='" + getEndDate() + "'" +
-            ", status='" + getStatus() + "'" +
-            "}";
+        return (
+            "Order{" +
+            "id=" +
+            id +
+            ", startedDate=" +
+            startedDate +
+            ", endDate=" +
+            endDate +
+            ", status=" +
+            status +
+            ", count=" +
+            count +
+            ", description='" +
+            description +
+            '\'' +
+            '}'
+        );
     }
 }

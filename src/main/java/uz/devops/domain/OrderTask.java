@@ -46,11 +46,11 @@ public class OrderTask implements Serializable {
     @Column(name = "employee_username")
     private String employeeUsername;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonIgnoreProperties(value = { "job", "professions" }, allowSetters = true)
     private Task task;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonIgnoreProperties(value = { "job" }, allowSetters = true)
     private Order order;
 

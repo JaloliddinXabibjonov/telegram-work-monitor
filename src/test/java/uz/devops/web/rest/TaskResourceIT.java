@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +29,6 @@ import uz.devops.domain.Profession;
 import uz.devops.domain.Task;
 import uz.devops.repository.TaskRepository;
 import uz.devops.service.TaskService;
-import uz.devops.service.criteria.TaskCriteria;
 import uz.devops.service.dto.TaskDTO;
 import uz.devops.service.mapper.TaskMapper;
 
@@ -46,8 +44,8 @@ class TaskResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PRICE = "AAAAAAAAAA";
-    private static final String UPDATED_PRICE = "BBBBBBBBBB";
+    private static final Long DEFAULT_PRICE = 123L;
+    private static final Long UPDATED_PRICE = 700L;
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
