@@ -73,7 +73,7 @@
           <td jhiTranslate="{{ 'workMonitorApp.Status.' + order.status }}">{{ order.status }}</td>
           <td>
             <div *ngIf="order.job">
-              <a href="javascript:void(0)" (click)="jobService.openView(order.job)">{{ order.job?.id }}</a>
+              <a href="javascript:void(0)" (click)="jobService.openView(order.job)">{{ order.job?.name }}</a>
             </div>
           </td>
           <td [width]="10" class="text-right">

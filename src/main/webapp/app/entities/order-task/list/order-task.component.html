@@ -78,7 +78,7 @@
           <td>{{ orderTask.employeeUsername }}</td>
           <td>
             <div *ngIf="orderTask.task">
-              <a href="javascript:void(0)" (click)="taskService.openView(orderTask.task)">{{ orderTask.task?.id }}</a>
+              <a href="javascript:void(0)" (click)="taskService.openView(orderTask.task)">{{ orderTask.task?.name }}</a>
             </div>
           </td>
           <td>

@@ -30,16 +30,16 @@
         <dd>
           <span>{{ task.description }}</span>
         </dd>
-        <dt>
-          <span jhiTranslate="workMonitorApp.task.priority" [ngbTooltip]="'workMonitorApp.task.help.priority' | translate">Priority</span>
-        </dt>
-        <dd>
-          <span>{{ task.priority }}</span>
-        </dd>
+        <!--        <dt>-->
+        <!--          <span jhiTranslate="workMonitorApp.task.priority" [ngbTooltip]="'workMonitorApp.task.help.priority' | translate">Priority</span>-->
+        <!--        </dt>-->
+        <!--        <dd>-->
+        <!--          <span>{{ task.priority }}</span>-->
+        <!--        </dd>-->
         <dt><span jhiTranslate="workMonitorApp.task.job">Job</span></dt>
         <dd>
           <div *ngIf="task.job">
-            <a [routerLink]="['/job', task.job?.id, 'view']">{{ task.job?.id }}</a>
+            <a [routerLink]="['/job', task.job?.id, 'view']">{{ task.job?.name }}</a>
           </div>
         </dd>
         <dt><span jhiTranslate="workMonitorApp.task.profession">Profession</span></dt>

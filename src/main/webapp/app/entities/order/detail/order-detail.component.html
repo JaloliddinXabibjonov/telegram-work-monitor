@@ -29,7 +29,7 @@
         <dt><span jhiTranslate="workMonitorApp.order.job">Job</span></dt>
         <dd>
           <div *ngIf="order.job">
-            <a [routerLink]="['/job', order.job?.id, 'view']">{{ order.job?.id }}</a>
+            <a [routerLink]="['/job', order.job?.id, 'view']">{{ order.job?.name }}</a>
           </div>
         </dd>
       </dl>
