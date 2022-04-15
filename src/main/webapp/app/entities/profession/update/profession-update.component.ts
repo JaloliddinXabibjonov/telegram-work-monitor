@@ -72,7 +72,6 @@ export class ProfessionUpdateComponent extends BaseComponent implements OnInit, 
 
   private onSuccess(action: 'created' | 'updated', id: any): void {
     this.eventManager.broadcast('ProfessionListModified');
-    this.alertService.success('workMonitorApp.profession.' + action, id, true);
     this.activeModal.dismiss();
   }
 

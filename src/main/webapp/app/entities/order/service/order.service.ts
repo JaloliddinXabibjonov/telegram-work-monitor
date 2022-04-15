@@ -193,7 +193,6 @@ export class OrderService implements IEntityConfig {
     const options = {
       useFunction: this.delete(id),
       event: 'orderListModification',
-      alertTranslation: 'workMonitorApp.order.deleted',
       alertTranslationValue: id,
     };
 

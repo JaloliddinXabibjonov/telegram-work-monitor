@@ -72,7 +72,6 @@ export class JobUpdateComponent extends BaseComponent implements OnInit, OnDestr
 
   private onSuccess(action: 'created' | 'updated', id: any): void {
     this.eventManager.broadcast('JobListModified');
-    this.alertService.success('workMonitorApp.job.' + action, id, true);
     this.activeModal.dismiss();
   }
 

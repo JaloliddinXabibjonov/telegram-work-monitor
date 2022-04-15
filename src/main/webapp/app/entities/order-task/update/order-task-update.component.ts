@@ -106,14 +106,12 @@ export class OrderTaskUpdateComponent extends BaseComponent implements OnInit, O
   }
 
   private onSuccess(action: 'created' | 'updated', id: any): void {
-    this.eventManager.broadcast('OrderTaskListModified');
-    this.alertService.success('workMonitorApp.orderTask.' + action, id, true);
+    this.eventManager.broadcast('orderTaskListModification');
     this.activeModal.dismiss();
   }
 
   protected updateForm(orderTask: IOrderTask): void {
     this.editForm.patchValue({
-      id: orderTask.id,
       status: orderTask.status,
       startedDate: orderTask.startedDate ? orderTask.startedDate.format(DATE_TIME_FORMAT) : null,
       endDate: orderTask.endDate ? orderTask.endDate.format(DATE_TIME_FORMAT) : null,

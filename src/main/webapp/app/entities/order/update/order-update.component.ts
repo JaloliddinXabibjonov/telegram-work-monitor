@@ -93,14 +93,12 @@ export class OrderUpdateComponent extends BaseComponent implements OnInit, OnDes
   }
 
   private onSuccess(action: 'created' | 'updated', id: any): void {
-    this.eventManager.broadcast('OrderListModified');
-    this.alertService.success('workMonitorApp.order.' + action, id, true);
+    this.eventManager.broadcast('orderListModification');
     this.activeModal.dismiss();
   }
 
   protected updateForm(order: IOrder): void {
     this.editForm.patchValue({
-      id: order.id,
       startedDate: order.startedDate ? order.startedDate.format(DATE_TIME_FORMAT) : null,
       endDate: order.endDate ? order.endDate.format(DATE_TIME_FORMAT) : null,
       status: order.status,

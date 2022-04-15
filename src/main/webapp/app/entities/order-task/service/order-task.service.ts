@@ -221,7 +221,6 @@ export class OrderTaskService implements IEntityConfig {
     const options = {
       useFunction: this.delete(id),
       event: 'orderTaskListModification',
-      alertTranslation: 'workMonitorApp.orderTask.deleted',
       alertTranslationValue: id,
     };
 

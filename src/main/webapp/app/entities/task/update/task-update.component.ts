@@ -100,14 +100,12 @@ export class TaskUpdateComponent extends BaseComponent implements OnInit, OnDest
   }
 
   private onSuccess(action: 'created' | 'updated', id: any): void {
-    this.eventManager.broadcast('TaskListModified');
-    this.alertService.success('workMonitorApp.task.' + action, id, true);
+    this.eventManager.broadcast('taskListModification');
     this.activeModal.dismiss();
   }
 
   protected updateForm(task: ITask): void {
     this.editForm.patchValue({
-      id: task.id,
       name: task.name,
       price: task.price,
       description: task.description,

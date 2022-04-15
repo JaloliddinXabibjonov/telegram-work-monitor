@@ -176,7 +176,6 @@ export class TaskService implements IEntityConfig {
     const options = {
       useFunction: this.delete(id),
       event: 'taskListModification',
-      alertTranslation: 'workMonitorApp.task.deleted',
       alertTranslationValue: id,
     };
 
