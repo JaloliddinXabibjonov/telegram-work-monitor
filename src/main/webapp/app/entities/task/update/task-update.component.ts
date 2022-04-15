@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { debounceTime, finalize, pluck, takeUntil } from 'rxjs/operators';
 
@@ -16,7 +16,7 @@ import { ProfessionService } from 'app/entities/profession/service/profession.se
 @Component({
   templateUrl: './task-update.component.html',
 })
-export class TaskUpdateComponent extends BaseComponent implements OnInit {
+export class TaskUpdateComponent extends BaseComponent implements OnInit, OnDestroy {
   isSaving = false;
   readonly task!: ITask;
 

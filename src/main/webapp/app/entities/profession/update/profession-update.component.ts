@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, finalize, pluck, takeUntil } from 'rxjs/operators';
+import { finalize, pluck, takeUntil } from 'rxjs/operators';
 
 import { IProfession, Profession } from '../profession.model';
 import { ProfessionService } from '../service/profession.service';
@@ -12,7 +12,7 @@ import { BaseComponent } from '../../../shared/class/base-component.model';
 @Component({
   templateUrl: './profession-update.component.html',
 })
-export class ProfessionUpdateComponent extends BaseComponent implements OnInit {
+export class ProfessionUpdateComponent extends BaseComponent implements OnInit, OnDestroy {
   isSaving = false;
   readonly profession!: IProfession;
 

@@ -4,7 +4,7 @@ import { finalize, takeUntil } from 'rxjs/operators';
 import { EventManager } from '../../../core/util/event-manager.service';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { Alert, AlertService } from '../../../core/util/alert.service';
+import { AlertService } from '../../../core/util/alert.service';
 
 @Component({
   templateUrl: 'entity-delete-modal.component.html',

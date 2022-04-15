@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { debounceTime, finalize, pluck, takeUntil } from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ import { Status } from 'app/entities/enumerations/status.model';
 @Component({
   templateUrl: './order-update.component.html',
 })
-export class OrderUpdateComponent extends BaseComponent implements OnInit {
+export class OrderUpdateComponent extends BaseComponent implements OnInit, OnDestroy {
   isSaving = false;
   readonly order!: IOrder;
   statusValues = Object.keys(Status);

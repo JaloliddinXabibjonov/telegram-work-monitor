@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { debounceTime, finalize, pluck, takeUntil } from 'rxjs/operators';
 
@@ -20,7 +20,7 @@ import { Status } from 'app/entities/enumerations/status.model';
 @Component({
   templateUrl: './order-task-update.component.html',
 })
-export class OrderTaskUpdateComponent extends BaseComponent implements OnInit {
+export class OrderTaskUpdateComponent extends BaseComponent implements OnInit, OnDestroy {
   isSaving = false;
   readonly orderTask!: IOrderTask;
   statusValues = Object.keys(Status);

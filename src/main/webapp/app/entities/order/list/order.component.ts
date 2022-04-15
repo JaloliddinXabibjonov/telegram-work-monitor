@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { JobService } from '../../job/service/job.service';
-import { Subscription } from 'rxjs';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { combineLatest, Subscription } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BaseComponent } from '../../../shared/class/base-component.model';
 import { finalize, takeUntil } from 'rxjs/operators';
 
 import { IOrder } from '../order.model';
 
-import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/config/pagination.constants';
+import { ASC, DESC, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EventManager } from '../../../core/util/event-manager.service';
 import { OrderService } from '../service/order.service';
 

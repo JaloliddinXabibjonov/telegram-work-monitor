@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { debounceTime, finalize, pluck, takeUntil } from 'rxjs/operators';
+import { finalize, pluck, takeUntil } from 'rxjs/operators';
 
 import { IJob, Job } from '../job.model';
 import { JobService } from '../service/job.service';
@@ -12,7 +12,7 @@ import { BaseComponent } from '../../../shared/class/base-component.model';
 @Component({
   templateUrl: './job-update.component.html',
 })
-export class JobUpdateComponent extends BaseComponent implements OnInit {
+export class JobUpdateComponent extends BaseComponent implements OnInit, OnDestroy {
   isSaving = false;
   readonly job!: IJob;
 
