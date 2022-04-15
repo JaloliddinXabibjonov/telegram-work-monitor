@@ -6,7 +6,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link uz.devops.domain.Task} entity.
@@ -28,7 +29,7 @@ public class TaskDTO implements Serializable {
      * Цена
      */
     @ApiModelProperty(value = "Цена")
-    private String price;
+    private Long price;
 
     /**
      * Описания
@@ -62,11 +63,11 @@ public class TaskDTO implements Serializable {
         this.name = name;
     }
 
-    public String getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

@@ -27,4 +27,5 @@
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
     <include file="config/liquibase/changelog/added_entity_constraints_user.xml"/>
+    <include file="config/liquibase/changelog/added_columns_to_Order.xml"/>
 </databaseChangeLog>

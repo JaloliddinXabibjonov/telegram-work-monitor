@@ -1,8 +1,11 @@
 package uz.devops.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import uz.devops.command.SimpleResultData;
+import uz.devops.domain.OrderTask;
 import uz.devops.service.dto.OrderTaskDTO;
 
 /**
@@ -47,4 +50,18 @@ public interface OrderTaskService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    SimpleResultData<OrderTask> checkOrderStatus(Long orderId, Long taskId);
+
+    SimpleResultData<OrderTask> startedOrderTask(Long orderTaskId, String username, Long orderId, Long taskId);
+
+    SimpleResultData<OrderTask> createOrderTask(Long orderId, Long taskId);
+
+    SimpleResultData<OrderTask> completedOrderTask(Long orderTaskId);
+
+    SimpleResultData<OrderTask> rejectOrderTask(Long orderTaskId);
+
+    SimpleResultData<OrderTask> findById(Long orderTaskId);
+
+    SimpleResultData<List<OrderTask>> findAvailableOrderTask(Long chatId);
 }

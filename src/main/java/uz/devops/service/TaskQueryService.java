@@ -10,8 +10,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.jhipster.service.QueryService;
-import uz.devops.domain.*; // for static metamodels
+import uz.devops.domain.Job_;
+import uz.devops.domain.Profession_;
 import uz.devops.domain.Task;
+import uz.devops.domain.Task_;
 import uz.devops.repository.TaskRepository;
 import uz.devops.service.criteria.TaskCriteria;
 import uz.devops.service.dto.TaskDTO;
@@ -92,9 +94,6 @@ public class TaskQueryService extends QueryService<Task> {
             }
             if (criteria.getName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getName(), Task_.name));
-            }
-            if (criteria.getPrice() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getPrice(), Task_.price));
             }
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Task_.description));

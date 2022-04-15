@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import tech.jhipster.security.RandomUtil;
+import uz.devops.command.SimpleResultData;
 import uz.devops.config.Constants;
 import uz.devops.domain.Authority;
 import uz.devops.domain.Profession;
@@ -345,6 +346,36 @@ public class UserService {
             .orElseThrow(() -> new NotFoundException("User not found with id: " + chatId));
     }
 
+    public SimpleResultData<User> findUserByChatId(Long chatId) {
+        Optional<User> optionalUser = userRepository.findByChatId(String.valueOf(chatId));
+        if (optionalUser.isEmpty()) {
+            log.debug("User not found with id: {}", chatId);
+            return new SimpleResultData<>("User not found with id: " + chatId, false);
+        }
+        return new SimpleResultData<>("User found !", true, optionalUser.get());
+    }
+
+    public SimpleResultData<User> findUserById(Long userId) {
+        var optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            log.debug("User not found with id: {}", userId);
+            return new SimpleResultData<>("User not found with id: " + userId, false);
+        }
+        return new SimpleResultData<>("User found !", true, optionalUser.get());
+    }
+
+    public SimpleResultData<List<User>> findAllAvailableUsers(Long taskId) {
+        log.debug("Request to find all available users with taskId: {}", taskId);
+        var availableUsers = checkAvailableUsers(taskId);
+
+        if (availableUsers.isEmpty()) {
+            log.debug("Available users not found by taskId: {}", taskId);
+            return new SimpleResultData<>("Available users not found by taskId: " + taskId, false);
+        }
+
+        return new SimpleResultData<>("Available users found !", true, availableUsers);
+    }
+
     public void changeUserFields(User user, BotState botState, Long taskId) {
         log.info("Request to change user with id: {} state: {} and editTaskId: {}", user.getId(), botState, taskId);
         user.setState(botState);
@@ -354,6 +385,7 @@ public class UserService {
 
     public User createNewUser(Message message) {
         log.info("Request to create new user with message: {}", message);
+
         User user = new User();
         user.setFirstName(message.getFrom().getFirstName());
         user.setPhoneNumber(message.getContact().getPhoneNumber());
@@ -377,15 +409,6 @@ public class UserService {
                     .anyMatch(taskProfession -> user.getProfessions().stream().anyMatch(taskProfession::equals) && !user.getBusy())
             )
             .collect(Collectors.toList());
-    }
-
-    public User save(User userDTO) {
-        User user = new User();
-        user.setChatId(user.getChatId());
-        user.setFirstName(userDTO.getFirstName());
-        user.setTgUsername(userDTO.getTgUsername());
-
-        return userRepository.save(user);
     }
 
     public void addProfessionToUser(String profName, User user) {
