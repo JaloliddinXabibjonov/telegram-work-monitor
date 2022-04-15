@@ -2,9 +2,21 @@
   <div class="d-flex justify-content-between align-items-center mb-5">
     <h2 class="m-0" jhiTranslate="workMonitorApp.profession.home.title">Professions</h2>
 
+    <button
+      class="ml-auto"
+      type="button"
+      nz-button
+      nzSize="large"
+      nzType="default"
+      jhiTranslate="entity.action.filter"
+      (click)="showFilter = !showFilter"
+    >
+      Filter
+    </button>
+
     <ngl-export-as
       *ngIf="professions?.length"
-      class="ml-auto"
+      class="ml-2"
       [data]="professions"
       requestUrl="{{ professionService.resourceUrl }}"
       [requestOption]="getOption"
@@ -26,7 +38,7 @@
       Add
     </button>
   </div>
-  <div class="mb-4">
+  <div class="mb-4" [hidden]="!showFilter">
     <ngl-filter-field [fields]="filterFields" (onFilter)="filter($event)"></ngl-filter-field>
   </div>
   <jhi-alert-error></jhi-alert-error>

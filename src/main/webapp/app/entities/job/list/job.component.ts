@@ -26,7 +26,7 @@ export class JobComponent extends BaseComponent implements OnInit, OnDestroy {
   ascending!: boolean;
   ngbPaginationPage = 1;
   query: any = {};
-
+  showFilter = false;
   exclude = [];
   filterFields = this.jobService.getFilterFields();
 

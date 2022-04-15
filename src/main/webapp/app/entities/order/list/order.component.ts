@@ -27,7 +27,7 @@ export class OrderComponent extends BaseComponent implements OnInit, OnDestroy {
   ascending!: boolean;
   ngbPaginationPage = 1;
   query: any = {};
-
+  showFilter = false;
   exclude = [];
   filterFields = this.orderService.getFilterFields();
 
