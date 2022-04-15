@@ -21,7 +21,6 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
-      *jhiHasAnyAuthority="'ROLE_TASK_WRITE'"
       (click)="taskService.openUpdate()"
     >
       Add
@@ -68,7 +67,7 @@
             </div>
           </td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_task_WRITE'">
+            <nz-button-group nzSize="small">
               <button nz-button (click)="taskService.openView(task)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>

@@ -21,7 +21,6 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
-      *jhiHasAnyAuthority="'ROLE_ORDER_WRITE'"
       (click)="orderService.openUpdate()"
     >
       Add
@@ -66,7 +65,7 @@
             </div>
           </td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_order_WRITE'">
+            <nz-button-group nzSize="small">
               <button nz-button (click)="orderService.openView(order)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>

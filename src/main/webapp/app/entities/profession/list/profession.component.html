@@ -21,7 +21,6 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
-      *jhiHasAnyAuthority="'ROLE_PROFESSION_WRITE'"
       (click)="professionService.openUpdate()"
     >
       Add
@@ -56,7 +55,7 @@
           </td>
           <td>{{ profession.description }}</td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_profession_WRITE'">
+            <nz-button-group nzSize="small">
               <button nz-button (click)="professionService.openView(profession)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>

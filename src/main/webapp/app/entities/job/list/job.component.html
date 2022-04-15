@@ -21,7 +21,6 @@
       nzSize="large"
       nzType="primary"
       jhiTranslate="entity.action.add"
-      *jhiHasAnyAuthority="'ROLE_JOB_WRITE'"
       (click)="jobService.openUpdate()"
     >
       Add
@@ -54,7 +53,7 @@
           </td>
           <td>{{ job.name }}</td>
           <td [width]="10" class="text-right">
-            <nz-button-group nzSize="small" *jhiHasAnyAuthority="'ROLE_job_WRITE'">
+            <nz-button-group nzSize="small">
               <button nz-button (click)="jobService.openView(job)">
                 <i nz-icon nzType="eye" class="icon-btn"></i>
               </button>
