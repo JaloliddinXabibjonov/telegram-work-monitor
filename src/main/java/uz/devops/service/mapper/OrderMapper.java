@@ -1,6 +1,8 @@
 package uz.devops.service.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import uz.devops.domain.Order;
 import uz.devops.service.dto.OrderDTO;
 
@@ -13,7 +15,6 @@ public interface OrderMapper extends EntityMapper<OrderDTO, Order> {
     OrderDTO toDto(Order s);
 
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     OrderDTO toDtoId(Order order);
 }

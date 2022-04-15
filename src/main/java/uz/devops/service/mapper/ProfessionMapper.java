@@ -1,7 +1,9 @@
 package uz.devops.service.mapper;
 
 import java.util.Set;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import uz.devops.domain.Profession;
 import uz.devops.service.dto.ProfessionDTO;
 
@@ -11,7 +13,6 @@ import uz.devops.service.dto.ProfessionDTO;
 @Mapper(componentModel = "spring", uses = {})
 public interface ProfessionMapper extends EntityMapper<ProfessionDTO, Profession> {
     @Named("nameSet")
-    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "name", source = "name")
     Set<ProfessionDTO> toDtoIdSet(Set<Profession> profession);
 }

@@ -1,7 +1,8 @@
 package uz.devops.service.mapper;
 
-import java.util.Set;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import uz.devops.domain.Task;
 import uz.devops.service.dto.TaskDTO;
 
@@ -15,7 +16,6 @@ public interface TaskMapper extends EntityMapper<TaskDTO, Task> {
     TaskDTO toDto(Task s);
 
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     TaskDTO toDtoId(Task task);
 

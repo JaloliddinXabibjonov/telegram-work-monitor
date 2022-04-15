@@ -1,6 +1,8 @@
 package uz.devops.service.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import uz.devops.domain.Job;
 import uz.devops.service.dto.JobDTO;
 
@@ -10,7 +12,6 @@ import uz.devops.service.dto.JobDTO;
 @Mapper(componentModel = "spring", uses = {})
 public interface JobMapper extends EntityMapper<JobDTO, Job> {
     @Named("id")
-    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     JobDTO toDtoId(Job job);
 }
