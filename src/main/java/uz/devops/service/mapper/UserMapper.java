@@ -99,7 +99,7 @@ public class UserMapper {
     }
 
     @Named("idSet")
-    @BeanMapping(ignoreByDefault = true)
+    //    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     public Set<UserDTO> toDtoIdSet(Set<User> users) {
         if (users == null) {
