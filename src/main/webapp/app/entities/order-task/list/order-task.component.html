@@ -78,12 +78,12 @@
           <td>{{ orderTask.employeeUsername }}</td>
           <td>
             <div *ngIf="orderTask.task">
-              <a href="javascript:void(0)" click="taskService.openView(orderTask.task)">{{ orderTask.task?.id }}</a>
+              <a href="javascript:void(0)" (click)="taskService.openView(orderTask.task)">{{ orderTask.task?.id }}</a>
             </div>
           </td>
           <td>
             <div *ngIf="orderTask.order">
-              <a href="javascript:void(0)" click="orderService.openView(orderTask.order)">{{ orderTask.order?.id }}</a>
+              <a href="javascript:void(0)" (click)="orderService.openView(orderTask.order)">{{ orderTask.order?.id }}</a>
             </div>
           </td>
           <td [width]="10" class="text-right">

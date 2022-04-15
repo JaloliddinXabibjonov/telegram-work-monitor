@@ -22,21 +22,15 @@
         <nz-date-picker
           id="field_startedDate"
           class="w-100"
-          formControlName="recipientDate"
+          formControlName="startedDate"
           nzSize="large"
-          nzFormat="dd.MM.yyyy HH:mm"
+          nzFormat="dd.MM.yyyy"
         ></nz-date-picker>
       </div>
 
       <div class="form-group col-md-6">
         <label for="field_endDate" class="d-block" jhiTranslate="workMonitorApp.order.endDate">End Date</label>
-        <nz-date-picker
-          id="field_endDate"
-          class="w-100"
-          formControlName="recipientDate"
-          nzSize="large"
-          nzFormat="dd.MM.yyyy HH:mm"
-        ></nz-date-picker>
+        <nz-date-picker id="field_endDate" class="w-100" formControlName="endDate" nzSize="large" nzFormat="dd.MM.yyyy"></nz-date-picker>
       </div>
 
       <div class="form-group col-md-6">

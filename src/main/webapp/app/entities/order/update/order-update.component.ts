@@ -99,8 +99,8 @@ export class OrderUpdateComponent extends BaseComponent implements OnInit, OnDes
 
   protected updateForm(order: IOrder): void {
     this.editForm.patchValue({
-      startedDate: order.startedDate ? order.startedDate.format(DATE_TIME_FORMAT) : null,
-      endDate: order.endDate ? order.endDate.format(DATE_TIME_FORMAT) : null,
+      startedDate: order.startedDate.format(DATE_TIME_FORMAT),
+      endDate: order.endDate.format(DATE_TIME_FORMAT),
       status: order.status,
       job: order.job,
     });

@@ -113,8 +113,8 @@ export class OrderTaskUpdateComponent extends BaseComponent implements OnInit, O
   protected updateForm(orderTask: IOrderTask): void {
     this.editForm.patchValue({
       status: orderTask.status,
-      startedDate: orderTask.startedDate ? orderTask.startedDate.format(DATE_TIME_FORMAT) : null,
-      endDate: orderTask.endDate ? orderTask.endDate.format(DATE_TIME_FORMAT) : null,
+      startedDate: orderTask.startedDate.format(DATE_TIME_FORMAT),
+      endDate: orderTask.endDate.format(DATE_TIME_FORMAT),
       employeeUsername: orderTask.employeeUsername,
       task: orderTask.task,
       order: orderTask.order,

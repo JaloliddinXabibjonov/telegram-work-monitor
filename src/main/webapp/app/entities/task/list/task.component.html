@@ -59,7 +59,6 @@
           <th jhiSortBy="description">
             <span jhiTranslate="workMonitorApp.task.description">Description</span> <fa-icon icon="sort"></fa-icon>
           </th>
-          <th jhiSortBy="priority"><span jhiTranslate="workMonitorApp.task.priority">Priority</span> <fa-icon icon="sort"></fa-icon></th>
           <th jhiSortBy="job.id"><span jhiTranslate="workMonitorApp.task.job">Job</span> <fa-icon icon="sort"></fa-icon></th>
           <th></th>
         </tr>
@@ -72,7 +71,6 @@
           <td>{{ task.name }}</td>
           <td>{{ task.price }}</td>
           <td>{{ task.description }}</td>
-          <td>{{ task.priority }}</td>
           <td>
             <div *ngIf="task.job">
               <a href="javascript:void(0)" (click)="jobService.openView(task.job)">{{ task.job?.id }}</a>
