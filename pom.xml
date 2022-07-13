@@ -6,8 +6,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>uz.devops</groupId>
-    <artifactId>workmonitor</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>work-monitor</artifactId>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
     <name>Workmonitor</name>
     <description>Description for workmonitor</description>
