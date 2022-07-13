@@ -1,7 +1,5 @@
 package uz.devops;
 
-import static uz.devops.domain.enumeration.Command.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -13,13 +11,15 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import uz.devops.command.CommandContainer;
+import uz.devops.config.ApplicationProperties;
 import uz.devops.utils.BotUtils;
+
+import static uz.devops.domain.enumeration.Command.*;
 
 @Component
 public class WorkMonitorBot extends TelegramLongPollingBot {
 
-    private static final String BOT_NAME = "devopsmonitor_bot";
-    private static final String BOT_TOKEN = "5131660890:AAHv3lYFOwGrIJMYvteMMQzBDcr8o1AlGuU";
+    private final ApplicationProperties applicationProperties;
     public static final String ADMIN_1_CHAT_ID = "910061782";
 
     @Lazy
@@ -29,14 +29,18 @@ public class WorkMonitorBot extends TelegramLongPollingBot {
     @Autowired
     private BotUtils botUtils;
 
+    public WorkMonitorBot(ApplicationProperties applicationProperties) {
+        this.applicationProperties = applicationProperties;
+    }
+
     @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return applicationProperties.getBot().getName();
     }
 
     @Override
     public String getBotToken() {
-        return BOT_TOKEN;
+        return applicationProperties.getBot().getToken();
     }
 
     @Override
@@ -63,11 +67,10 @@ public class WorkMonitorBot extends TelegramLongPollingBot {
         botUtils
             .findByChatId(update.getMessage().getChatId())
             .ifPresent(user -> {
-                if (user.getState() != null) {
-                    commandContainer.stateProcessor(user.getState()).execute(update);
-                } else {
+                if (user.getState() == null) {
                     commandContainer.mainProcessor(update.getMessage().getText()).execute(update);
                 }
+                commandContainer.stateProcessor(user.getState()).execute(update);
             });
         if (botUtils.userIsEmpty(update.getMessage().getChatId())) {
             commandContainer.registrationProcessor(update).execute(update);

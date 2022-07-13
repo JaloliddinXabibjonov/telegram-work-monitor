@@ -179,4 +179,7 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  bot:
+    name: devopsmonitor_bot
+    token: 5131660890:AAHv3lYFOwGrIJMYvteMMQzBDcr8o1AlGuU
