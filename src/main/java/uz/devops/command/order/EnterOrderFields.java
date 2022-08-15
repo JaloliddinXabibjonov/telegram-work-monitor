@@ -7,13 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.enumeration.BotState;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
 import uz.devops.service.UserService;
 import uz.devops.utils.BotUtils;
 
-@Service
+@Service(Constants.CREATE_ORDER)
 @RequiredArgsConstructor
 public class EnterOrderFields implements Processor {
 

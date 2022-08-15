@@ -84,6 +84,7 @@ public class OrderTaskDone implements Processor {
             order.setEndDate(Instant.now());
             orderRepository.save(order);
             adminChatIdList.forEach(chatId -> messageSenderService.sendMessage(Long.parseLong(chatId), messageUtils.orderDoneForAdmin(orderTask.getOrder()), null));
+            messageSenderService.sendMessage(Long.valueOf(order.getCustomer().getChatId()), MessageUtils.YOUR_ORDER_IS_DONE+"\n"+messageUtils.getOrderInfo(order), null);
         }
 
         String taskInfoAfterDone = messageUtils.getTaskInfoAfterDone(orderTask.getTask(), orderTask);

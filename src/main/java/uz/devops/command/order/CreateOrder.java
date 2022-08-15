@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.User;
 import uz.devops.domain.enumeration.BotState;
 import uz.devops.domain.enumeration.RoleName;
@@ -53,7 +54,8 @@ public class CreateOrder implements Processor {
                     user.setState(BotState.ENTER_ORDER_COUNT);
                     userRepository.save(user);
                     messageSenderService.sendMessage(update.getMessage().getChatId(), messageUtils.enterOrderCount(), null);
-                } else if (user.getState().equals(BotState.ENTER_ORDER_COUNT)) {
+                }
+                else if (user.getState().equals(BotState.ENTER_ORDER_COUNT)) {
                     var count = update.getMessage().getText();
                     if (Objects.equals(botUtils.checkNumberValidation(update.getMessage().getText()), Boolean.FALSE)) {
                         messageSenderService.sendMessage(update.getMessage().getChatId(), ONLY_NUMBER, null);

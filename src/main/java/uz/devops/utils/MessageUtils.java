@@ -100,6 +100,7 @@ public class MessageUtils {
     public static final String NEW_PROFESSION_SAVED_SUCCESSFULLY = "Yangi kasb muvaffaqiyatli saqlandi! ";
     public static final String ADD_NEW_PROFESSION = "➕";
     public static final String PROFESSION_NAME_IS_ALREADY_EXIST = "Ushbu nomdagi kasb avval kiritilgan! ";
+    public static final String YOUR_ORDER_IS_DONE = "Sizning buyurtmangiz bajarildi";
 
 
     public String getJobInfo(Job job) {
