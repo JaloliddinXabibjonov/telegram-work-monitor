@@ -1,5 +1,7 @@
 package uz.devops.command.task;
 
+import static uz.devops.domain.enumeration.Command.SET_PROFESSION_TO_TASK;
+import static uz.devops.domain.enumeration.Command.SET_PROFESSION_TO_USER;
 import static uz.devops.utils.MessageUtils.ENTER_TASK_DESCRIPTION;
 import static uz.devops.utils.MessageUtils.ONLY_ENTER_NUMBER;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.Task;
 import uz.devops.domain.enumeration.BotState;
 import uz.devops.repository.JobRepository;
@@ -20,7 +23,7 @@ import uz.devops.service.UserService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
 
-@Service
+@Service(Constants.CREATE_NEW_TASK)
 @RequiredArgsConstructor
 public class CreateTask implements Processor {
 
@@ -88,7 +91,7 @@ public class CreateTask implements Processor {
                             task.setDescription(message.getText());
                             taskRepository.save(task);
                         });
-                    var professionsKeyboard = BotUtils.getProfessionsKeyboard(professionRepository);
+                    var professionsKeyboard = BotUtils.getProfessionsKeyboard(professionRepository, SET_PROFESSION_TO_TASK.getCommandName()+"#");
                     messageSenderService.sendMessage(
                         message.getChatId(),
                         messageUtils.setRoleToTask(user.getExtraTableId()),

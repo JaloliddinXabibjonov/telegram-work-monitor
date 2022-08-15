@@ -4,6 +4,8 @@ public class Icons {
 
     public static final String CONFIRM_ICON = "✅";
     public static final String REMOVE_ICON = "❌";
+    public static final String NEXT_PAGE_ICON = "➡️";
+    public static final String PREVIOUS_PAGE_ICON = "⬅️";
     public static final String REJECT_MAN_ICON = "\uD83D\uDE45\uD83C\uDFFB\u200D♂";
     public static final String EMPLOYEE_MAN_ICON = " \uD83D\uDC68\uD83C\uDFFB\u200D\uD83D\uDD27";
     public static final String UZ_FLAG_ICON = "\uD83C\uDDFA\uD83C\uDDFF";

@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.Job;
 import uz.devops.domain.enumeration.BotState;
 import uz.devops.repository.JobRepository;
@@ -20,7 +21,7 @@ import uz.devops.utils.BotUtils;
 
 @RequiredArgsConstructor
 @Slf4j
-@Service
+@Service(Constants.CHOOSE_TASK_TO_EDIT)
 public class ChooseTaskToEdit implements Processor {
 
     private final MessageSenderService messageSenderService;

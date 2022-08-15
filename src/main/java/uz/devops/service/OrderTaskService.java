@@ -51,7 +51,7 @@ public interface OrderTaskService {
      */
     void delete(Long id);
 
-    SimpleResultData<OrderTask> checkOrderStatus(Long orderId, Long taskId);
+    SimpleResultData<OrderTask> checkOrderStatus(Long orderTaskId);
 
     SimpleResultData<OrderTask> startedOrderTask(Long orderTaskId, String username, Long orderId, Long taskId);
 

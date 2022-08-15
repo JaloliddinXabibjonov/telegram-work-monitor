@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.service.MessageSenderService;
 
 @RequiredArgsConstructor
-@Service
+@Service(Constants.CALL_TO_ADMIN)
 public class CallToAdmin implements Processor {
 
     private final MessageSenderService messageSenderService;

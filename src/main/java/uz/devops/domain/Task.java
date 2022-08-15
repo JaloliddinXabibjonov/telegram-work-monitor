@@ -62,7 +62,7 @@ public class Task implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "profession_name")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "tasks" }, allowSetters = true)
+    @JsonIgnoreProperties( allowSetters = true,allowGetters = true)
     private Set<Profession> professions = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

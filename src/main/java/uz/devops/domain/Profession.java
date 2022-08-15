@@ -41,6 +41,14 @@ public class Profession implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
+
+    public Profession() {
+    }
+
+    public Profession(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -49,6 +57,7 @@ public class Profession implements Serializable {
         this.setName(name);
         return this;
     }
+
 
     public void setName(String name) {
         this.name = name;

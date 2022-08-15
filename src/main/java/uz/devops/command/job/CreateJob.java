@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.enumeration.BotState;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.JobService;
@@ -14,7 +15,7 @@ import uz.devops.service.UserService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
 
-@Service
+@Service(Constants.CREATE_NEW_JOB)
 @RequiredArgsConstructor
 public class CreateJob implements Processor {
 

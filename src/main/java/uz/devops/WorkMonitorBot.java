@@ -1,33 +1,48 @@
 package uz.devops;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.ParseMode;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import uz.devops.command.CommandContainer;
+import uz.devops.command.Processor;
+import uz.devops.command.other.UnknownCommand;
 import uz.devops.config.ApplicationProperties;
+import uz.devops.config.Constants;
+import uz.devops.domain.Button;
+import uz.devops.domain.User;
+import uz.devops.repository.ButtonRepository;
 import uz.devops.utils.BotUtils;
+
+import java.util.Optional;
 
 import static uz.devops.domain.enumeration.Command.*;
 
+@Slf4j
 @Component
 public class WorkMonitorBot extends TelegramLongPollingBot {
 
     private final ApplicationProperties applicationProperties;
-    public static final String ADMIN_1_CHAT_ID = "910061782";
+    public static final String ADMIN_1_CHAT_ID = "573492532";
 
     @Lazy
     @Autowired
     private CommandContainer commandContainer;
 
     @Autowired
+    private UnknownCommand unknownCommand;
+
+    @Autowired
+    private ButtonRepository buttonRepository;
+    @Autowired
     private BotUtils botUtils;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     public WorkMonitorBot(ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
@@ -45,34 +60,43 @@ public class WorkMonitorBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (!update.hasMessage() && !update.hasCallbackQuery()) {
-            sendMessage(update);
-            return;
-        }
-
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            onMessageReceived(update);
-        }
-
-        if (update.hasMessage() && update.getMessage().hasContact()) {
-            shareContact(update);
-        }
-
-        if (update.hasCallbackQuery()) {
+        if (update.hasMessage()) {
+            if (update.getMessage().hasText()) {
+                onMessageReceived(update);
+            } else if (update.getMessage().hasContact()) {
+                shareContact(update);
+            }
+        } else if (update.hasCallbackQuery()) {
             onCallbackReceived(update);
+        } else {
+            unknownCommand.execute(update);
         }
     }
 
     private void onMessageReceived(Update update) {
-        botUtils
-            .findByChatId(update.getMessage().getChatId())
-            .ifPresent(user -> {
-                if (user.getState() == null) {
-                    commandContainer.mainProcessor(update.getMessage().getText()).execute(update);
+        Optional<User> optionalUser = botUtils.findByChatId(update.getMessage().getChatId());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getState() == null) {
+                String text = update.getMessage().getText();
+                Optional<Button> optionalButton = buttonRepository.findByName(text);
+                if (optionalButton.isPresent()) {
+                    String command = optionalButton.get().getName();
+                    if (applicationContext.containsBeanDefinition(command)) {
+                        try {
+                            final Processor bean = applicationContext.getBean(command, Processor.class);
+                            bean.execute(update);
+                        } catch (Exception e) {
+                            log.warn("Error on searching command service : " + e.getLocalizedMessage());
+                        }
+                    }
+                } else if (text.startsWith(ADD_ORDER_BY_SHORT_COMMAND.getCommandName())) {
+                    commandContainer.callbackDataProcessor(ADD_ORDER_BY_SHORT_COMMAND.getCommandName()).execute(update);
                 }
+            } else {
                 commandContainer.stateProcessor(user.getState()).execute(update);
-            });
-        if (botUtils.userIsEmpty(update.getMessage().getChatId())) {
+            }
+        } else {
             commandContainer.registrationProcessor(update).execute(update);
         }
     }
@@ -83,39 +107,54 @@ public class WorkMonitorBot extends TelegramLongPollingBot {
 
     private void onCallbackReceived(Update update) {
         CallbackQuery callbackQuery = update.getCallbackQuery();
-        Message message = callbackQuery.getMessage();
         String data = callbackQuery.getData();
-
-        botUtils
-            .findByChatId(message.getChatId())
-            .ifPresent(user -> {
-                if (user.getState() != null) {
-                    commandContainer.stateProcessor(user.getState()).execute(update);
-                }
-            });
-        if (data.equals(CONFIRM_USER_PROFESSION.getCommandName())) {
-            commandContainer.mainProcessor(data).execute(update);
-        } else if (message.getText().startsWith(ASSIGN_ROLE_TO_USER.getCommandName())) {
-            commandContainer.setRoleToUser().execute(update);
-        } else if (data.equals(CONFIRM_TASK_PROFESSION.getCommandName())) {
-            commandContainer.mainProcessor(data).execute(update);
-        } else if (message.getText().startsWith(ASSIGN_ROLE_TO_TASK.getCommandName())) {
-            commandContainer.setRoleToTask().execute(update);
+        String command;
+        if (data.startsWith(SET_PROFESSION_TO_TASK.getCommandName())) {
+            command=SET_PROFESSION_TO_TASK.getCommandName();
+        } else if (data.startsWith(Constants.CHOOSE_ROLE)) {
+            command= SET_ROLE_TO_USER.getCommandName();
+        } else if (data.startsWith(SET_PROFESSION_TO_USER.getCommandName())) {
+            command=SET_PROFESSION_TO_USER.getCommandName();
+        } else if (data.startsWith(CONFIRM_TASK_PROFESSION.getCommandName())) {
+            command=CONFIRM_TASK_PROFESSION.getCommandName();
+        } else if (data.startsWith(CONFIRM_ORDER.getCommandName())) {
+            command=CONFIRM_ORDER.getCommandName();
+        } else if (data.startsWith(TASK_DONE.getCommandName())) {
+            command=TASK_DONE.getCommandName();
+        } else if (data.startsWith(REJECT_ORDER.getCommandName())) {
+            command=REJECT_ORDER.getCommandName();
+        } else if (data.startsWith(CONFIRM_PROFESSION.getCommandName())) {
+            command=CONFIRM_PROFESSION.getCommandName();
+        } else if (data.startsWith(GET_PAGE_OF_MY_DONE_TASKS.getCommandName())) {
+            command=GET_PAGE_OF_MY_DONE_TASKS.getCommandName();
+        } else if (data.startsWith(Constants.GET_ORDER_TASK)) {
+            command=Constants.GET_ORDER_TASK;
+        } else if (data.startsWith(Constants.ADD_TASK_TO_JOB)) {
+            command=Constants.ADD_TASK_TO_JOB;
+        } else if (data.startsWith(GET_MAIN_KEYBOARDS.getCommandName())) {
+            command=Constants.GET_MAIN_KEYBOARDS;
+        }else if (data.startsWith(Constants.GET_ORDER_TASK_BY_ID)) {
+            command=Constants.GET_ORDER_TASK_BY_ID;
+        }else if (data.startsWith(Constants.ADD_NEW_PROFESSION)) {
+            command=Constants.ADD_NEW_PROFESSION;
+        } else if (data.startsWith(Constants.REMOVE_PROFESSION_COMMAND)) {
+            command=Constants.REMOVE_PROFESSION_COMMAND;
+        }else if (data.startsWith(Constants.REMOVE_PROFESSION_BY_NAME)) {
+            command=Constants.REMOVE_PROFESSION_BY_NAME;
         } else {
-            commandContainer.mainProcessor(data).execute(update);
+            command=data;
         }
+
+        if (applicationContext.containsBeanDefinition(command)) {
+            try {
+                final Processor bean = applicationContext.getBean(command, Processor.class);
+                bean.execute(update);
+            } catch (Exception e) {
+                log.warn("Error on searching command service : " + e.getLocalizedMessage());
+            }
+        }
+
     }
 
-    private void sendMessage(Update update) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(update.getMessage().getChatId()));
-        sendMessage.setText("Noto'gri xabar kiritildi !!!");
-        sendMessage.setParseMode(ParseMode.HTML);
 
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
 }

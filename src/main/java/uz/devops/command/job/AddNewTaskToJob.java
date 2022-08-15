@@ -7,12 +7,13 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.enumeration.BotState;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
 import uz.devops.utils.BotUtils;
 
-@Service
+@Service(Constants.ADD_TASK_TO_JOB)
 @RequiredArgsConstructor
 public class AddNewTaskToJob implements Processor {
 
@@ -23,8 +24,7 @@ public class AddNewTaskToJob implements Processor {
     @Override
     public void execute(Update update) {
         Message message = update.getCallbackQuery().getMessage();
-        Long jobId = botUtils.getAnyIdFromText(message.getText());
-
+        Long jobId = Long.valueOf(update.getCallbackQuery().getData().split("#")[1]);
         userRepository
             .findByChatId(String.valueOf(message.getChatId()))
             .ifPresent(user -> {

@@ -34,6 +34,7 @@ public class ShareContactCommand implements Processor {
 
         keyboardMarkup.setKeyboard(keyboardRowList);
         keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(false);
 
         messageSenderService.sendMessage(update.getMessage().getChatId(), SHARE_CONTACT_FOR_REGISTRATION, keyboardMarkup);
     }

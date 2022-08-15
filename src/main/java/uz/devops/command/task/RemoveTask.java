@@ -8,12 +8,13 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.repository.TaskRepository;
 import uz.devops.service.MessageSenderService;
 import uz.devops.utils.BotUtils;
 
 @Slf4j
-@Service
+@Service(Constants.REMOVE_TASK)
 @RequiredArgsConstructor
 public class RemoveTask implements Processor {
 

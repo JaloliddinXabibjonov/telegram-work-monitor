@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
 import uz.devops.utils.BotUtils;
 
-@Service
+@Service(Constants.REMOVE_USER)
 @RequiredArgsConstructor
 public class RemoveUser implements Processor {
 

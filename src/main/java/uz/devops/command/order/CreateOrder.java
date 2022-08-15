@@ -1,11 +1,5 @@
 package uz.devops.command.order;
 
-import static uz.devops.WorkMonitorBot.ADMIN_1_CHAT_ID;
-import static uz.devops.utils.MessageUtils.ONLY_NUMBER;
-import static uz.devops.utils.MessageUtils.SERVER_ERROR;
-
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -13,11 +7,18 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
 import uz.devops.domain.User;
 import uz.devops.domain.enumeration.BotState;
+import uz.devops.domain.enumeration.RoleName;
 import uz.devops.repository.OrderRepository;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.*;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
+
+import java.util.List;
+import java.util.Objects;
+
+import static uz.devops.utils.MessageUtils.ONLY_NUMBER;
+import static uz.devops.utils.MessageUtils.SERVER_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -72,6 +73,8 @@ public class CreateOrder implements Processor {
                     user.setState(null);
                     userRepository.save(user);
                     createOrder(user, message);
+                    messageSenderService.sendMessage(update.getMessage().getChatId(), MessageUtils.ORDER_SUCCESSFULLY_ADDED, botUtils.createMainButtonsByRole(message.getChatId()));
+
                 }
             });
     }
@@ -90,13 +93,13 @@ public class CreateOrder implements Processor {
             messageSenderService.sendMessage(message.getChatId(), SERVER_ERROR, null);
             return;
         }
-
         var simpleResultData = userService.findAllAvailableUsers(task.getId());
+        List<String> allAdminChatIds = userRepository.findAllByAuthority(RoleName.ADMIN.toString());
         if (simpleResultData.getSuccess().equals(Boolean.FALSE)) {
             messageSenderService.sendMessageForAdmin(
-                List.of(ADMIN_1_CHAT_ID),
+                allAdminChatIds,
                 messageUtils.createNewOrder(orderId),
-                botUtils.getMainReplyKeyboard(String.valueOf(message.getChatId()))
+                botUtils.createMainButtonsByRole(Long.valueOf(allAdminChatIds.get(0)))
             );
             return;
         }
@@ -110,13 +113,13 @@ public class CreateOrder implements Processor {
                     messageSenderService.sendMessage(
                         Long.valueOf(existsUser.getChatId()),
                         messageUtils.getTaskInfo(orderTaskData.getId(), orderTaskData.getOrder(), orderTaskData.getTask()),
-                        BotUtils.getOrderKeyboard()
+                        BotUtils.getOrderKeyboard(orderTaskData.getId())
                     )
                 )
             );
 
         messageSenderService.sendMessageForAdmin(
-            List.of(ADMIN_1_CHAT_ID),
+            userRepository.findAllByAuthority(RoleName.ADMIN.toString()),
             messageUtils.createNewOrder(orderId),
             botUtils.getMainReplyKeyboard(String.valueOf(message.getChatId()))
         );

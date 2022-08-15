@@ -1,4 +1,4 @@
-package uz.devops.command.pipeline;
+package uz.devops.command.task.pipeline;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

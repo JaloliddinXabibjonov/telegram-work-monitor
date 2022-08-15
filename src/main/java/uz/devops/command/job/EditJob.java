@@ -9,18 +9,21 @@ import static uz.devops.utils.MessageUtils.EDIT_NAME;
 import static uz.devops.utils.MessageUtils.ENTER_NEW_NAME;
 
 import java.util.List;
+
+import com.sun.xml.bind.v2.runtime.reflect.opt.Const;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.enumeration.BotState;
 import uz.devops.service.MessageSenderService;
 import uz.devops.service.UserService;
 import uz.devops.utils.BotUtils;
 
-@Service
+@Service(Constants.EDIT_JOB)
 @RequiredArgsConstructor
 public class EditJob implements Processor {
 

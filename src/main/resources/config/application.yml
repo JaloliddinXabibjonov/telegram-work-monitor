@@ -101,7 +101,7 @@ spring:
       hibernate.query.fail_on_pagination_over_collection_fetch: true
       hibernate.query.in_clause_parameter_padding: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
@@ -182,4 +182,4 @@ jhipster:
 application:
   bot:
     name: devopsmonitor_bot
-    token: 5131660890:AAHv3lYFOwGrIJMYvteMMQzBDcr8o1AlGuU
+    token: 5418013987:AAEkzSldjtW0KNY8uFO9MgRZOFkPTgRuovc

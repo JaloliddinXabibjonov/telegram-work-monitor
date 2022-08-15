@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
 import uz.devops.config.Constants;
 import uz.devops.domain.enumeration.BotState;
 
@@ -117,7 +118,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Set<Profession> professions = new HashSet<>();
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "jhi_user_authority",
         joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
@@ -126,6 +127,25 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
+
+
+    public User() {
+    }
+
+    public User(boolean activated, String phoneNumber, Boolean confirmed, Set<Authority> authorities) {
+        this.activated = activated;
+        this.phoneNumber = phoneNumber;
+        this.confirmed = confirmed;
+        this.authorities = authorities;
+    }
+
+    public User(boolean activated, String phoneNumber, Boolean confirmed, Set<Profession> professions, Set<Authority> authorities) {
+        this.activated = activated;
+        this.phoneNumber = phoneNumber;
+        this.confirmed = confirmed;
+        this.professions = professions;
+        this.authorities = authorities;
+    }
 
     public Long getId() {
         return id;

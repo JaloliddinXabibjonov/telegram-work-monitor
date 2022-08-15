@@ -6,19 +6,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.domain.OrderTask;
 import uz.devops.service.MessageSenderService;
 import uz.devops.service.OrderTaskService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
 
-@Service
+import java.util.List;
+
+@Service(Constants.EXIST_TASKS)
 @RequiredArgsConstructor
 public class AvailableTasks implements Processor {
 
     private final MessageSenderService messageSenderService;
     private final OrderTaskService orderTaskService;
     private final MessageUtils messageUtils;
+        List<String> arr=List.of("a", "b");
 
     @Override
     public void execute(Update update) {
@@ -36,7 +40,7 @@ public class AvailableTasks implements Processor {
             messageSenderService.sendMessage(
                 update.getMessage().getChatId(),
                 messageUtils.getTaskInfo(orderTask.getId(), orderTask.getOrder(), orderTask.getTask()),
-                BotUtils.getOrderKeyboard()
+                BotUtils.getOrderKeyboard(orderTask.getId())
             );
         }
     }

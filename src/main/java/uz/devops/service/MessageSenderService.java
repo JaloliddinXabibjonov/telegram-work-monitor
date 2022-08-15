@@ -12,4 +12,7 @@ public interface MessageSenderService {
     void sendMessageForAdmin(List<String> chatIdList, String message, ReplyKeyboard replyKeyboard);
 
     void deleteMessage(Integer messageId, String chatId);
+
+    void answerCallbackQuery(String callBackQueryId, String text);
+    void sendMessageWithReply(String chatId, String message, Integer replyMessageId);
 }

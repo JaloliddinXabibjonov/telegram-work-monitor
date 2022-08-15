@@ -89,8 +89,8 @@ public class OrderTaskServiceImpl implements OrderTaskService {
     }
 
     @Override
-    public SimpleResultData<OrderTask> checkOrderStatus(Long orderId, Long taskId) {
-        var optionalOrderTask = orderTaskRepository.findByOrderAndTaskId(orderId, taskId);
+    public SimpleResultData<OrderTask> checkOrderStatus(Long orderTaskId) {
+        var optionalOrderTask = orderTaskRepository.findByIdAndStatusNotLike(orderTaskId,Status.ACTIVE);
 
         if (optionalOrderTask.isPresent()) {
             return new SimpleResultData<>("Order already get", false);
@@ -131,7 +131,7 @@ public class OrderTaskServiceImpl implements OrderTaskService {
         var order = orderById.getData();
 
         OrderTask orderTask = new OrderTask();
-        orderTask.setStatus(Status.TO_DO);
+        orderTask.setStatus(Status.ACTIVE);
         orderTask.setOrder(order);
         orderTask.setTask(task);
         orderTaskRepository.save(orderTask);
@@ -152,21 +152,21 @@ public class OrderTaskServiceImpl implements OrderTaskService {
         var orderTask = optionalOrderTask.get();
         orderTask.setStatus(Status.DONE);
         orderTask.setEndDate(Instant.now());
-        orderTaskRepository.save(orderTask);
+        OrderTask savedOrderTask = orderTaskRepository.save(orderTask);
 
-        var order = orderTask.getOrder();
-        order.setStatus(Status.DONE);
-        order.setEndDate(Instant.now());
-        orderRepository.save(order);
+//        var order = orderTask.getOrder();
+//        order.setStatus(Status.DONE);
+//        order.setEndDate(Instant.now());
+//        orderRepository.save(order);
 
-        return new SimpleResultData<>("OrderTask done !", true, orderTask);
+        return new SimpleResultData<>("OrderTask done !", true, savedOrderTask);
     }
 
     @Override
     public SimpleResultData<OrderTask> rejectOrderTask(Long orderTaskId) {
         var orderTaskSimpleResultData = findById(orderTaskId);
         var orderTask = orderTaskSimpleResultData.getData();
-        orderTask.setStatus(Status.TO_DO);
+        orderTask.setStatus(Status.ACTIVE);
         orderTask.setEmployeeUsername(null);
         orderTask.setStartedDate(null);
         orderTaskRepository.save(orderTask);
@@ -192,7 +192,7 @@ public class OrderTaskServiceImpl implements OrderTaskService {
         var user = userByChatId.getData();
 
         var orderTasks = orderTaskRepository
-            .findAllByStatus(Status.TO_DO)
+            .findAllByStatus(Status.ACTIVE)
             .stream()
             .filter(orderTask ->
                 orderTask
@@ -207,7 +207,6 @@ public class OrderTaskServiceImpl implements OrderTaskService {
             log.debug("Available orderTask not found");
             return new SimpleResultData<>("False", false);
         }
-
         return new SimpleResultData<>("Success", true, orderTasks);
     }
 }

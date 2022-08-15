@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
 import uz.devops.service.MessageSenderService;
 
-@Service
+@Service(Constants.CHOOSE_ONE_TO_EDIT)
 @RequiredArgsConstructor
 public class ChooseOneToEdit implements Processor {
 

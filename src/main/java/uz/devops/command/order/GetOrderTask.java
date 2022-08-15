@@ -1,15 +1,12 @@
 package uz.devops.command.order;
 
-import static uz.devops.WorkMonitorBot.ADMIN_1_CHAT_ID;
-import static uz.devops.utils.MessageUtils.SERVER_ERROR;
-import static uz.devops.utils.MessageUtils.WORK_GOT;
-
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
+import uz.devops.config.Constants;
+import uz.devops.domain.User;
 import uz.devops.repository.UserRepository;
 import uz.devops.service.MessageSenderService;
 import uz.devops.service.OrderTaskService;
@@ -17,9 +14,13 @@ import uz.devops.service.TaskService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
 
-@Service
+import java.util.Optional;
+
+import static uz.devops.utils.MessageUtils.*;
+
+@Service(Constants.GET_ORDER_TASK)
 @RequiredArgsConstructor
-public class GetOrder implements Processor {
+public class GetOrderTask implements Processor {
 
     private final MessageSenderService messageSenderService;
     private final OrderTaskService orderTaskService;
@@ -31,9 +32,19 @@ public class GetOrder implements Processor {
     @Override
     public void execute(Update update) {
         Message message = update.getCallbackQuery().getMessage();
-        Long orderTaskId = botUtils.getOrderTaskId(message.getText());
+        Long orderTaskId = Long.valueOf(update.getCallbackQuery().getData().split("#")[1]);
         Long taskId = botUtils.getTaskIdFromText(message.getText());
 
+        Optional<User> optionalUser = userRepository.findByChatId(message.getChatId().toString());
+        if (optionalUser.isEmpty()){
+            messageSenderService.sendMessage(message.getChatId(), USER_NOT_FOUND, null);
+            return;
+        }
+        Boolean busy = optionalUser.get().getBusy();
+        if (busy){
+            messageSenderService.sendMessageWithReply(message.getChatId().toString(), YOU_CANNOT_GET_ORDER_TASK , message.getMessageId());
+            return;
+        }
         var simpleResultData = orderTaskService.findById(orderTaskId);
         if (simpleResultData.getSuccess().equals(Boolean.FALSE)) {
             messageSenderService.sendMessage(message.getChatId(), SERVER_ERROR, null);
@@ -41,7 +52,7 @@ public class GetOrder implements Processor {
         }
 
         var orderTask = simpleResultData.getData();
-        var orderSimpleResultData = orderTaskService.checkOrderStatus(orderTask.getOrder().getId(), taskId);
+        var orderSimpleResultData = orderTaskService.checkOrderStatus(orderTask.getId());
         if (orderSimpleResultData.getSuccess().equals(Boolean.FALSE)) {
             messageSenderService.deleteMessage(message.getMessageId(), String.valueOf(message.getChatId()));
             messageSenderService.sendMessage(message.getChatId(), WORK_GOT, null);
@@ -52,7 +63,7 @@ public class GetOrder implements Processor {
             orderTaskId,
             message.getChat().getUserName(),
             orderTask.getOrder().getId(),
-            taskId
+            orderTask.getTask().getId()
         );
         if (resultData.getSuccess().equals(Boolean.FALSE)) {
             messageSenderService.sendMessage(message.getChatId(), SERVER_ERROR, null);
@@ -72,12 +83,7 @@ public class GetOrder implements Processor {
             message.getChatId(),
             messageUtils.myTask(taskById.getData(), startedOrderTask),
             message.getMessageId(),
-            botUtils.getTaskOrderKeyboard()
-        );
-        messageSenderService.sendMessageForAdmin(
-            List.of(ADMIN_1_CHAT_ID),
-            messageUtils.getTaskInfoAfterTook(taskById.getData(), startedOrderTask),
-            null
+            botUtils.getTaskOrderKeyboardByOrderTaskId(startedOrderTask.getId())
         );
     }
 }

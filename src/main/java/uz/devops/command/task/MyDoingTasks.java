@@ -1,14 +1,11 @@
 package uz.devops.command.task;
 
-import static uz.devops.utils.MessageUtils.USER_NOT_FOUND;
-import static uz.devops.utils.MessageUtils.USER_WORK_NOT_FOUND;
-
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import uz.devops.command.Processor;
 import uz.devops.command.SimpleResultData;
+import uz.devops.config.Constants;
 import uz.devops.domain.Task;
 import uz.devops.domain.enumeration.Status;
 import uz.devops.repository.OrderTaskRepository;
@@ -18,9 +15,14 @@ import uz.devops.service.UserService;
 import uz.devops.utils.BotUtils;
 import uz.devops.utils.MessageUtils;
 
-@Service
+import java.util.stream.Collectors;
+
+import static uz.devops.utils.MessageUtils.USER_NOT_FOUND;
+import static uz.devops.utils.MessageUtils.USER_WORK_NOT_FOUND;
+
 @RequiredArgsConstructor
-public class MyTasks implements Processor {
+@Service(Constants.MY_DOING_TASKS)
+public class MyDoingTasks implements Processor {
 
     private final MessageSenderService messageSenderService;
     private final OrderTaskRepository orderTaskRepository;
@@ -39,30 +41,19 @@ public class MyTasks implements Processor {
             return;
         }
 
-        var orderTasks = orderTaskRepository.findAllByEmployeeUsernameAndStatusNotLike(resultData.getData().getTgUsername(), Status.TO_DO);
+        var orderTasks = orderTaskRepository.findAllByEmployeeUsernameAndStatus(resultData.getData().getTgUsername(), Status.DOING);
         if (orderTasks.isEmpty()) {
             messageSenderService.sendMessage(chatId, USER_WORK_NOT_FOUND, null);
             return;
         }
 
         orderTasks
-            .stream()
-            .filter(order -> order.getStatus().equals(Status.DONE))
-            .collect(Collectors.toList())
-            .forEach(orderTask -> {
-                SimpleResultData<Task> taskById = taskService.findTaskById(orderTask.getTask().getId());
-                messageSenderService.sendMessage(chatId, messageUtils.getAboutMyTask(orderTask, taskById.getData()), null);
-            });
-
-        orderTasks
-            .stream()
-            .filter(orderTask -> orderTask.getStatus().equals(Status.DOING))
             .forEach(orderTask -> {
                 var taskById = taskService.findTaskById(orderTask.getTask().getId());
                 messageSenderService.sendMessage(
                     chatId,
                     messageUtils.myTask(taskById.getData(), orderTask),
-                    botUtils.getTaskOrderKeyboard()
+                    botUtils.getTaskOrderKeyboardByOrderTaskId(orderTask.getId())
                 );
             });
     }

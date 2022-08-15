@@ -412,7 +412,7 @@ public class UserService {
     }
 
     public void addProfessionToUser(String profName, User user) {
-        Optional<Profession> professionOptional = professionRepository.findById(profName);
+        Optional<Profession> professionOptional = professionRepository.findByName(profName);
         if (professionOptional.isEmpty()) {
             log.debug("Profession not found with name: {}", profName);
             return;
@@ -434,4 +434,16 @@ public class UserService {
                 }
             });
     }
+
+    public void checkUserProfessionByPhoneNumber(String data, String phoneNumber) {
+        userRepository
+            .findByPhoneNumber(phoneNumber)
+            .ifPresent(user -> {
+                if (!user.getProfessions().removeIf(profession -> Objects.equals(profession.getName(), data))) {
+                    addProfessionToUser(data, user);
+                }
+            });
+    }
+
+
 }

@@ -32,9 +32,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/work-monitor
-    username: work-monitor
-    password: 123
+    url: jdbc:postgresql://localhost:5432/work_monitor
+    username: postgres
+    password: root123
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -61,9 +61,12 @@ spring:
     locator:
       discovery:
         enabled: true
+  sql:
+    init:
+      mode: never
 
 server:
-  port: 8080
+  port: 8081
 
 # ===================================================================
 # JHipster specific properties

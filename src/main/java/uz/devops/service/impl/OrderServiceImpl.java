@@ -108,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
         Job job = optionalJob.get();
 
         Order order = new Order();
-        order.setStatus(Status.TO_DO);
+        order.setStatus(Status.ACTIVE);
         order.setCreatedDate(Instant.now());
         order.setDescription(description);
         order.setJob(job);

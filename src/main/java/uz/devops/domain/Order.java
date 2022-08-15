@@ -42,7 +42,19 @@ public class Order extends AbstractAuditingEntity implements Serializable {
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Job job;
 
+
+    @ManyToOne
+    private User customer;
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+
+    public User getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
 
     public Long getId() {
         return this.id;

@@ -36,4 +36,6 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
         " and ot.task.id = t.id and ot.status <> 'DOING'"
     )
     List<Task> findTasksByOrderId(@Param("orderId") Long orderId);
+
+    List<Task> findAllByJobIdOrderById(Long job_id);
 }
