@@ -46,7 +46,7 @@ public class GetOrderTaskById implements Processor {
         }
         OrderTask orderTask = orderTasks.get();
         String text = messageUtils.getOrderTaskInfo(orderTask,orderTask.getOrder(),orderTask.getTask());
-        messageSenderService.deleteMessage(message.getMessageId(), chatId.toString());
+//        messageSenderService.deleteMessage(message.getMessageId(), chatId.toString());
         messageSenderService.sendMessage(chatId, text, null);
     }
 

@@ -28,6 +28,7 @@ public final class Constants {
     public static final String REMOVE_TASK = "remove_task";
     public static final String CHOOSE_TASK_TO_EDIT = "choose_task_to_edit"  ;
     public static final String DELETE_MESSAGE = "delete_message";
+    public static final String CREATE_ORDER = "create_order";
 
     private Constants() {}
 
